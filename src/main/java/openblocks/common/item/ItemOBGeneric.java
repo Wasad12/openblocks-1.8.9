@@ -27,6 +27,8 @@ public class ItemOBGeneric extends Item {
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
-		list.add(new ItemStack(item, 1, META_GLIDER_WING));
+		// 1.8.9 equivalent of 1.12.2 Item.isInCreativeTab: own tab + search tab
+		if (tab == getCreativeTab() || tab == CreativeTabs.tabAllSearch)
+			list.add(new ItemStack(item, 1, META_GLIDER_WING));
 	}
 }
