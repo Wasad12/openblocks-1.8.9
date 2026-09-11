@@ -18,7 +18,6 @@ import openblocks.OpenBlocks;
 import openblocks.client.bindings.KeyInputHandler;
 import openblocks.client.renderer.entity.EntityHangGliderRenderer;
 import openblocks.common.entity.EntityHangGlider;
-import openblocks.common.item.ItemOBGeneric;
 
 public class ClientProxy implements IOpenBlocksProxy {
 
@@ -74,10 +73,15 @@ public class ClientProxy implements IOpenBlocksProxy {
 		}
 
 		if (OpenBlocks.Items.generic != null) {
+			final ModelResourceLocation wingLocation = new ModelResourceLocation("openblocks:glider_wing", "inventory");
 			ModelBakery.registerItemVariants(OpenBlocks.Items.generic,
 					new ResourceLocation("openblocks:glider_wing"));
-			ModelLoader.setCustomModelResourceLocation(OpenBlocks.Items.generic, ItemOBGeneric.META_GLIDER_WING,
-					new ModelResourceLocation("openblocks:glider_wing", "inventory"));
+			ModelLoader.setCustomMeshDefinition(OpenBlocks.Items.generic, new ItemMeshDefinition() {
+				@Override
+				public ModelResourceLocation getModelLocation(ItemStack stack) {
+					return wingLocation;
+				}
+			});
 		}
 	}
 
