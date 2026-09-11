@@ -17,7 +17,6 @@ import openblocks.OpenBlocks;
 import openblocks.client.bindings.KeyInputHandler;
 import openblocks.client.renderer.entity.EntityHangGliderRenderer;
 import openblocks.common.entity.EntityHangGlider;
-import openblocks.common.item.ItemOBGeneric;
 
 public class ClientProxy implements IOpenBlocksProxy {
 
@@ -33,6 +32,8 @@ public class ClientProxy implements IOpenBlocksProxy {
 				return new EntityHangGliderRenderer(manager);
 			}
 		});
+
+		registerItemModels();
 	}
 
 	@Override
@@ -47,10 +48,20 @@ public class ClientProxy implements IOpenBlocksProxy {
 	public void registerRenderInformation() {
 		if (OpenBlocks.Items.hangGlider != null) {
 			MinecraftForge.EVENT_BUS.register(new GliderPlayerRenderHandler());
+		}
+	}
 
-			final ModelResourceLocation normalLocation = new ModelResourceLocation(OpenBlocks.location("hang_glider"), "inventory");
-			final ModelResourceLocation hiddenLocation = new ModelResourceLocation(OpenBlocks.location("hang_glider_hidden"), "inventory");
-			ModelBakery.registerItemVariants(OpenBlocks.Items.hangGlider, normalLocation, hiddenLocation);
+	// NOTE: must run in preInit (1.12.2 registers item models during preInit as well).
+	// Model bake happens before mod init(), so init-time registration is silently ignored.
+	@SuppressWarnings("deprecation")
+	private static void registerItemModels() {
+		// NOTE: plain variant-name strings, WITHOUT "#inventory" suffix. 1.8.9 resolves item model
+		// files from these strings, and MRL-style "name#inventory" strings break file lookup.
+		// See docs/ARCHITECTURE.md.
+		if (OpenBlocks.Items.hangGlider != null) {
+			final ModelResourceLocation normalLocation = new ModelResourceLocation("openblocks:hang_glider", "inventory");
+			final ModelResourceLocation hiddenLocation = new ModelResourceLocation("openblocks:hang_glider_hidden", "inventory");
+			ModelBakery.addVariantName(OpenBlocks.Items.hangGlider, "openblocks:hang_glider", "openblocks:hang_glider_hidden");
 			ModelLoader.setCustomMeshDefinition(OpenBlocks.Items.hangGlider, new ItemMeshDefinition() {
 				@Override
 				public ModelResourceLocation getModelLocation(ItemStack stack) {
@@ -60,8 +71,14 @@ public class ClientProxy implements IOpenBlocksProxy {
 		}
 
 		if (OpenBlocks.Items.generic != null) {
-			ModelLoader.setCustomModelResourceLocation(OpenBlocks.Items.generic, ItemOBGeneric.META_GLIDER_WING,
-					new ModelResourceLocation(OpenBlocks.location("glider_wing"), "inventory"));
+			final ModelResourceLocation wingLocation = new ModelResourceLocation("openblocks:glider_wing", "inventory");
+			ModelBakery.addVariantName(OpenBlocks.Items.generic, "openblocks:glider_wing");
+			ModelLoader.setCustomMeshDefinition(OpenBlocks.Items.generic, new ItemMeshDefinition() {
+				@Override
+				public ModelResourceLocation getModelLocation(ItemStack stack) {
+					return wingLocation;
+				}
+			});
 		}
 	}
 
