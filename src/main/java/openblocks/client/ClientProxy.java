@@ -48,9 +48,34 @@ public class ClientProxy implements IOpenBlocksProxy {
 	@Override
 	public void postInit() {
 		probeResources("postInit");
+		dumpVariantMaps();
 	}
 
-	// TEMPORARY DEBUG (fix loop 2, model resolution investigation) — reverted after diagnosis
+	// TEMPORARY DEBUG (fix loop 2, variant registration investigation) — reverted after diagnosis
+	private static void dumpVariantMaps() {
+		try {
+			for (java.lang.reflect.Field f : ModelBakery.class.getDeclaredFields()) {
+				if (java.lang.reflect.Modifier.isStatic(f.getModifiers())
+						&& java.util.Map.class.isAssignableFrom(f.getType())) {
+					f.setAccessible(true);
+					java.util.Map<?, ?> map = (java.util.Map<?, ?>)f.get(null);
+					for (java.util.Map.Entry<?, ?> e : map.entrySet()) {
+						Object key = e.getKey();
+						String itemName = String.valueOf(key);
+						try {
+							Object item = key.getClass().getMethod("get").invoke(key);
+							if (item instanceof net.minecraft.item.Item)
+								itemName = String.valueOf(net.minecraft.item.Item.itemRegistry.getNameForObject((net.minecraft.item.Item)item));
+						} catch (Exception ignored) {}
+						if (itemName.contains("openblocks"))
+							FMLLog.info("[VARIANTDGB] static map %s: item=%s values=%s", f.getName(), itemName, e.getValue());
+					}
+				}
+			}
+		} catch (Exception e) {
+			FMLLog.info("[VARIANTDGB] dump failed: %s", e);
+		}
+	}
 	private static void probeResources(String phase) {
 		final IResourceManager rm = Minecraft.getMinecraft().getResourceManager();
 		for (String path : new String[] {
