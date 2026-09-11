@@ -158,6 +158,22 @@ public class EntityHangGlider extends Entity implements IEntityAdditionalSpawnDa
 
 	@Override
 	public void onUpdate() {
+		// TEMPORARY DEBUG (fix loop 2, short-glide investigation) — reverted after diagnosis
+		if (!worldObj.isRemote) {
+			final ItemStack held = (player != null)? player.getHeldItem() : null;
+			logger.info("[GLIDERDBG] onGround={} motionY={} motionX={} motionZ={} lastMotionY={} deployed={} valid={} held={} playerDead={} gliderDead={}",
+					player != null && player.onGround,
+					player != null? player.motionY : -999,
+					player != null? player.motionX : -999,
+					player != null? player.motionZ : -999,
+					lastMotionY,
+					player != null && !player.onGround && !player.isInWater() && !player.isPlayerSleeping(),
+					isGliderValid(player, this),
+					held == null? "null" : held.getItem().getClass().getName(),
+					player != null && player.isDead,
+					isDead);
+		}
+
 		if (!isGliderValid(player, this)) {
 			setDead();
 		}
