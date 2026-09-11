@@ -1,0 +1,49 @@
+/*
+ * OpenBlocks 1.8.9 port build file.
+ * Faithful backport of OpenBlocks 1.7.4 (1.12.2). See docs/ARCHITECTURE.md.
+ */
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'Forge'
+            url = 'https://files.minecraftforge.net/maven'
+        }
+    }
+
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = mc_version + "-" + mod_version
+group = "openblocks"
+archivesBaseName = "OpenBlocks"
+
+sourceCompatibility = targetCompatibility = '1.8'
+
+minecraft {
+    version = mc_version + "-" + forge_version
+    runDir = "run"
+
+    mappings = mcp_mappings
+}
+
+processResources {
+    inputs.property "version", mod_version
+    inputs.property "mcversion", mc_version
+
+    // Process mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': mod_version, 'mcversion': mc_version
+    }
+
+    // Copy anything else directly
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}

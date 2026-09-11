@@ -1,0 +1,26 @@
+{
+  "modListVersion": 2,
+  "modList":
+  [
+    {
+      "modid": "openblocks",
+      "name": "OpenBlocks",
+      "description": "All the things you never thought you will ever need",
+      "version": "${version}",
+      "mcversion": "${mcversion}",
+      "url": "http://openmods.info/",
+      "updateUrl": "",
+      "authorList": [
+        "Mikee",
+        "NeverCast",
+        "boq",
+        "Lyqyd"
+      ],
+      "credits": "",
+      "logoFile": "",
+      "screenshots": [
+      ],
+      "parent": ""
+    }
+  ]
+}
