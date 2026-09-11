@@ -2,6 +2,7 @@ package openblocks.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -9,7 +10,10 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ICustomModelLoader;
+import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -35,6 +39,37 @@ public class ClientProxy implements IOpenBlocksProxy {
 		});
 
 		registerItemModels();
+
+		// TEMPORARY DEBUG (fix loop 4, bake forensics) — remove once file-first failure is explained.
+		// Passive listener: logs every model location the bake requests for our domain, changes nothing.
+		ModelLoaderRegistry.registerLoader(new ICustomModelLoader() {
+			@Override
+			public void onResourceManagerReload(IResourceManager resourceManager) {}
+
+			@Override
+			public boolean accepts(ResourceLocation modelLocation) {
+				if ("openblocks".equals(modelLocation.getResourceDomain())) {
+					org.apache.logging.log4j.LogManager.getLogger().info("[MODELPROBE] loader asked for '{}' (class {})",
+							modelLocation, modelLocation.getClass().getSimpleName());
+				}
+				return false;
+			}
+
+			@Override
+			public IModel loadModel(ResourceLocation modelLocation) {
+				return null; // never reached (accepts always false)
+			}
+		});
+
+		// TEMPORARY DEBUG (fix loop 4) — direct resource-manager visibility check for the exact
+		// file the bake should resolve. Runs in preInit; result approximates bake-time visibility.
+		try {
+			Minecraft.getMinecraft().getResourceManager()
+					.getResource(new ResourceLocation("openblocks", "models/item/hang_glider.json"));
+			org.apache.logging.log4j.LogManager.getLogger().info("[MODELPROBE] direct getResource models/item/hang_glider.json OK");
+		} catch (Exception e) {
+			org.apache.logging.log4j.LogManager.getLogger().info("[MODELPROBE] direct getResource models/item/hang_glider.json FAIL: {}", e.toString());
+		}
 	}
 
 	@Override
