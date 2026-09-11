@@ -82,7 +82,10 @@ public class ClientProxy implements IOpenBlocksProxy {
 		if (OpenBlocks.Items.hangGlider != null) {
 			final ModelResourceLocation normalLocation = new ModelResourceLocation("openblocks:hang_glider", "inventory");
 			final ModelResourceLocation hiddenLocation = new ModelResourceLocation("openblocks:hang_glider_hidden", "inventory");
-			ModelBakery.registerItemVariants(OpenBlocks.Items.hangGlider, normalLocation, hiddenLocation);
+			ModelBakery.registerItemVariants(OpenBlocks.Items.hangGlider, normalLocation);
+			// TEMPORARY DEBUG (fix loop 2): separate single-arg call — testing whether 2318
+			// drops non-first varargs. Reverted/merged after diagnosis.
+			ModelBakery.registerItemVariants(OpenBlocks.Items.hangGlider, hiddenLocation);
 			ModelLoader.setCustomMeshDefinition(OpenBlocks.Items.hangGlider, new ItemMeshDefinition() {
 				@Override
 				public ModelResourceLocation getModelLocation(ItemStack stack) {
