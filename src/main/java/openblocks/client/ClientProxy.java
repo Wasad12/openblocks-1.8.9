@@ -2,7 +2,9 @@ package openblocks.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLLog;import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -40,10 +42,32 @@ public class ClientProxy implements IOpenBlocksProxy {
 	@Override
 	public void init() {
 		MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
+		probeResources("init");
 	}
 
 	@Override
-	public void postInit() {}
+	public void postInit() {
+		probeResources("postInit");
+	}
+
+	// TEMPORARY DEBUG (fix loop 2, model resolution investigation) — reverted after diagnosis
+	private static void probeResources(String phase) {
+		final IResourceManager rm = Minecraft.getMinecraft().getResourceManager();
+		for (String path : new String[] {
+				"models/item/glider_wing.json",
+				"models/item/hang_glider.json",
+				"item/glider_wing.json",
+				"textures/models/hang_glider.png",
+				"textures/items/glider_wing.png",
+				"lang/en_US.lang" }) {
+			try {
+				rm.getResource(new ResourceLocation("openblocks", path));
+				FMLLog.info("[MODELDGB] %s: FOUND openblocks:%s", phase, path);
+			} catch (Exception e) {
+				FMLLog.info("[MODELDGB] %s: MISSING openblocks:%s (%s)", phase, path, e);
+			}
+		}
+	}
 
 	@Override
 	public void registerRenderInformation() {
