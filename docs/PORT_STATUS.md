@@ -10,7 +10,7 @@
 - **GitHub:** `https://github.com/Wasad12/openblocks-1.8.9` (public) — receives ONLY the
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
-  Last push 2026-09-12 (`f4a74bb`, docs handoff fixes).
+  Last push 2026-09-12 (`924d78d`, Auto Anvil complete — all work through `571b15f`).
 - **Current feature:** none — Auto Anvil COMPLETED (user-confirmed 2026-09-12).
   Awaiting next feature instruction.
 - **Feature status:** no active feature. May revisit completed features if issues surface later.
