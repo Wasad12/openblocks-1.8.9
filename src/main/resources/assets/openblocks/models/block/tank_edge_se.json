@@ -4,15 +4,15 @@
                  },
     "elements":  [
                      {
-                         "name":  "se",
+                         "name":  "nw",
                          "from":  [
+                                      15.9,
                                       -0.1,
-                                      0.1,
                                       15.9
                                   ],
                          "to":  [
-                                    0.1,
-                                    15.9,
+                                    16.1,
+                                    16.1,
                                     16.1
                                 ],
                          "faces":  {
@@ -21,36 +21,60 @@
                                                      "uv":  [
                                                                 0.0,
                                                                 0.0,
-                                                                0.1,
-                                                                7.9
-                                                            ]
+                                                                1.0,
+                                                                16.0
+                                                            ],
+                                                     "cullface":  "north"
                                                  },
                                        "east":  {
                                                     "texture":  "#frame",
                                                     "uv":  [
                                                                0.0,
                                                                0.0,
-                                                               0.1,
-                                                               7.9
-                                                           ]
+                                                               1.0,
+                                                               16.0
+                                                           ],
+                                                    "rotation":  90
                                                 },
                                        "south":  {
                                                      "texture":  "#frame",
                                                      "uv":  [
                                                                 0.0,
                                                                 0.0,
-                                                                0.1,
-                                                                7.9
-                                                            ]
+                                                                1.0,
+                                                                16.0
+                                                            ],
+                                                     "rotation":  90
                                                  },
                                        "west":  {
                                                     "texture":  "#frame",
                                                     "uv":  [
                                                                0.0,
                                                                0.0,
-                                                               0.1,
-                                                               7.9
-                                                           ]
+                                                               1.0,
+                                                               16.0
+                                                           ],
+                                                    "cullface":  "west"
+                                                },
+                                       "up":  {
+                                                  "texture":  "#frame",
+                                                  "uv":  [
+                                                             0.0,
+                                                             0.0,
+                                                             1.0,
+                                                             1.0
+                                                         ],
+                                                  "cullface":  "up"
+                                              },
+                                       "down":  {
+                                                    "texture":  "#frame",
+                                                    "uv":  [
+                                                               0.0,
+                                                               15.0,
+                                                               1.0,
+                                                               16.0
+                                                           ],
+                                                    "cullface":  "down"
                                                 }
                                    }
                      }

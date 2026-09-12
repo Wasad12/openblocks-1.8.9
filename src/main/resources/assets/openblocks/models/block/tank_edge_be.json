@@ -4,43 +4,64 @@
                  },
     "elements":  [
                      {
-                         "name":  "be",
+                         "name":  "bw",
                          "from":  [
                                       15.9,
                                       -0.1,
-                                      0.1
+                                      -0.1
                                   ],
                          "to":  [
                                     16.1,
                                     0.1,
-                                    15.9
+                                    16.1
                                 ],
                          "faces":  {
+                                       "north":  {
+                                                     "texture":  "#frame",
+                                                     "uv":  [
+                                                                0.0,
+                                                                0.0,
+                                                                1.0,
+                                                                1.0
+                                                            ],
+                                                     "cullface":  "north"
+                                                 },
                                        "east":  {
                                                     "texture":  "#frame",
                                                     "uv":  [
                                                                0.0,
                                                                0.0,
-                                                               7.9,
-                                                               0.1
+                                                               16.0,
+                                                               1.0
                                                            ]
                                                 },
+                                       "south":  {
+                                                     "texture":  "#frame",
+                                                     "uv":  [
+                                                                0.0,
+                                                                0.0,
+                                                                1.0,
+                                                                1.0
+                                                            ],
+                                                     "cullface":  "south"
+                                                 },
                                        "west":  {
                                                     "texture":  "#frame",
                                                     "uv":  [
                                                                0.0,
                                                                0.0,
-                                                               7.9,
-                                                               0.1
-                                                           ]
+                                                               16.0,
+                                                               1.0
+                                                           ],
+                                                    "cullface":  "west"
                                                 },
                                        "up":  {
                                                   "texture":  "#frame",
                                                   "uv":  [
                                                              0.0,
                                                              0.0,
-                                                             0.1,
-                                                             7.9
+                                                             16.0,
+                                                             1.0
                                                          ]
                                               },
                                        "down":  {
@@ -48,9 +69,10 @@
                                                     "uv":  [
                                                                0.0,
                                                                0.0,
-                                                               0.1,
-                                                               7.9
-                                                           ]
+                                                               16.0,
+                                                               1.0
+                                                           ],
+                                                    "cullface":  "down"
                                                 }
                                    }
                      }

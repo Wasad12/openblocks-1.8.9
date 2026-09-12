@@ -715,3 +715,24 @@ so my 4 puts/vertex completed only 3.2 vertices → `build()` threw. (The paddin
 was removed in later versions, which is why 1.12.2-era code omits it.) Fix: pad any
 trailing elements per vertex (queries `getElementCount()`, no hardcoding).
 Rebuilt (`:reobfJar` BUILD SUCCESSFUL → 153,331 bytes), redeployed, awaiting retest.
+
+---
+
+## 2026-09-12 — Feature: Tank (fix loop 4 — wrong edge pieces, ROOT CAUSE FOUND)
+
+User screenshots: shared seam stays while outer edges vanish; stacked corners show black
+squares; (item icon "wrong" still open). Root cause, PROVED by reading the 1.12.2
+sources: fix loop 2 split the WRONG file. `tank_frame.json` (all 12 elements) is the
+INVENTORY-ONLY model — in-world edges come from `tank_frame_{x,y,z}.json` (one element
+each, with `cullface`, 1px-wide UV strips, and DIFFERENT corner naming: axis `nw` sits
+at x≈0 while `tank_frame`'s `nw` sits at x≈16). Each blockstate variant = one axis file
++ Forge transform translation ([1,0,0] etc. = +1 block on normalized geometry; decoded
+by hand, matches all 12 corners). My pieces had wrong geometry, wrong UVs, no cullface,
+no translations — explaining every world symptom at once. Also read 1.8.9
+`TRSRTransformation` source (implements `IModelState`, nulls = identity) but chose the
+zero-risk path instead: the 12 `tank_edge_*`.json now carry the translation baked into
+`from`/`to` (+16 px per block, script-generated from the axis files, cullface/UVs
+verbatim), so runtime baking stays transform-free (proven path). `evaluate()` bit order
+already matched `EDGES` — unchanged. Item icon: full-tank box already equals 1.12.2's
+`tank_fluid_16` exactly (geometry + UVs), so asking user for a close-up classification.
+Rebuilt (`:reobfJar` BUILD SUCCESSFUL → 154,014 bytes), redeployed.

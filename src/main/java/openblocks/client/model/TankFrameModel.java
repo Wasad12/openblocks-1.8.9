@@ -31,9 +31,13 @@ import openblocks.common.block.TankNeighbourState;
 /**
  * 1.8.9-native equivalent of 1.12.2's {@code openmods:variantmodel} tank frame
  * (see 1.12.2 {@code blockstates/tank.json}): the 12 frame edges are baked once from
- * {@code tank_edge_*}.json (exact 1.12.2 geometry/UVs) and combined per-block from the
- * neighbour flags. The 12 visibility expressions are ported verbatim from the
- * {@code expansions} in 1.12.2's blockstate.
+ * {@code tank_edge_*}.json and combined per-block from the neighbour flags.
+ * Each edge file = one 1.12.2 {@code tank_frame_{x,y,z}}.json axis element (exact
+ * geometry/UVs/cullface) pre-translated by its blockstate {@code transform}
+ * (1 block = 16 px), because 1.8.9 has no runtime variant-transform stage.
+ * The 12 visibility expressions are ported verbatim from the {@code expansions}
+ * in 1.12.2's blockstate (earlier builds wrongly split the inventory-only
+ * {@code tank_frame}.json, whose names/geometry/UVs don't match the axis files).
  *
  * <p>Installed over the static full-frame model at {@link ModelBakeEvent}; the static
  * model stays as fallback (bake failure) and as the inventory parent.</p>
