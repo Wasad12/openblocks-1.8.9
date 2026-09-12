@@ -16,6 +16,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import openblocks.IOpenBlocksProxy;
 import openblocks.OpenBlocks;
 import openblocks.client.bindings.KeyInputHandler;
+import openblocks.client.model.GliderItemModel;
 import openblocks.client.renderer.entity.EntityHangGliderRenderer;
 import openblocks.common.entity.EntityHangGlider;
 
@@ -35,6 +36,11 @@ public class ClientProxy implements IOpenBlocksProxy {
 		});
 
 		registerItemModels();
+
+		// Glider visibility switching (deployed: hidden in hands, shown in GUI) lives in
+		// GliderItemModel, installed over the baked model at ModelBakeEvent. Must register
+		// before the first bake (preInit — the first ModelManager load predates mod init()).
+		MinecraftForge.EVENT_BUS.register(new GliderItemModel.BakeHandler());
 	}
 
 	@Override
@@ -57,18 +63,18 @@ public class ClientProxy implements IOpenBlocksProxy {
 	private static void registerItemModels() {
 		if (OpenBlocks.Items.hangGlider != null) {
 			final ModelResourceLocation normalLocation = new ModelResourceLocation("openblocks:hang_glider", "inventory");
-			final ModelResourceLocation hiddenLocation = new ModelResourceLocation("openblocks:hang_glider_hidden", "inventory");
 			// NOTE: plain ResourceLocations (NOT ModelResourceLocations): matches vanilla 1.8.9
 			// convention (e.g. vanilla "bow", "coal"). Forge maps these to models/item/*.json.
 			// Item JSONs must use "builtin/generated" as parent: 1.8.9 has no models/item/generated.json
 			// (added in 1.9); builtin/generated is its 1.8.9 equivalent (vanilla items use it too).
+			// The mesh definition always resolves to the normal model; deployed/folded visibility
+			// switching happens per-stack AND per-perspective in GliderItemModel (see that class).
 			ModelBakery.registerItemVariants(OpenBlocks.Items.hangGlider,
-					new ResourceLocation("openblocks:hang_glider"),
-					new ResourceLocation("openblocks:hang_glider_hidden"));
+					new ResourceLocation("openblocks:hang_glider"));
 			ModelLoader.setCustomMeshDefinition(OpenBlocks.Items.hangGlider, new ItemMeshDefinition() {
 				@Override
 				public ModelResourceLocation getModelLocation(ItemStack stack) {
-					return EntityHangGlider.isStackDeployedGlider(stack)? hiddenLocation : normalLocation;
+					return normalLocation;
 				}
 			});
 		}
