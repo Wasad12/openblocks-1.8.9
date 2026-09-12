@@ -37,7 +37,7 @@
      comparator output, creative-search filled tanks, empty-hand click on water (nothing).
      XP drain needs xpJuice (no bucket yet — testable only via creative filled tank if listed).
   2. Fix loop on user screenshots/logs, then commit/test cycles per feature.
-- **Last known-good Git commit:** `623e748` (session handoff; code checkpoint `61977ae`, built + deployed, 2026-09-12)
+- **Last known-good Git commit:** `39651c2` (Tank implemented, built 132,610 bytes + deployed 2026-09-12; src matches deployed JAR, docs-only changes after build do not affect it)
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
   `git status` permanently list 1369 phantom-modified reference files (content PROVEN identical via
