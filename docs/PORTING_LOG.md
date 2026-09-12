@@ -601,3 +601,72 @@ TEMPORARY code. Awaiting next feature instruction.
   1.8 branches are BANNED sources (user instruction) — 1.10.X was consulted once at explicit
   user request (files identical to 1.12.X, no signal). Theories marked INFERRED are
   disproven until VERIFIED; trust only log/bytecode/probe evidence.
+
+---
+
+## 2026-09-12 — Feature: Tank (Phase A — investigate, 1.12.2 source only)
+
+Source classes (all under `OpenBlocks-1.12.X/src/main/java/openblocks/`, VERIFIED by reading):
+- `common/block/BlockTank.java` — `OpenBlock` + `ExtendedBlockState` (orientation +
+  `VariantModelState` unlisted); pick-block NBT (with `Amount`=capacity quirk); comparator;
+  light; creative-search filled listing.
+- `common/tileentity/TileEntityTank.java` — `SyncedTileEntity` + column fill/drain, neighbour
+  balancing, bottom-fill, bucket-empty + XP-drain activation, NBT-preserving drops,
+  `FastTESR` + pass 1, fluid capability wrapper.
+- `common/item/ItemTankBlock.java` — `ItemOpenBlock` + `level` property override (17
+  `tank_fluid_N` submodels), item fluid-handler + texture capabilities, tooltip mB,
+  `%s Tank` name, `fillTankItem` for creative listing.
+- `client/renderer/tileentity/TileEntityTankRenderer.java` — `FastTESR`, neighbour-aware
+  fluid walls + animated surface (`TankRenderLogic` data).
+- `client/renderer/tileentity/tank/*` (10 files) — pure connection/wave logic (`Diagonal`
+  is the only lib import).
+- `common/LiquidXpUtils.java` (ratio math only), `Config` tanks keys + `xpToLiquidRatio`,
+  `OpenBlocks.Fluids.xpJuice` (luminosity 10, density 800, viscosity 1500), recipe
+  obsidian + `paneGlass` → 2, `tank.png`, `xp_juice_{still,flowing}.png`, lang keys
+  (already in our `en_US.lang`).
+
+OpenModsLib deps used: `OpenBlock` (hardness 1.0F), `SyncedTileEntity`/`SyncMap`/
+`SyncableTank`/`GenericTank`, `VariantModelState`, `ItemOpenBlock`, item texture cap,
+`openmods.utils.{Diagonal,ItemUtils,MiscUtils,TranslationUtils,TextureUtils,
+EnchantmentUtils}`. Only `Diagonal` + fragments ported; rest replaced/dropped (see
+ARCHITECTURE.md "Tank" section).
+
+Unavoidable 1.8.9 API facts (all VERIFIED via `javap` on the `forgeBin` 1722 jar):
+no `fluids/capability` package (→ old `IFluidHandler` + `FluidContainerRegistry`);
+`FastTESR` exists with `WorldRenderer` signature (pos/color/tex/lightmap/endVertex/
+setTranslation all present); `TileEntity` has `getDescriptionPacket`/`onDataPacket`/
+`hasFastRenderer`; `ExtendedBlockState` exists (unused — static frame model instead).
+
+---
+
+## 2026-09-12 — Feature: Tank (Phase B — plan)
+
+Full plan recorded in `ARCHITECTURE.md` ("Tank" section): behavior preserved (capacity,
+balancing, columns, buckets-in, XP drain, NBT drops/pick, comparator, light, recipe,
+config, search listing); lib/sync/render adapted (S35 sync, static frame model,
+WorldRenderer TESR, `random.splash` fill sound, `xpJuice` without bucket handler).
+KNOWN DEVIATIONS v1: internal frame strips between connected tanks (no variantmodel
+loader); no per-level fluid in item model (no `ItemOverride`); bucket-out unsupported
+(also unsupported in 1.12.2 — faithful, not a deviation).
+
+---
+
+## 2026-09-12 — Feature: Tank (Phase C — implemented, built, deployed, UNTESTED)
+
+New files (all under `OpenBlocks-1.8.9/src/main/java/` + resources): `common/block/BlockTank`,
+`common/tileentity/TileEntityTank`, `common/item/ItemTankBlock`, `common/LiquidXpUtils`
+(ratios only), `openmods/utils/Diagonal` (verbatim, Vec3i import only),
+`client/renderer/tileentity/tank/*` (10 files, `GenericTank`→`FluidTank`),
+`client/renderer/tileentity/TileEntityTankRenderer` (WorldRenderer); `Config` tanks keys +
+`xpToLiquidRatio`; `OpenBlocks` xpJuice + block/TE registration + recipe; `ClientProxy`
+TESR binding + item model + stitch listener; `blockstates/tank.json`,
+`models/{block,item}/tank.json` (frame elements verbatim + particle), `tank.png` +
+`xp_juice_{still,flowing}.png{,.mcmeta}` (copied); lang already had all keys.
+
+Build: 2 trivial compile iterations (missing `Block` import; own inner `Blocks` class
+shadowed vanilla import in tab icon — fully qualified now). `:reobfJar` BUILD SUCCESSFUL →
+132,610 bytes (JAR contents VERIFIED: all tank classes + models + textures), deployed
+03:52 (unrelated mods untouched). Notably the whole batch of INFERRED 1.8.9 names
+(Chunk CHECK-enum, 2-arg notify, S35 ctor, floor_double/sin, tabAllSearch, getSubBlocks
+delegation, stitch `map`, CUTOUT layer) compiled clean on first pass.
+Status: awaiting user test (checklist in PORT_STATUS.md).

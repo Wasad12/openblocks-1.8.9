@@ -8,17 +8,25 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import openblocks.IOpenBlocksProxy;
 import openblocks.OpenBlocks;
 import openblocks.client.bindings.KeyInputHandler;
 import openblocks.client.model.GliderItemModel;
 import openblocks.client.renderer.entity.EntityHangGliderRenderer;
+import openblocks.client.renderer.tileentity.TileEntityTankRenderer;
 import openblocks.common.entity.EntityHangGlider;
+import openblocks.common.tileentity.TileEntityTank;
 
 public class ClientProxy implements IOpenBlocksProxy {
 
@@ -41,6 +49,13 @@ public class ClientProxy implements IOpenBlocksProxy {
 		// GliderItemModel, installed over the baked model at ModelBakeEvent. Must register
 		// before the first bake (preInit — the first ModelManager load predates mod init()).
 		MinecraftForge.EVENT_BUS.register(new GliderItemModel.BakeHandler());
+
+		if (OpenBlocks.Blocks.tank != null) {
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new TileEntityTankRenderer());
+			// same as 1.12.2 ClientProxy: stitch every registered fluid's still icon
+			// (mod fluids like xpJuice are NOT stitched automatically on 1.8.9).
+			MinecraftForge.EVENT_BUS.register(new FluidTextureRegisterListener());
+		}
 	}
 
 	@Override
@@ -90,10 +105,29 @@ public class ClientProxy implements IOpenBlocksProxy {
 				}
 			});
 		}
+
+		if (OpenBlocks.Blocks.tank != null) {
+			final Item tankItem = Item.getItemFromBlock(OpenBlocks.Blocks.tank);
+			if (tankItem != null)
+				ModelLoader.setCustomModelResourceLocation(tankItem, 0,
+						new ModelResourceLocation("openblocks:tank", "inventory"));
+		}
 	}
 
 	@Override
 	public boolean isClientPlayer(EntityPlayer player) {
 		return player == Minecraft.getMinecraft().thePlayer;
+	}
+
+	// same listener as 1.12.2 ClientProxy.FluidTextureRegisterListener (verbatim).
+	private static class FluidTextureRegisterListener {
+		@SubscribeEvent
+		public void onTextureStitch(TextureStitchEvent.Pre evt) {
+			for (Fluid f : FluidRegistry.getRegisteredFluids().values()) {
+				final ResourceLocation fluidTexture = f.getStill();
+				if (fluidTexture != null)
+					evt.map.registerSprite(fluidTexture);
+			}
+		}
 	}
 }

@@ -136,3 +136,47 @@ The 1.12.2 source stays the primary authority (§2); everything here is adaptati
   (1.8.9 has no off-hand; single-hand logic throughout.)
 - Unstackable glider (2026-09-12, DELIBERATE user-requested deviation): 1.12.2 stacks the
   glider to 64; ours is `setMaxStackSize(1)`. Wings still stack (crafting ingredient).
+
+### Tank (2026-09-12, Phase B plan — behavior preserved, lib/sync/render adapted to 1.8.9)
+
+Source: `BlockTank`, `TileEntityTank`, `ItemTankBlock`, `TileEntityTankRenderer`,
+`client/renderer/tileentity/tank/*` (10 files), `LiquidXpUtils` (part), `Config` tanks keys +
+`xpToLiquidRatio`, recipe `tank_0.json`, `tank.png`, `xp_juice_{still,flowing}.png`,
+lang keys (already in our `en_US.lang`: `tile.openblocks.tank.*`, `fluid.openblocks.xp_juice`).
+
+- NO OpenModsLib port (§9: per-feature local equivalents). Dropped lib systems: `OpenBlock` base
+  (plain `BlockContainer` + `setHardness(1.0F)` like `OpenBlock`'s default), `SyncedTileEntity`/
+  `SyncMap`/`SyncableTank`/`GenericTank` (own NBT + `S35PacketUpdateTileEntity` sync, throttled
+  with the same SYNC/UPDATE thresholds), `VariantModelState`/`NeighbourMap` model state,
+  `ItemOpenBlock`, `ItemTextureCapability`, `IItemPropertyGetter` level override (1.9+ API).
+- NO fluid capabilities in 1.8.9 Forge 1722 (VERIFIED: no `fluids/capability` package in
+  `forgeBin` jar). `TileEntityTank` implements the old facing-agnostic `IFluidHandler`
+  (column fill/drain logic verbatim); containers handled via `FluidContainerRegistry`
+  (container→tank only, exactly like 1.12.2's `tryEmptyItem` which never fills buckets FROM
+  the tank). `ItemTankBlock` keeps NBT/tooltip/display-name/`fillTankItem` but no item caps.
+- `FastTESR` EXISTS in 1.8.9 (VERIFIED via javap) with `(…, WorldRenderer)` signature —
+  renderer port is mechanical (`BufferBuilder` → `WorldRenderer`; API exists: pos/color/tex/
+  lightmap/endVertex/setTranslation all VERIFIED). `TankRenderLogic` + all connection classes +
+  `TankRenderUtils` + `openmods.utils.Diagonal` (verbatim copy, same convention as
+  `DisplayListWrapper`) port unchanged; `GenericTank` refs replaced with `FluidTank`
+  (`getSpace()` = capacity − amount locally). Fluid sprite via `TextureMapBlocks`
+  `getAtlasSprite(fluid.getStill(stack))`; still textures stitched by ported
+  `FluidTextureRegisterListener` (same as 1.12.2 `ClientProxy` listener).
+- Block model: static full-frame `models/block/tank.json` (verbatim `tank_frame.json`
+  elements + particle). The 1.12.2 `openmods:variantmodel` edge-hiding (Karnaugh expressions
+  over 18 neighbours) has no 1.8.9 loader counterpart — KNOWN DEVIATION v1: internal frame
+  strips render between connected tanks; fluid-wall culling (the salient part) is kept via
+  the ported `TankRenderLogic`. Item model: static frame (`models/item/tank.json` parents the
+  block model); per-level `tank_fluid_N` item submodels impossible (no `ItemOverride` in
+  1.8.9) — fluid-in-item shown via tooltip + `%s Tank` name instead (both ported).
+- Sounds: 1.8.9 `Fluid` has no sound hooks — fill plays vanilla `random.splash` (1.8.9 bucket
+  sound). XP drain: `player.addExperience` directly (`EnchantmentUtils.addPlayerXP` is a thin
+  wrapper; only ratio math from `LiquidXpUtils` ported, `FLUID_TO_LEVELS` dropped per §19).
+- `xpJuice` fluid registered as part of this feature (required by tank XP drain; §19):
+  same name/props (`luminosity 10, density 800, viscosity 1500`), sounds adapted to 1.8.9
+  string form. XP Bucket item itself stays a separate future feature (no `BucketFillHandler`).
+- Faithful details kept: 16-bucket capacity, neighbour balancing + bottom-fill column logic,
+  pick-block NBT (incl. the 1.12.2 quirk of normalizing `Amount` to capacity), harvest drops
+  with fluid NBT, comparator output, light emission, creative-search filled-tank listing
+  (gated on `tabAllSearch` like the glider's `isInCreativeTab` equivalent), recipe
+  (obsidian + `paneGlass` → 2), all five `tanks` config keys + `xpToLiquidRatio`.

@@ -11,15 +11,16 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-12 (`c8fd7d5`, code + docs, verified: 39 files incl. `docs/`).
-- **Current feature:** none (Hang Glider COMPLETED 2026-09-12; awaiting next instruction)
-- **Feature status:** Idle — no active feature.
+- **Current feature:** Tank (IN PROGRESS — implemented, built, deployed 2026-09-12; awaiting user test)
+- **Feature status:** Phase C done — `BlockTank` + `TileEntityTank` + `ItemTankBlock` + TESR fluid renderer + xpJuice fluid + recipe + config.
 - **Last completed feature:** Hang Glider (user-confirmed COMPLETED 2026-09-12)
 - **Current problem:** none — all issues closed, tree clean, no TEMPORARY code.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (60,224 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (unstackable glider)
-- **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-12 03:12 (unrelated mods untouched)
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (132,610 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (Tank implemented)
+- **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-12 03:52 (unrelated mods untouched)
 - **Last user test result (2026-09-12):** Hang Glider COMPLETED (user-confirmed; incl. GUI parity
-  + unstackable glider). No active testing.
+  + unstackable glider). Tank NOT YET TESTED — needs: place/craft, bucket fill, fluid render,
+  stacking/balancing, break-keeps-fluid, comparator, XP drain, search listing.
 - **Known issues:** see `KNOWN_ISSUES.md`
 - **Important discoveries:**
   - `OpenBlocks-1.12.X/OpenModsLib/` submodule directory is EMPTY — the lib source of truth is the
@@ -31,9 +32,11 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. SESSION HANDOFF — new session starts here: tree clean at `a941c94`, debug audit passed
-     (zero markers), GitHub subtree pushed + verified (`d204756`). Read §16 order, then await
-     user's next feature instruction (Hang Glider COMPLETED).
+  1. USER TEST Tank in `1.8.9(6)`: craft (obsidian+glass), place, water-bucket fill,
+     fluid render visible, stack 2+ tanks (balance), break (keeps fluid, re-place keeps it),
+     comparator output, creative-search filled tanks, empty-hand click on water (nothing).
+     XP drain needs xpJuice (no bucket yet — testable only via creative filled tank if listed).
+  2. Fix loop on user screenshots/logs, then commit/test cycles per feature.
 - **Last known-good Git commit:** `623e748` (session handoff; code checkpoint `61977ae`, built + deployed, 2026-09-12)
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made

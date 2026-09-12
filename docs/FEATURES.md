@@ -5,7 +5,8 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-_none — awaiting user's next feature instruction._
+- Tank (`BlockTank` + `TileEntityTank` + `ItemTankBlock` + TESR fluid renderer + xpJuice fluid).
+  Phase A/B done 2026-09-12 (see PORTING_LOG + ARCHITECTURE); implementing.
 
 ## COMPLETED
 
