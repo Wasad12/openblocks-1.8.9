@@ -190,6 +190,10 @@ lang keys (already in our `en_US.lang`: `tile.openblocks.tank.*`, `fluid.openblo
   fluid + level, cache cleared on every bake (sprite reload-safe). Compiler lessons: 1.8.9
   `BakedQuad` carries no sprite (dropped `setTexture`); `ISmartItemModel` extends plain
   `IBakedModel` (no `getFormat` — that comes from `IPerspectiveAwareModel`'s branch).
+  Crash lesson (fix loop 3): 1.8.9 ITEM vertex format has a 5th PADDING_1B element
+  (PROVED via `javap -c` on `DefaultVertexFormats`); `UnpackedBakedQuad.Builder` counts
+  puts per vertex against the format, so every vertex needs the padding `put` too —
+  done generically via `getElementCount()`.
 - Fill sound (fix loop 2): 1.8.9 `ItemBucket` bytecode VERIFIED to reference only
   `random.fizz` (lava; water placement is silent) — the 1.12.2 fluid empty-sound has no
   1.8.9 asset. Faithful behavior: lava → `random.fizz`, everything else silent

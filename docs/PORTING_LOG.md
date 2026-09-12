@@ -700,3 +700,18 @@ tanks show the empty icon in inventory, (3) fill sound wrong. All three fixed, s
    else silent (1.12.2's pour asset doesn't exist on 1.8.9).
 Build: `:reobfJar` BUILD SUCCESSFUL → 153,254 bytes (12 edge JSONs + 3 model classes
 VERIFIED inside), deployed (unrelated mods untouched). Awaiting user retest of all three.
+
+---
+
+## 2026-09-12 — Feature: Tank (fix loop 3 — item-fluid hotbar crash, ROOT CAUSE FOUND)
+
+User pasted `crash-2026-09-12_04.11.00-client.txt`: `IllegalStateException: not enough
+data` in `UnpackedBakedQuad$Builder.build`, via `TankItemModel` while rendering a full
+water tank in the hotbar. Root cause PROVED via `javap -c` on 1.8.9 `forgeBin`
+`DefaultVertexFormats`: 1.8.9 ITEM = POSITION_3F + COLOR_4UB + TEX_2F + NORMAL_3B +
+**PADDING_1B** = 5 elements per vertex. The builder counts `put()` calls per vertex
+against the format (source fetched from the 1.8.9 Forge branch confirms the counting),
+so my 4 puts/vertex completed only 3.2 vertices → `build()` threw. (The padding byte
+was removed in later versions, which is why 1.12.2-era code omits it.) Fix: pad any
+trailing elements per vertex (queries `getElementCount()`, no hardcoding).
+Rebuilt (`:reobfJar` BUILD SUCCESSFUL → 153,331 bytes), redeployed, awaiting retest.

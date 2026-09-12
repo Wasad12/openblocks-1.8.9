@@ -70,6 +70,12 @@ public class TankItemModel implements ISmartItemModel {
 		builder.put(1, 1, 1, 1, 1);
 		builder.put(2, (float)u, (float)v);
 		builder.put(3, nx, ny, nz);
+		// 1.8.9 ITEM has a 5th PADDING_1B element (PROVED via javap on
+		// DefaultVertexFormats: POSITION_3F + COLOR_4UB + TEX_2F + NORMAL_3B +
+		// PADDING_1B). Builder.build() throws "not enough data" without it — that was
+		// the 04:11 hotbar crash. Pad any trailing elements generically.
+		for (int e = 4; e < DefaultVertexFormats.ITEM.getElementCount(); e++)
+			builder.put(e, 0);
 	}
 
 	private static BakedQuad quad(EnumFacing face, double[] xs, double[] ys, double[] zs, double[] us, double[] vs) {
