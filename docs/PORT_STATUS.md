@@ -10,7 +10,7 @@
 - **GitHub:** `https://github.com/Wasad12/openblocks-1.8.9` (public) — receives ONLY the
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
-  Last push 2026-09-12 (`154070a`, Auto Enchantment Table COMPLETED).
+  Last push 2026-09-12 (`f4a74bb`, docs handoff fixes).
 - **Current feature:** none — Auto Enchantment Table COMPLETED (user-confirmed 2026-09-12).
   Awaiting next feature instruction.
 - **Feature status:** no active feature. May revisit completed features if issues surface later.
@@ -35,10 +35,10 @@
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
   1. Await user's next feature instruction — no active feature, tree clean, all issues closed.
-  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `154070a` 2026-09-12
-     (all local work through `ebcc4aa` now visible). Future pushes need explicit
+  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `f4a74bb` 2026-09-12
+     (all local work through `2375167` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
-- **Last known-good Git commit:** `4603401` (push record; code at `ebcc4aa` matches
+- **Last known-good Git commit:** `2375167` (docs handoff; code at `ebcc4aa` matches
   deployed 436,283-byte JAR).
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
