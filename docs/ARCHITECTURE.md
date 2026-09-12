@@ -180,6 +180,40 @@ lang keys (already in our `en_US.lang`: `tile.openblocks.tank.*`, `fluid.openblo
   and `getDrops` prefers the stash over a world TE lookup (the 1.8.9 break path provably
   calls `getDrops`, yet the lookup observed an empty tank — stash removes the lookup
   from the equation entirely).
+
+### XP Drain + XP Shower (2026-09-12, Phase B plan — behavior preserved, lib adapted)
+
+Source: `BlockXPDrain`/`TileEntityXPDrain`, `BlockXPShower`/`TileEntityXPShower`,
+`EntityXPOrbNoFly`, `FXLiquidSpray`, `EnchantmentUtils` (XP math), recipes
+(iron bars; iron + obsidian), `xp_drain`/`xp_shower` models + textures, lang keys
+(already in our `en_US.lang`).
+
+- No lib port: `OpenTileEntity`/`SyncedTileEntity`/`SyncMap`/`SyncableBoolean`/
+  `GenericTank`/`CompatibilityUtils`/`BlockUtils` replaced with plain `TileEntity` +
+  NBT + `S35` sync (spray flag only) + old `IFluidHandler` + inline AABBs.
+  `FourDirections` orientation dropped for the drain (flat symmetric plate — 1.12.2's
+  orientation variants render identically); shower keeps a vanilla horizontal `FACING`
+  (tank side) + `POWERED`, meta-mapped like 1.12.2 (`0x8` bit).
+- Shower AABB + model rotations: authored-north geometry rotated per facing
+  (E:y90/S:y180/W:y270, vanilla stairs pattern — INFERRED, user eyes verify the arm
+  touches the tank). `canPlaceBlockOnSide` N/S/E/W verbatim; redstone via
+  `isBlockIndirectlyGettingPowered` + `onNeighborBlockChange`/`onBlockAdded`.
+- Drain fills the tank BELOW via old `IFluidHandler.fill(UP, ...)` (our Tank speaks it);
+  orb/player logic + `random.orb` pickup verbatim. Shower pulls 100 mB/cycle from the
+  tank BEHIND (`FACING`) with an xpJuice-only guard, spawns `EntityXPOrbNoFly`
+  (id 709 like 1.12.2; `moveEntity` for 1.8.9, lava plays `random.fizz` like vanilla
+  1.8.9 orbs — 1.12.2's burn sound has no 1.8.9 asset).
+- Orb renderer: 1.12.2 registers NONE (relies on 1.12 superclass fallback); 1.8.9 gets
+  an explicit vanilla `RenderXPOrb` binding (no reliance on fallback).
+- Spray FX: `EntityFX` port (`setParticleIcon` EXISTS in 1.8.9 — VERIFIED via `javap`;
+  `canCollide` does not — dropped, `moveEntity` collides by default); layer 1 =
+  block-atlas sprite like vanilla dig particles. Proxy gains `getParticleSettings` +
+  `spawnLiquidSpray` (server: 2 / no-op).
+- Harvest rules: vanilla defaults both versions (`OpenBlock` sets none) — glass drain
+  and rock shower behave like vanilla glass/stone. No custom sounds beyond `random.orb`.
+- Compiler lessons (fix loop 1, all 1.9-isms caught at build): `Vec3d`→`Vec3`;
+  `BlockStateContainer`→`BlockState`; `getStateForPlacement`→`onBlockPlaced` (same args);
+  no `resetPositionToBB` (inlined from boundingBox); `slipperiness` is a public field.
 - Frame connectivity (fix loop 2, 2026-09-12): 1.8.9 HAS the native counterpart —
   `ISmartBlockModel` (VERIFIED via `javap`), the era mechanism for connected textures.
   New `openblocks.client.model.TankFrameModel` (installed over the static model at

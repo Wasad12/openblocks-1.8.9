@@ -7,14 +7,18 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RenderXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -22,12 +26,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import openblocks.IOpenBlocksProxy;
 import openblocks.OpenBlocks;
 import openblocks.client.bindings.KeyInputHandler;
+import openblocks.client.fx.FXLiquidSpray;
 import openblocks.client.model.GliderItemModel;
 import openblocks.client.model.TankFrameModel;
 import openblocks.client.model.TankItemModel;
 import openblocks.client.renderer.entity.EntityHangGliderRenderer;
 import openblocks.client.renderer.tileentity.TileEntityTankRenderer;
 import openblocks.common.entity.EntityHangGlider;
+import openblocks.common.entity.EntityXPOrbNoFly;
 import openblocks.common.tileentity.TileEntityTank;
 
 public class ClientProxy implements IOpenBlocksProxy {
@@ -42,6 +48,13 @@ public class ClientProxy implements IOpenBlocksProxy {
 			@Override
 			public Render<? super EntityHangGlider> createRenderFor(RenderManager manager) {
 				return new EntityHangGliderRenderer(manager);
+			}
+		});
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityXPOrbNoFly.class, new IRenderFactory<EntityXPOrbNoFly>() {
+			@Override
+			public Render<? super EntityXPOrbNoFly> createRenderFor(RenderManager manager) {
+				return new RenderXPOrb(manager);
 			}
 		});
 
@@ -117,11 +130,35 @@ public class ClientProxy implements IOpenBlocksProxy {
 				ModelLoader.setCustomModelResourceLocation(tankItem, 0,
 						new ModelResourceLocation("openblocks:tank", "inventory"));
 		}
+
+		if (OpenBlocks.Blocks.xpDrain != null) {
+			final Item drainItem = Item.getItemFromBlock(OpenBlocks.Blocks.xpDrain);
+			if (drainItem != null)
+				ModelLoader.setCustomModelResourceLocation(drainItem, 0,
+						new ModelResourceLocation("openblocks:xp_drain", "inventory"));
+		}
+
+		if (OpenBlocks.Blocks.xpShower != null) {
+			final Item showerItem = Item.getItemFromBlock(OpenBlocks.Blocks.xpShower);
+			if (showerItem != null)
+				ModelLoader.setCustomModelResourceLocation(showerItem, 0,
+						new ModelResourceLocation("openblocks:xp_shower", "inventory"));
+		}
 	}
 
 	@Override
 	public boolean isClientPlayer(EntityPlayer player) {
 		return player == Minecraft.getMinecraft().thePlayer;
+	}
+
+	@Override
+	public int getParticleSettings() {
+		return Minecraft.getMinecraft().gameSettings.particleSetting;
+	}
+
+	@Override
+	public void spawnLiquidSpray(World world, FluidStack fluid, double x, double y, double z, float scale, float gravity, Vec3 velocity) {
+		Minecraft.getMinecraft().effectRenderer.addEffect(new FXLiquidSpray(world, fluid, x, y, z, scale, gravity, velocity));
 	}
 
 	// same listener as 1.12.2 ClientProxy.FluidTextureRegisterListener (verbatim).

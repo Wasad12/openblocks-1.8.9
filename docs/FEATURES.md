@@ -5,7 +5,9 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-_none — awaiting user's next feature instruction._
+- XP Drain (`BlockXPDrain` + `TileEntityXPDrain`) + XP Shower (`BlockXPShower` +
+  `TileEntityXPShower` + `EntityXPOrbNoFly` + spray FX). Phase A/B done 2026-09-12;
+  implementing.
 
 ## COMPLETED
 

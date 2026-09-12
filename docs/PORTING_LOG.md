@@ -782,6 +782,47 @@ user request (all fluids silent).
 
 ---
 
+## 2026-09-12 — Feature: XP Drain + XP Shower (Phase A — investigate, 1.12.2 source only)
+
+Source (all VERIFIED by reading): `BlockXPDrain` (glass plate, 1/16 AABB, CUTOUT),
+`TileEntityXPDrain` (drains standing players ≤4 XP/tick + XP orbs into tank BELOW via
+fluid capability, `random.orb` pickup), `BlockXPShower` (FourDirections wall mount,
+POWERED bit, redstone-gated), `TileEntityXPShower` (pulls 100 mB/3 ticks from tank
+BEHIND into 1-bucket xpJuice buffer, spawns `EntityXPOrbNoFly` below, client spray
+particles), `EntityXPOrbNoFly` (no player magnet, lava bounce), `FXLiquidSpray`
+(sprite-textured gravity particle, layer 1), `EnchantmentUtils` XP math, recipes
+(9x iron bars; 3x iron + obsidian), flat models + textures, lang keys present.
+Notable: 1.12.2 registers NO orb renderer (superclass fallback); entity id 709.
+OpenModsLib deps: OpenTileEntity/Synced/SyncableBoolean/GenericTank/compat/block-utils
+(all replaced, see ARCHITECTURE.md).
+
+---
+
+## 2026-09-12 — Feature: XP Drain + XP Shower (Phase B — plan)
+
+Full plan in ARCHITECTURE.md (XP section). Heads-up items: shower arm rotation follows
+the vanilla stairs pattern (INFERRED — needs eyes); orb gets explicit RenderXPOrb;
+spray port drops canCollide (no 1.8.9 field); harvest rules stay vanilla (lib sets
+none); proxy gains spray + particle-setting methods.
+
+---
+
+## 2026-09-12 — Feature: XP Drain + XP Shower (Phase C — implemented, built, deployed)
+
+New: `BlockXPDrain`/`TileEntityXPDrain`, `BlockXPShower`/`TileEntityXPShower` (+FACING/
+POWERED, wall mount, redstone), `EntityXPOrbNoFly` (id 709), `FXLiquidSpray`,
+`EnchantmentUtils` (XP math subset), proxy spray/particle methods, registrations +
+2 recipes, blockstates/models/textures, lang already present. Caught and fixed a real
+self-introduced bug before building (shower drained-then-checked neighbour fluid —
+would void wrong fluids; now simulate-first). One compile iteration for five 1.9-isms
+(Vec3, BlockState, onBlockPlaced, resetPositionToBB, slipperiness field — all in
+ARCHITECTURE.md). `:reobfJar` BUILD SUCCESSFUL, 176,240 bytes (contents VERIFIED),
+deployed (unrelated mods untouched). Awaiting user test: drain players/orbs into tank
+below; shower (redstone-powered, tank behind) pours orbs + spray; arm touches tank;
+orb renderer visible; recipes craft.
+
+---
+
 ## 2026-09-12 — Feature: Hang Glider (post-completion fix — survival hand-hiding)
 
 User: deployed glider hides in hand in creative but NOT in survival (flight itself works

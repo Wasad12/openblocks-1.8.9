@@ -18,11 +18,16 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import openblocks.common.block.BlockTank;
+import openblocks.common.block.BlockXPDrain;
+import openblocks.common.block.BlockXPShower;
 import openblocks.common.entity.EntityHangGlider;
+import openblocks.common.entity.EntityXPOrbNoFly;
 import openblocks.common.item.ItemHangGlider;
 import openblocks.common.item.ItemOBGeneric;
 import openblocks.common.item.ItemTankBlock;
 import openblocks.common.tileentity.TileEntityTank;
+import openblocks.common.tileentity.TileEntityXPDrain;
+import openblocks.common.tileentity.TileEntityXPShower;
 
 @Mod(modid = OpenBlocks.MODID, name = OpenBlocks.NAME, version = OpenBlocks.VERSION, updateJSON = OpenBlocks.UPDATE_JSON)
 public class OpenBlocks {
@@ -36,6 +41,7 @@ public class OpenBlocks {
 	public static final String UPDATE_JSON = "http://openmods.info/versions/openblocks.json"; // HTTP, for wider support
 
 	private static final int ENTITY_HANGGLIDER_ID = 701;
+	private static final int ENTITY_XP_ID = 709;
 
 	@Instance(MODID)
 	public static OpenBlocks instance;
@@ -58,6 +64,8 @@ public class OpenBlocks {
 
 	public static class Blocks {
 		public static BlockTank tank;
+		public static BlockXPDrain xpDrain;
+		public static BlockXPShower xpShower;
 	}
 
 	public static class Fluids {
@@ -90,7 +98,16 @@ public class OpenBlocks {
 		GameRegistry.registerBlock(Blocks.tank, ItemTankBlock.class, "tank");
 		GameRegistry.registerTileEntity(TileEntityTank.class, "openblocks_tank");
 
+		Blocks.xpDrain = new BlockXPDrain();
+		GameRegistry.registerBlock(Blocks.xpDrain, net.minecraft.item.ItemBlock.class, "xp_drain");
+		GameRegistry.registerTileEntity(TileEntityXPDrain.class, "openblocks_xp_drain");
+
+		Blocks.xpShower = new BlockXPShower();
+		GameRegistry.registerBlock(Blocks.xpShower, net.minecraft.item.ItemBlock.class, "xp_shower");
+		GameRegistry.registerTileEntity(TileEntityXPShower.class, "openblocks_xp_shower");
+
 		EntityRegistry.registerModEntity(EntityHangGlider.class, "hang_glider", ENTITY_HANGGLIDER_ID, instance, 64, 1, true);
+		EntityRegistry.registerModEntity(EntityXPOrbNoFly.class, "xp_orb_no_fly", ENTITY_XP_ID, instance, 64, 1, true);
 
 		proxy.preInit();
 	}
@@ -114,6 +131,16 @@ public class OpenBlocks {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.tank, 2),
 				"ogo", "ggg", "ogo",
 				'o', net.minecraft.init.Blocks.obsidian, 'g', "paneGlass"));
+
+		// xp drain (mirrors 1.12.2 xp_drain_0.json: 9x iron bars)
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.xpDrain),
+				"iii", "iii", "iii",
+				'i', net.minecraft.init.Blocks.iron_bars));
+
+		// xp shower (mirrors 1.12.2 xp_shower_0.json: 3x iron + obsidian)
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.xpShower),
+				"iii", "  o",
+				'i', "ingotIron", 'o', net.minecraft.init.Blocks.obsidian));
 
 		proxy.init();
 		proxy.registerRenderInformation();
