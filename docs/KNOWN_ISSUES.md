@@ -1,0 +1,10 @@
+# Known Issues
+
+| # | Description | Affected | Reproduction | Suspected cause | Investigation | Status |
+|---|-------------|----------|--------------|-----------------|---------------|--------|
+| 1 | `OpenBlocks-1.12.X/OpenModsLib/` submodule is empty; lib source lives in sibling `OpenModsLib-1.12.X/` | Build/scaffold | List dir → 0 entries (VERIFIED 2026-09-11) | Submodule never initialized on this machine | Decided with Hang Glider: NO lib port — per-feature local equivalents only (see ARCHITECTURE.md) | Closed 2026-09-12 |
+| 2 | No 1.8.9 Gradle scaffold exists | All | No 1.8.9 project in workspace (VERIFIED 2026-09-11) | Project not started | Scaffolded with Hang Glider: builds, reobfs, deploys, pushed to GitHub | Closed 2026-09-12 |
+| 3 | Uncertain 1.8.9 MCP names | Hang Glider | Static uncertainty | MCP mapping differences | Resolved 2026-09-11 by compiler + mapping data (see PORTING_LOG) | Closed |
+| 4 | TPP body rotation via `RenderLivingEvent` (was INFERRED) | Hang Glider | Third/second person while gliding | Different injection mechanism | Conjugation transform derived + verified against Forge 1.8.9 patch | Closed — user confirmed FIXED 2026-09-11 |
+| 5 | Glide distance shorter than 1.12.2 in rain/snow | Hang Glider | Standing jump in precipitation, short hop | Original 1.12.2 behavior (rain suppression branch), NOT a port bug | GLIDERDBG traces + user verification 2026-09-12 | Closed — user confirmed 2026-09-12 |
+| 6 | Item models didn't bake: our JSONs inherited 1.12.2's `"parent": "item/generated"`, a file that doesn't exist in 1.8.9 vanilla (parent load in `resolveDependencies` threw the FNFE; log only showed the variant) | Hang Glider | Was: missing/invisible item models | 1.9+ parent file used on 1.8.9 | Root cause PROVED via vanilla-jar inventory + diamond_sword.json parent + full causal chain | Closed — user confirmed TPP identical to 1.12.2 on 2026-09-12 |
