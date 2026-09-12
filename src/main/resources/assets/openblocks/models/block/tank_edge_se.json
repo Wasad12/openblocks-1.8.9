@@ -1,0 +1,58 @@
+{
+    "textures":  {
+                     "frame":  "openblocks:blocks/tank"
+                 },
+    "elements":  [
+                     {
+                         "name":  "se",
+                         "from":  [
+                                      -0.1,
+                                      0.1,
+                                      15.9
+                                  ],
+                         "to":  [
+                                    0.1,
+                                    15.9,
+                                    16.1
+                                ],
+                         "faces":  {
+                                       "north":  {
+                                                     "texture":  "#frame",
+                                                     "uv":  [
+                                                                0.0,
+                                                                0.0,
+                                                                0.1,
+                                                                7.9
+                                                            ]
+                                                 },
+                                       "east":  {
+                                                    "texture":  "#frame",
+                                                    "uv":  [
+                                                               0.0,
+                                                               0.0,
+                                                               0.1,
+                                                               7.9
+                                                           ]
+                                                },
+                                       "south":  {
+                                                     "texture":  "#frame",
+                                                     "uv":  [
+                                                                0.0,
+                                                                0.0,
+                                                                0.1,
+                                                                7.9
+                                                            ]
+                                                 },
+                                       "west":  {
+                                                    "texture":  "#frame",
+                                                    "uv":  [
+                                                               0.0,
+                                                               0.0,
+                                                               0.1,
+                                                               7.9
+                                                           ]
+                                                }
+                                   }
+                     }
+                 ]
+}

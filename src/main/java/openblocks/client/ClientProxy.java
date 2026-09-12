@@ -23,6 +23,8 @@ import openblocks.IOpenBlocksProxy;
 import openblocks.OpenBlocks;
 import openblocks.client.bindings.KeyInputHandler;
 import openblocks.client.model.GliderItemModel;
+import openblocks.client.model.TankFrameModel;
+import openblocks.client.model.TankItemModel;
 import openblocks.client.renderer.entity.EntityHangGliderRenderer;
 import openblocks.client.renderer.tileentity.TileEntityTankRenderer;
 import openblocks.common.entity.EntityHangGlider;
@@ -55,6 +57,9 @@ public class ClientProxy implements IOpenBlocksProxy {
 			// same as 1.12.2 ClientProxy: stitch every registered fluid's still icon
 			// (mod fluids like xpJuice are NOT stitched automatically on 1.8.9).
 			MinecraftForge.EVENT_BUS.register(new FluidTextureRegisterListener());
+			// connected frame edges (fix 1) + fluid in item (fix 2); both reload-safe.
+			MinecraftForge.EVENT_BUS.register(new TankFrameModel.BakeHandler());
+			MinecraftForge.EVENT_BUS.register(new TankItemModel.BakeHandler());
 		}
 	}
 

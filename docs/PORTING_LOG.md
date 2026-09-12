@@ -682,3 +682,21 @@ fluid did — exactly the reported symptom. 1.12.2 `OpenBlock` extends plain `Bl
 (render type MODEL), so the original never hits this. Fix: `BlockTank.getRenderType()`
 returns 3 (MODEL). Rebuilt (`:reobfJar` BUILD SUCCESSFUL → 132,622 bytes), redeployed,
 committed (`e065b7d`). Awaiting user retest.
+
+---
+
+## 2026-09-12 — Feature: Tank (fix loop 2 — connectivity + item fluid + sound)
+
+User reports after render-type fix: (1) adjacent-tank frames don't connect, (2) filled
+tanks show the empty icon in inventory, (3) fill sound wrong. All three fixed, same build:
+1. Connectivity: `TankFrameModel` smart block model (12 edge pieces + verbatim Karnaugh
+   expressions + unlisted neighbour state; static model = fallback/inventory parent).
+2. Item fluid: `TankItemModel` smart item model (procedural fluid box, 16 levels, per
+   fluid+level cache cleared on bake). Compiler schooled two 1.8.9 shapes: no
+   `Builder.setTexture` (quads carry no sprite pre-1.9) and no `getFormat` on
+   `ISmartItemModel` (both VERIFIED via `javap` afterwards).
+3. Sound: was `random.splash` (entity-splash noise — wrong); `ItemBucket` bytecode
+   PROVES 1.8.9 water placement is silent, lava fizzes. Now: lava → `random.fizz`,
+   else silent (1.12.2's pour asset doesn't exist on 1.8.9).
+Build: `:reobfJar` BUILD SUCCESSFUL → 153,254 bytes (12 edge JSONs + 3 model classes
+VERIFIED inside), deployed (unrelated mods untouched). Awaiting user retest of all three.

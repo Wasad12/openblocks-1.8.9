@@ -1,0 +1,58 @@
+{
+    "textures":  {
+                     "frame":  "openblocks:blocks/tank"
+                 },
+    "elements":  [
+                     {
+                         "name":  "tw",
+                         "from":  [
+                                      -0.1,
+                                      15.9,
+                                      0.1
+                                  ],
+                         "to":  [
+                                    0.1,
+                                    16.1,
+                                    15.9
+                                ],
+                         "faces":  {
+                                       "east":  {
+                                                    "texture":  "#frame",
+                                                    "uv":  [
+                                                               0.0,
+                                                               0.0,
+                                                               7.9,
+                                                               0.1
+                                                           ]
+                                                },
+                                       "west":  {
+                                                    "texture":  "#frame",
+                                                    "uv":  [
+                                                               0.0,
+                                                               0.0,
+                                                               7.9,
+                                                               0.1
+                                                           ]
+                                                },
+                                       "up":  {
+                                                  "texture":  "#frame",
+                                                  "uv":  [
+                                                             0.0,
+                                                             0.0,
+                                                             0.1,
+                                                             7.9
+                                                         ]
+                                              },
+                                       "down":  {
+                                                    "texture":  "#frame",
+                                                    "uv":  [
+                                                               0.0,
+                                                               0.0,
+                                                               0.1,
+                                                               7.9
+                                                           ]
+                                                }
+                                   }
+                     }
+                 ]
+}

@@ -163,14 +163,11 @@ lang keys (already in our `en_US.lang`: `tile.openblocks.tank.*`, `fluid.openblo
   `getAtlasSprite(fluid.getStill(stack))`; still textures stitched by ported
   `FluidTextureRegisterListener` (same as 1.12.2 `ClientProxy` listener).
 - Block model: static full-frame `models/block/tank.json` (verbatim `tank_frame.json`
-  elements + particle). The 1.12.2 `openmods:variantmodel` edge-hiding (Karnaugh expressions
-  over 18 neighbours) has no 1.8.9 loader counterpart — KNOWN DEVIATION v1: internal frame
-  strips render between connected tanks; fluid-wall culling (the salient part) is kept via
-  the ported `TankRenderLogic`. Item model: static frame (`models/item/tank.json` parents the
-  block model); per-level `tank_fluid_N` item submodels impossible (no `ItemOverride` in
-  1.8.9) — fluid-in-item shown via tooltip + `%s Tank` name instead (both ported).
-- Sounds: 1.8.9 `Fluid` has no sound hooks — fill plays vanilla `random.splash` (1.8.9 bucket
-  sound). XP drain: `player.addExperience` directly (`EnchantmentUtils.addPlayerXP` is a thin
+  elements + particle) as base/fallback and inventory parent. The 1.12.2
+  `openmods:variantmodel` edge-hiding is implemented natively — see "Frame connectivity"
+  below (the old KNOWN DEVIATION v1 is GONE).
+- Sounds: 1.8.9 `Fluid` has no sound hooks — see "Fill sound" below. XP drain:
+  `player.addExperience` directly (`EnchantmentUtils.addPlayerXP` is a thin
   wrapper; only ratio math from `LiquidXpUtils` ported, `FLUID_TO_LEVELS` dropped per §19).
 - `xpJuice` fluid registered as part of this feature (required by tank XP drain; §19):
   same name/props (`luminosity 10, density 800, viscosity 1500`), sounds adapted to 1.8.9
@@ -179,6 +176,24 @@ lang keys (already in our `en_US.lang`: `tile.openblocks.tank.*`, `fluid.openblo
   (INVISIBLE — VERIFIED via `javap`: `iconst_m1`), which is why the placed tank rendered
   nothing while the TESR fluid showed. 1.12.2 `OpenBlock` extends plain `Block` (MODEL),
   so 1.12.2 never hits this. Fix: `BlockTank.getRenderType()` returns 3 (MODEL).
+- Frame connectivity (fix loop 2, 2026-09-12): 1.8.9 HAS the native counterpart —
+  `ISmartBlockModel` (VERIFIED via `javap`), the era mechanism for connected textures.
+  New `openblocks.client.model.TankFrameModel` (installed over the static model at
+  `ModelBakeEvent`, glider-`BakeHandler` pattern): bakes the 12 `tank_edge_*`.json pieces
+  once (exact 1.12.2 geometry/UVs, split from `tank_frame.json`) and combines the visible
+  ones per-block from a new unlisted `TankNeighbourState` property (same 18 flags + same
+  `accepts()` rule as 1.12.2 `NeighbourMap`). The 12 edge expressions are ported verbatim
+  from the `expansions` in 1.12.2's blockstate.
+- Fluid in inventory (fix loop 2): new `TankItemModel` (smart item model over the frame
+  item model): filled tanks show a procedural fluid box (full footprint, sixteenth height
+  like 1.12.2's 17 `tank_fluid_N` models; winding/UVs mirror the TESR), cached per
+  fluid + level, cache cleared on every bake (sprite reload-safe). Compiler lessons: 1.8.9
+  `BakedQuad` carries no sprite (dropped `setTexture`); `ISmartItemModel` extends plain
+  `IBakedModel` (no `getFormat` — that comes from `IPerspectiveAwareModel`'s branch).
+- Fill sound (fix loop 2): 1.8.9 `ItemBucket` bytecode VERIFIED to reference only
+  `random.fizz` (lava; water placement is silent) — the 1.12.2 fluid empty-sound has no
+  1.8.9 asset. Faithful behavior: lava → `random.fizz`, everything else silent
+  (replaces the wrong `random.splash`, which is the entity-splash noise).
 - Faithful details kept: 16-bucket capacity, neighbour balancing + bottom-fill column logic,
   pick-block NBT (incl. the 1.12.2 quirk of normalizing `Amount` to capacity), harvest drops
   with fluid NBT, comparator output, light emission, creative-search filled-tank listing

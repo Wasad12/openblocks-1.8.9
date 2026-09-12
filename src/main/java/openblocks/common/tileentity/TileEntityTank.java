@@ -16,6 +16,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.Chunk.EnumCreateEntityType;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -213,7 +214,10 @@ public class TileEntityTank extends TileEntity implements ITickable, IFluidHandl
 		if (fitted != fluid.amount) return null;
 
 		fillColumn(fluid.copy(), true);
-		getWorld().playSoundAtEntity(player, "random.splash", 1f, 1f);
+		// 1.8.9 vanilla buckets play no pour sound (ItemBucket bytecode VERIFIED: only
+		// "random.fizz" for lava); the 1.12.2 fluid empty-sound has no 1.8.9 equivalent.
+		if (fluid.getFluid() == FluidRegistry.LAVA)
+			getWorld().playSoundAtEntity(player, "random.fizz", 1f, 1f);
 
 		for (FluidContainerRegistry.FluidContainerData data : FluidContainerRegistry.getRegisteredFluidContainerData()) {
 			if (data.filledContainer != null && data.filledContainer.getItem() == container.getItem()

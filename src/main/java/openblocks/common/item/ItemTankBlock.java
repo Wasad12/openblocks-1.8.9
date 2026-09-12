@@ -74,6 +74,12 @@ public class ItemTankBlock extends ItemBlock {
 		return true;
 	}
 
+	public static FluidStack getTankFluid(ItemStack stack) {
+		if (stack == null) return null;
+		final FluidStack fluid = readTank(stack).getFluid();
+		return (fluid != null && fluid.amount > 0 && fluid.getFluid() != null)? fluid : null;
+	}
+
 	private static FluidTank readTank(ItemStack stack) {
 		FluidTank tank = new FluidTank(TileEntityTank.getTankCapacity());
 
