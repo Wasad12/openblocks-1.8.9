@@ -670,3 +670,15 @@ shadowed vanilla import in tab icon — fully qualified now). `:reobfJar` BUILD 
 (Chunk CHECK-enum, 2-arg notify, S35 ctor, floor_double/sin, tabAllSearch, getSubBlocks
 delegation, stitch `map`, CUTOUT layer) compiled clean on first pass.
 Status: awaiting user test (checklist in PORT_STATUS.md).
+
+---
+
+## 2026-09-12 — Feature: Tank (fix loop 1 — invisible block, ROOT CAUSE FOUND)
+
+User: placed tank invisible, liquid shows. Root cause PROVED via `javap` on the 1.8.9
+`forgeBin` jar: `BlockContainer.getRenderType()` returns -1 (`iconst_m1`, INVISIBLE).
+Our `BlockTank` inherited it, so the static frame model never rendered while the TESR
+fluid did — exactly the reported symptom. 1.12.2 `OpenBlock` extends plain `Block`
+(render type MODEL), so the original never hits this. Fix: `BlockTank.getRenderType()`
+returns 3 (MODEL). Rebuilt (`:reobfJar` BUILD SUCCESSFUL → 132,622 bytes), redeployed,
+committed (`e065b7d`). Awaiting user retest.
