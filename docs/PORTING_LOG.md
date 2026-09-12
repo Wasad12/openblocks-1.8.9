@@ -754,6 +754,18 @@ predate the loop-4 geometry build — world frames + icon both need a fresh rete
 
 ---
 
+## 2026-09-12 — Feature: Tank COMPLETED (user-confirmed) + glider fix verified
+
+User: glider survival-hiding "fixed now"; Tank "working and looking fine" after own
+testing - "i think we can move to the next feature". Per section 7 both count as explicit
+confirmation: Tank moves to COMPLETED (fix loops 1-6 included: render type, connectivity
+via true axis geometry, item fluid + padding crash + north winding, NBT drop stash,
+silent fills), glider post-completion fix verified (player-scoped hiding). Final Tank
+build 154,310 bytes deployed in 1.8.9(6)/minecraft/mods. Tree clean. Awaiting next
+feature instruction.
+
+---
+
 ## 2026-09-12 — Feature: Tank (fix loop 6 — survival drops + sound removal)
 
 User: (1) breaking a tank in survival drops an empty tank (fluid lost); (2) remove the

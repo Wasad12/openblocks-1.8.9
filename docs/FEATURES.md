@@ -5,15 +5,16 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-- Tank (`BlockTank` + `TileEntityTank` + `ItemTankBlock` + TESR fluid renderer + xpJuice fluid).
-  Fix loops 1-6 done (see PORTING_LOG); awaiting user retest + completion confirm (§7).
-- Hang Glider (post-completion fix, reported 2026-09-12): deployed hand-hiding worked in
-  creative but not survival. Fix deployed, awaiting user retest.
+_none — awaiting user's next feature instruction._
 
 ## COMPLETED
 
 - Hang Glider (`ItemHangGlider` + `EntityHangGlider` + renderer + vario/thermal + recipes +
   perspective-aware item model + unstackable glider). User-confirmed COMPLETED 2026-09-12.
+  Post-completion survival hand-hiding fix (player-scoped, no identity scan) user-confirmed FIXED 2026-09-12.
+- Tank (`BlockTank` + `TileEntityTank` + `ItemTankBlock` + connected-frame smart model +
+  TESR fluid + item fluid box + xpJuice fluid + recipe + silent fills + harvest-stash NBT
+  drops). User-confirmed COMPLETED 2026-09-12 ("working and looking fine").
 
 ## NOT STARTED
 
