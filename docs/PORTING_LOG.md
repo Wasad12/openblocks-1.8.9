@@ -736,3 +736,18 @@ verbatim), so runtime baking stays transform-free (proven path). `evaluate()` bi
 already matched `EDGES` — unchanged. Item icon: full-tank box already equals 1.12.2's
 `tank_fluid_16` exactly (geometry + UVs), so asking user for a close-up classification.
 Rebuilt (`:reobfJar` BUILD SUCCESSFUL → 154,014 bytes), redeployed.
+
+---
+
+## 2026-09-12 — Feature: Tank (fix loop 5 — item icon half-empty, ROOT CAUSE FOUND)
+
+User classifies the icon: top + left show fluid, right side empty. Shared-edge audit of
+my 6 item quads (closed solids must traverse every shared edge in opposite directions)
+PROVES exactly one face backwards: NORTH ran its UP/WEST shared edges the same way as
+those faces; the other five are pairwise consistent, and top/left visibly rendering
+confirms the analysis orientation (a global flip would hide those too). The order was
+copied from the TESR, which renders fine in-world — so the TESR path must run
+unculled; item quads are culled, hence the missing side. Fix: NORTH reversed (vertex
+to UV pairing kept). In-world TESR deliberately untouched (verified working). Rebuilt
+(`:reobfJar` BUILD SUCCESSFUL, 154,017 bytes), redeployed. NOTE: user's screenshots
+predate the loop-4 geometry build — world frames + icon both need a fresh retest.

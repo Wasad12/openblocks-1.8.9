@@ -98,10 +98,14 @@ public class TankItemModel implements ISmartItemModel {
 		final double vMin = sprite.getMinV(), vMax = sprite.getMaxV();
 
 		final List<BakedQuad> quads = new ArrayList<BakedQuad>();
-		// NORTH (z=0)
+		// NORTH (z=0). NOTE: order deliberately differs from the TESR: the TESR runs
+		// with culling off, but item quads are culled — and a shared-edge audit PROVED
+		// the TESR order backwards here (it traverses the UP/WEST shared edges the same
+		// way as those faces; a closed solid needs opposite directions). In-world TESR
+		// is verified working and stays untouched.
 		quads.add(quad(EnumFacing.NORTH,
-				new double[] { 1, 1, 0, 0 }, new double[] { 0, h, h, 0 }, new double[] { 0, 0, 0, 0 },
-				new double[] { uMax, uMax, uMin, uMin }, new double[] { vMin, vMax, vMax, vMin }));
+				new double[] { 0, 0, 1, 1 }, new double[] { 0, h, h, 0 }, new double[] { 0, 0, 0, 0 },
+				new double[] { uMin, uMin, uMax, uMax }, new double[] { vMin, vMax, vMax, vMin }));
 		// SOUTH (z=1)
 		quads.add(quad(EnumFacing.SOUTH,
 				new double[] { 1, 1, 0, 0 }, new double[] { 0, h, h, 0 }, new double[] { 1, 1, 1, 1 },

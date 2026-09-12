@@ -16,7 +16,7 @@
 - **Last completed feature:** Hang Glider (user-confirmed COMPLETED 2026-09-12)
 - **Current problem:** none — all issues closed, tree clean, no TEMPORARY code.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (154,014 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (Tank fix loop 4: true edge geometry)
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (154,017 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (Tank fix loop 5: item north-face winding)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-12 03:52 (unrelated mods untouched)
 - **Last user test result (2026-09-12):** Hang Glider COMPLETED (user-confirmed; incl. GUI parity
   + unstackable glider). Tank NOT YET TESTED — needs: place/craft, bucket fill, fluid render,
