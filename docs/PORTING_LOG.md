@@ -1215,3 +1215,17 @@ in-tab and update as server state syncs back; plain-block previews are unaffecte
 by the user-observed nozzle growth — no changes there. Rebuilt (BUILD SUCCESSFUL,
 504,066 bytes), redeployed. Awaiting retest: textured nozzles in-world + in-tab,
 output flow to adjacent inventories/tanks.
+
+---
+
+## 2026-09-12 — Feature: Vacuum Hopper (fix loop 2 — tab preview regression, ROOT CAUSE FOUND)
+
+User: output flows ✓, in-world nozzles textured ✓, but the tab preview lost its
+textures (my fix-loop-1 regression). Root cause PROVED via `javap -c` on the 1722
+`forgeBin` `BlockRendererDispatcher`: the in-world order is `getModelForState`
+(PLAIN state) → `getExtendedState` → `handleBlockState`. I had passed the EXTENDED
+state (with unlisted values) into the model lookup, which misses the bake store
+(keyed by plain states) and returns the missing model — hence the untextured tab.
+Fix: dispatcher order restored (lookup plain, render extended). Rebuilt (BUILD
+SUCCESSFUL, 504,067 bytes), redeployed. Awaiting retest: textured body + nozzles
+in-tab, everything else unchanged.
