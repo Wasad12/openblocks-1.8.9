@@ -27,6 +27,9 @@ public class ClientProxy implements IOpenBlocksProxy {
 
 	public ClientProxy() {}
 
+	// TEMPORARY DEBUG (fix loop 4) — holds the resource manager handed to reload listeners.
+	static volatile IResourceManager probeManager = null;
+
 	@Override
 	public void preInit() {
 		new KeyInputHandler().setup();
@@ -44,7 +47,13 @@ public class ClientProxy implements IOpenBlocksProxy {
 		// Passive listener: logs every model location the bake requests for our domain, changes nothing.
 		ModelLoaderRegistry.registerLoader(new ICustomModelLoader() {
 			@Override
-			public void onResourceManagerReload(IResourceManager resourceManager) {}
+			public void onResourceManagerReload(IResourceManager resourceManager) {
+				ClientProxy.probeManager = resourceManager;
+				org.apache.logging.log4j.LogManager.getLogger().info(
+						"[MODELPROBE] reload manager: {}@{}",
+						resourceManager.getClass().getName(),
+						Integer.toHexString(System.identityHashCode(resourceManager)));
+			}
 
 			@Override
 			public boolean accepts(ResourceLocation modelLocation) {
@@ -53,13 +62,30 @@ public class ClientProxy implements IOpenBlocksProxy {
 					probeLog.info("[MODELPROBE] loader asked for '{}' (class {})",
 							modelLocation, modelLocation.getClass().getSimpleName());
 					// Same-thread, bake-time visibility check for the exact file VanillaLoader will request.
-					try {
-						Minecraft.getMinecraft().getResourceManager().getResource(
-								new ResourceLocation(modelLocation.getResourceDomain(),
-										modelLocation.getResourcePath() + ".json"));
-						probeLog.info("[MODELPROBE] bake-time getResource OK: {}", modelLocation);
-					} catch (Exception e) {
-						probeLog.info("[MODELPROBE] bake-time getResource FAIL: {} : {}", modelLocation, e.toString());
+					ResourceLocation exact = new ResourceLocation(modelLocation.getResourceDomain(),
+							modelLocation.getResourcePath() + ".json");
+					IResourceManager game = Minecraft.getMinecraft().getResourceManager();
+					IResourceManager bake = ClientProxy.probeManager;
+					probeLog.info("[MODELPROBE] managers: game={}@{} bake={}@{}",
+							game == null ? "null" : game.getClass().getName(),
+							game == null ? "?" : Integer.toHexString(System.identityHashCode(game)),
+							bake == null ? "null" : bake.getClass().getName(),
+							bake == null ? "?" : Integer.toHexString(System.identityHashCode(bake)));
+					if (game != null) {
+						try {
+							game.getResource(exact);
+							probeLog.info("[MODELPROBE] game-manager getResource OK: {}", exact);
+						} catch (Exception e) {
+							probeLog.info("[MODELPROBE] game-manager getResource FAIL: {} : {}", exact, e.toString());
+						}
+					}
+					if (bake != null) {
+						try {
+							bake.getResource(exact);
+							probeLog.info("[MODELPROBE] bake-manager getResource OK: {}", exact);
+						} catch (Exception e) {
+							probeLog.info("[MODELPROBE] bake-manager getResource FAIL: {} : {}", exact, e.toString());
+						}
 					}
 				}
 				return false;
