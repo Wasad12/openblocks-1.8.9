@@ -10,7 +10,7 @@
 - **GitHub:** `https://github.com/Wasad12/openblocks-1.8.9` (public) — receives ONLY the
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
-  Last push 2026-09-12 (`00acc15`, fix loops 3-4 + docs).
+  Last push 2026-09-12 (`b57f968`, XP completion mark).
 - **Current feature:** none — XP Drain + XP Shower COMPLETED (user-confirmed 2026-09-12).
   Awaiting next feature instruction.
 - **Feature status:** no active feature. May revisit XP Drain/Shower if issues surface later.
@@ -34,13 +34,11 @@
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
   1. Await user's next feature instruction — no active feature, tree clean, all issues closed.
-  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `00acc15` 2026-09-12
-     (all code work through `80551c6` now visible; this completion-mark commit pushes on
-     next explicit request).
-- **Last known-good Git commit:** `80551c6` (XP fix loops 3-4 user-verified, built
-  176,716 bytes + deployed 2026-09-12; src matches deployed JAR).
-- **Last known-good Git commit:** `e1f3596` (XP fix loop 2) + uncommitted fix loops 3-4
-  (src matches deployed 176,716-byte JAR; commit after user confirms).
+  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `b57f968` 2026-09-12
+     (all local work through `3fd8906` now visible). Future pushes need explicit
+     request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
+- **Last known-good Git commit:** `3fd8906` (XP COMPLETED mark; code at `80551c6` matches
+  deployed 176,716-byte JAR).
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
   `git status` permanently list 1369 phantom-modified reference files (content PROVEN identical via
