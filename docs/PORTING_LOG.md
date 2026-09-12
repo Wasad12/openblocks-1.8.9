@@ -751,3 +751,19 @@ unculled; item quads are culled, hence the missing side. Fix: NORTH reversed (ve
 to UV pairing kept). In-world TESR deliberately untouched (verified working). Rebuilt
 (`:reobfJar` BUILD SUCCESSFUL, 154,017 bytes), redeployed. NOTE: user's screenshots
 predate the loop-4 geometry build — world frames + icon both need a fresh retest.
+
+---
+
+## 2026-09-12 — Feature: Tank (fix loop 6 — survival drops + sound removal)
+
+User: (1) breaking a tank in survival drops an empty tank (fluid lost); (2) remove the
+fill sound entirely, lava fizz included. For (1), forensics PROVED the 1.8.9 break path
+(harvestBlock -> dropBlockAsItem -> dropBlockAsItemWithChance -> getDrops, all VERIFIED
+via javap -c, including the TE-alive ordering) DOES call our NBT-aware getDrops, so the
+empty drop means the world TE lookup inside getDrops observed nothing, cause unknown
+statically. Robust fix regardless of cause: harvestBlock override stashes the live TE's
+tank NBT (handed to us directly, no lookup) and getDrops prefers the stash, falling back
+to the live lookup; stash always cleared in finally (sequential server thread, cannot
+leak). If drops are STILL empty, the fluid was never in the TE and the retest answers
+(tooltip mB? pick-block full?) will say so. For (2): fill sound deleted outright per
+user request (all fluids silent).

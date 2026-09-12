@@ -176,6 +176,10 @@ lang keys (already in our `en_US.lang`: `tile.openblocks.tank.*`, `fluid.openblo
   (INVISIBLE — VERIFIED via `javap`: `iconst_m1`), which is why the placed tank rendered
   nothing while the TESR fluid showed. 1.12.2 `OpenBlock` extends plain `Block` (MODEL),
   so 1.12.2 never hits this. Fix: `BlockTank.getRenderType()` returns 3 (MODEL).
+- Survival drops (fix loop 6): `harvestBlock` override stashes the live TE's tank NBT
+  and `getDrops` prefers the stash over a world TE lookup (the 1.8.9 break path provably
+  calls `getDrops`, yet the lookup observed an empty tank — stash removes the lookup
+  from the equation entirely).
 - Frame connectivity (fix loop 2, 2026-09-12): 1.8.9 HAS the native counterpart —
   `ISmartBlockModel` (VERIFIED via `javap`), the era mechanism for connected textures.
   New `openblocks.client.model.TankFrameModel` (installed over the static model at
@@ -194,10 +198,8 @@ lang keys (already in our `en_US.lang`: `tile.openblocks.tank.*`, `fluid.openblo
   (PROVED via `javap -c` on `DefaultVertexFormats`); `UnpackedBakedQuad.Builder` counts
   puts per vertex against the format, so every vertex needs the padding `put` too —
   done generically via `getElementCount()`.
-- Fill sound (fix loop 2): 1.8.9 `ItemBucket` bytecode VERIFIED to reference only
-  `random.fizz` (lava; water placement is silent) — the 1.12.2 fluid empty-sound has no
-  1.8.9 asset. Faithful behavior: lava → `random.fizz`, everything else silent
-  (replaces the wrong `random.splash`, which is the entity-splash noise).
+- Fill sound (fix loop 2): silent for every fluid — DELIBERATE user request
+  (2026-09-12; lava fizz removed too).
 - Faithful details kept: 16-bucket capacity, neighbour balancing + bottom-fill column logic,
   pick-block NBT (incl. the 1.12.2 quirk of normalizing `Amount` to capacity), harvest drops
   with fluid NBT, comparator output, light emission, creative-search filled-tank listing

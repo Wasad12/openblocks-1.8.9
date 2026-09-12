@@ -14,8 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.tileentity.TileEntity;import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
@@ -138,15 +137,38 @@ public class BlockTank extends BlockContainer {
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		ItemStack stack = new ItemStack(this);
 
-		TileEntityTank tile = getTank(world, pos);
-		if (tile != null && tile.getTank().getFluidAmount() > 0) {
-			NBTTagCompound tankTag = tile.getItemNBT();
+		NBTTagCompound tankTag = pendingDropTank;
+		if (tankTag == null) {
+			TileEntityTank tile = getTank(world, pos);
+			if (tile != null && tile.getTank().getFluidAmount() > 0)
+				tankTag = tile.getItemNBT();
+		}
+
+		if (tankTag != null && tankTag.hasKey("FluidName")) {
 			NBTTagCompound itemTag = getItemTag(stack);
 			itemTag.setTag("tank", tankTag);
 		}
 
 		drops.add(stack);
 		return drops;
+	}
+
+	// Harvest-time tank-NBT stash. harvestBlock hands us the live TE directly, so
+	// the drop no longer depends on a world TE lookup inside getDrops (which observed
+	// an empty tank on the 1.8.9 break path even though the path provably calls
+	// getDrops — see PORTING_LOG fix loop 6). Server thread is sequential, and the
+	// field is always cleared in finally, so this cannot leak across harvests.
+	private NBTTagCompound pendingDropTank;
+
+	@Override
+	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te) {
+		if (te instanceof TileEntityTank && ((TileEntityTank)te).getTank().getFluidAmount() > 0)
+			pendingDropTank = ((TileEntityTank)te).getItemNBT();
+		try {
+			super.harvestBlock(world, player, pos, state, te);
+		} finally {
+			pendingDropTank = null;
+		}
 	}
 
 	private static NBTTagCompound getItemTag(ItemStack stack) {
