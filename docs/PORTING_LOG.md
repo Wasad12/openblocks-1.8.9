@@ -767,3 +767,22 @@ to the live lookup; stash always cleared in finally (sequential server thread, c
 leak). If drops are STILL empty, the fluid was never in the TE and the retest answers
 (tooltip mB? pick-block full?) will say so. For (2): fill sound deleted outright per
 user request (all fluids silent).
+
+---
+
+## 2026-09-12 — Feature: Hang Glider (post-completion fix — survival hand-hiding)
+
+User: deployed glider hides in hand in creative but NOT in survival (flight itself works
+in both). Forensics: the hiding rule was my adaptation — scan the client glider map for
+an identity match (`heldItem == stack`) — because 1.8.9's smart-item hook only receives
+the stack, while 1.12.2's property getter also receives the rendering entity and does a
+direct player lookup (`gliderMap.get(player)`, VERIFIED in 1.12.2 source). The code has
+NO mode-dependent branch, so identical code seeing different results means the stack
+objects differ by mode somewhere in vanilla's survival path (exact mechanism unproven;
+not chased further). Fix removes identity from the equation: `handleItemState` now hides
+whenever the stack is a glider and the LOCAL player has a live glider
+(`getGliderFor(thePlayer)`, the same player-scoped `gliderMap.get` lookup the working
+body-tilt already uses). Covers all modes/perspectives; SMP-correct (your glider, your
+hands). The superseded scan (`isStackDeployedGlider`) is deleted; the faithful
+`isHeldStackDeployedGlider` stays (unused, as before). Rebuilt (BUILD SUCCESSFUL,
+154,310 bytes), redeployed. Awaiting retest in BOTH modes.

@@ -63,16 +63,13 @@ public class EntityHangGlider extends Entity implements IEntityAdditionalSpawnDa
 		return player.getHeldItem() == heldStack;
 	}
 
-	public static boolean isStackDeployedGlider(ItemStack stack) {
-		if (stack == null) return false;
-
-		for (Map.Entry<EntityPlayer, EntityHangGlider> e : gliderMap.entrySet()) {
-			final EntityPlayer player = e.getKey();
-			final EntityHangGlider glider = e.getValue();
-			if (player != null && glider != null && !glider.isDead && player.getHeldItem() == stack) return true;
-		}
-
-		return false;
+	// Live glider for a player, or null. Player-scoped like 1.12.2's rule, but
+	// without any ItemStack identity: 1.8.9's smart-item hook only receives the stack,
+	// and identity proved unreliable in survival (see PORTING_LOG glider fix loop).
+	public static EntityHangGlider getGliderFor(EntityPlayer player) {
+		if (player == null) return null;
+		final EntityHangGlider glider = gliderMap.get(player);
+		return (glider != null && !glider.isDead)? glider : null;
 	}
 
 	public static boolean isGliderDeployed(EntityPlayer player) {

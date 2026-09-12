@@ -3,6 +3,7 @@ package openblocks.client.model;
 import java.util.Collections;
 import java.util.List;
 import javax.vecmath.Matrix4f;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -18,6 +20,7 @@ import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import openblocks.common.entity.EntityHangGlider;
+import openblocks.common.item.ItemHangGlider;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -45,7 +48,13 @@ public class GliderItemModel implements ISmartItemModel, IPerspectiveAwareModel 
 	public IBakedModel handleItemState(ItemStack stack) {
 		// Deployed: return this, so the perspective-aware branch below hides the item in
 		// hands but keeps it in the GUI. Folded: the plain baked model (today's behavior).
-		return EntityHangGlider.isStackDeployedGlider(stack)? this : inner;
+		// Player-scoped aliveness (same lookup the body-tilt uses), NOT stack identity:
+		// 1.8.9's hook only receives the stack, and identity proved unreliable in survival
+		// (creative hid, survival didn't — same code, so the objects must differ by mode).
+		if (stack == null || !(stack.getItem() instanceof ItemHangGlider)) return inner;
+		final EntityPlayerSP thePlayer = Minecraft.getMinecraft().thePlayer;
+		if (thePlayer == null) return inner;
+		return EntityHangGlider.getGliderFor(thePlayer) != null? this : inner;
 	}
 
 	@Override

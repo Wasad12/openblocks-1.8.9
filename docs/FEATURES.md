@@ -6,7 +6,9 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 ## IN PROGRESS
 
 - Tank (`BlockTank` + `TileEntityTank` + `ItemTankBlock` + TESR fluid renderer + xpJuice fluid).
-  Phase A/B done 2026-09-12 (see PORTING_LOG + ARCHITECTURE); implementing.
+  Fix loops 1-6 done (see PORTING_LOG); awaiting user retest + completion confirm (§7).
+- Hang Glider (post-completion fix, reported 2026-09-12): deployed hand-hiding worked in
+  creative but not survival. Fix deployed, awaiting user retest.
 
 ## COMPLETED
 
