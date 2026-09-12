@@ -2,12 +2,14 @@ package openmods.utils;
 
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
@@ -36,5 +38,16 @@ public class InventoryUtils {
 			return new InvWrapper((IInventory)te);
 
 		return null;
+	}
+
+	// 1.8.9 adaptation of OpenModsLib InventoryUtils.canInsertStack: 1.8.9 has
+	// ItemHandlerHelper.insertItem but NOT insertItemStacked (VERIFIED absent via
+	// javap), so the probe is insertItem(handler, copy, simulate=true) with a
+	// null-tolerant leftover comparison (null = fully inserted). First used by the
+	// Vacuum Hopper entity selector.
+	public static boolean canInsertStack(IItemHandler handler, ItemStack stack) {
+		if (handler == null || stack == null) return false;
+		final ItemStack leftover = ItemHandlerHelper.insertItem(handler, stack.copy(), true);
+		return leftover == null || leftover.stackSize < stack.stackSize;
 	}
 }

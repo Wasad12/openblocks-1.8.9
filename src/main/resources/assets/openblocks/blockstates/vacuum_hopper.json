@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "normal": { "model": "openblocks:vacuum_hopper_body" }
+    }
+}

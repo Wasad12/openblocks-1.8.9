@@ -30,6 +30,7 @@ import openblocks.client.fx.FXLiquidSpray;
 import openblocks.client.model.GliderItemModel;
 import openblocks.client.model.TankFrameModel;
 import openblocks.client.model.TankItemModel;
+import openblocks.client.model.VacuumHopperModel;
 import openblocks.client.renderer.entity.EntityHangGliderRenderer;
 import openblocks.client.renderer.tileentity.TileEntityAutoEnchantmentTableRenderer;
 import openblocks.client.renderer.tileentity.TileEntityTankRenderer;
@@ -79,6 +80,11 @@ public class ClientProxy implements IOpenBlocksProxy {
 
 		if (OpenBlocks.Blocks.autoEnchantmentTable != null) {
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAutoEnchantmentTable.class, new TileEntityAutoEnchantmentTableRenderer());
+		}
+
+		if (OpenBlocks.Blocks.vacuumHopper != null) {
+			// per-side output nozzles over the static body (TankFrameModel pattern)
+			MinecraftForge.EVENT_BUS.register(new VacuumHopperModel.BakeHandler());
 		}
 	}
 
@@ -164,6 +170,13 @@ public class ClientProxy implements IOpenBlocksProxy {
 			if (anvilItem != null)
 				ModelLoader.setCustomModelResourceLocation(anvilItem, 0,
 						new ModelResourceLocation("openblocks:auto_anvil", "inventory"));
+		}
+
+		if (OpenBlocks.Blocks.vacuumHopper != null) {
+			final Item hopperItem = Item.getItemFromBlock(OpenBlocks.Blocks.vacuumHopper);
+			if (hopperItem != null)
+				ModelLoader.setCustomModelResourceLocation(hopperItem, 0,
+						new ModelResourceLocation("openblocks:vacuum_hopper", "inventory"));
 		}
 	}
 

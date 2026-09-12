@@ -1147,3 +1147,51 @@ correct on first test). Final build 463,781 bytes deployed in
 `1.8.9(6)/minecraft/mods`. Tree clean. Completed tally: Hang Glider, Tank,
 XP Drain + XP Shower, Auto Enchantment Table, Auto Anvil (all user-confirmed).
 Awaiting next feature instruction.
+
+---
+
+## 2026-09-12 — Feature: Vacuum Hopper (Phase A — investigate, 1.12.2 source only)
+
+Source (all VERIFIED by reading): `BlockVacuumHopper` (bounds/collision/selection
+AABBs, ExtendedBlockState + VariantModelState per-side output nozzles, collision
+intake), `TileEntityVacuumHopper` (344 lines: 10 slots, 5-level xpJuice tank,
+item/xp output maps, vacuumDisabled flag, suction physics, portal particles, 10-tick
+neighbour output, sneak-toggle), `ContainerVacuumHopper` (5-wide grid + player inv),
+`GuiVacuumHopper` (SyncedGuiContainer + tank gauge + 2 side tabs), shapeless recipe,
+body + 6 nozzle models + 4 textures, lang keys present in our `en_US.lang`.
+OpenModsLib deps: `SyncableBoolean` (to port), `InventoryUtils.canInsertStack` +
+`ItemUtils.setEntityItemStack` (small, to port/adapt), full sync/inventory/GUI
+stack (all already ported — reused).
+
+---
+
+## 2026-09-12 — Feature: Vacuum Hopper (Phase B — plan)
+
+Full plan in ARCHITECTURE.md ("Vacuum Hopper" section). 1.8.9 facts VERIFIED via
+`javap`: no `insertItemStacked` (adapt canInsertStack to `insertItem`+simulate);
+`EntityItem.setEntityItemStack` exists; `getEntityItem` (not `getItem`); no AABB
+`grow` (use `expand`); Predicate `getEntitiesWithinAABB` exists; `spawnParticle`
+needs 7 doubles; `BlockPartFace` has no UV rotation (nozzle rotation keys ignored,
+cosmetic); `ExtendedBlockState` exists. `getTicks` == `getTotalWorldTime()` (read
+from lib source). Dropped: cannon-projectile branch (no Cannon yet), EnumHand,
+IActivateAwareTile, caps wrappers, fixers.
+
+---
+
+## 2026-09-12 — Feature: Vacuum Hopper (Phase C — implemented, built, deployed)
+
+New: `common/block/BlockVacuumHopper` + `HopperOutputState` (unlisted property),
+`common/tileentity/TileEntityVacuumHopper`, `common/container/ContainerVacuumHopper`,
+`client/gui/GuiVacuumHopper`, `client/model/VacuumHopperModel` (smart nozzles),
+`openmods/sync/SyncableBoolean` + registry line, `InventoryUtils.canInsertStack` +
+registration (block/TE/shapeless recipe) + ClientProxy item model + BakeHandler +
+blockstate/body/item models + 18 script-generated nozzle JSONs + 4 textures (lang
+already had all keys). Zero compile iterations — every INFERRED 1.8.9 name
+(`getEntityItem`, `expand`, Predicate `getEntitiesWithinAABB`, 7-arg
+`spawnParticle`, `ExtendedBlockState`, `Blocks.hopper`, `Items.ender_eye`,
+`addShapelessRecipe`) compiled clean first try. `:reobfJar` BUILD SUCCESSFUL →
+503,784 bytes (all hopper classes + 18 nozzles + textures VERIFIED inside),
+deployed (unrelated mods untouched). Awaiting user test: recipe crafts; placed
+hopper renders (body + nozzle indicators per output side); items/XP orbs get sucked
+in; GUI gauge + item/xp side tabs match 1.12.2; sneak-toggle disables vacuum;
+auto-output to adjacent inventories/tanks.

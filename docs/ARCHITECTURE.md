@@ -365,3 +365,47 @@ Source: `BlockAutoAnvil` (TwoDirections anvil, non-opaque/solid sides), `TileEnt
   transform in 1.8.9); `models/item/auto_anvil.json` = parent + verbatim block-item
   `thirdperson` display (fix-loop-3 lesson, shower precedent). 6 textures copied;
   bare `auto_anvil.png` is unreferenced anywhere in 1.12.2 (VERIFIED by grep) — skipped.
+
+### Vacuum Hopper (2026-09-12, Phase B plan — behavior preserved, nozzle model + caps adapted)
+
+Source: `BlockVacuumHopper` (plain OpenBlock, 0.25-0.75 bounds / ~full collision /
+0.3-0.7 selection, ExtendedBlockState + VariantModelState nozzle indicators,
+entity-collision intake), `TileEntityVacuumHopper` (344 lines: 10-slot inventory,
+xpJuice tank for 5 levels, item/xp output side-maps, vacuumDisabled flag, suction
+physics + portal particles, neighbour output every 10 ticks, sneak-toggle),
+`ContainerVacuumHopper` (5-wide grid + player inv at 69, 176x151 GUI),
+`GuiVacuumHopper` (tank gauge in raw mB, item/xp side tabs), shapeless recipe
+(hopper + obsidian + ender eye), body + 6 nozzle models + 4 textures, lang keys
+(already in our `en_US.lang`).
+
+- New ports under the same packages: `SyncableBoolean` (verbatim — `SyncableObjectBase`
+  + `ISyncableValueProvider` exist; registered in preInit like the other sync types),
+  `InventoryUtils.canInsertStack` (added to our existing `InventoryUtils` — 1.8.9 has
+  `insertItem` but NOT `insertItemStacked` (VERIFIED absent via `javap`), so the check
+  is `insertItem(handler, copy, true)` with null-tolerant leftover comparison instead
+  of `insertItemStacked`; `ItemHandlerHelper.insertItem` itself exists).
+  `ItemUtils.setEntityItemStack` stays a private TE helper (full `ItemUtils` pulls
+  hashing deps per §19; `EntityItem.setEntityItemStack` VERIFIED to exist in 1.8.9).
+- Dropped: `EntityItemProjectile` branch of the entity selector (cannon entity — NOT
+  STARTED, no such entities can exist; restored with the Cannon feature), `EnumHand`
+  (single-hand sneak check via `getHeldItem()` null), `IActivateAwareTile` (block
+  handles sneak-toggle inline, same outcome), fluid/item capability wrappers
+  (old `IFluidHandler` drain-only on xp sides + item-handler cap, enchant-table
+  pattern), fixers/IncludeInterface (precedent).
+- 1.8.9 API facts (all VERIFIED via `javap` unless noted): `EntityItem.
+  getEntityItem()` (not `getItem()`); `EntityXPOrb.getXpValue()` (XPDrain precedent);
+  `AxisAlignedBB` has NO `grow` (use `expand(3,3,3)` — identical); `getEntitiesWithinAABB`
+  3-arg guava-Predicate overload exists; `spawnParticle` needs 7 doubles (block-center
+  + jitter position, zero motion — the 1.12.2 4-arg call has no 1.8.9 overload);
+  `OpenMods.proxy.getTicks` == `getTotalWorldTime()` (read from the lib source);
+  `ExtendedBlockState` exists (unused by Tank, used here); `BlockPartFace` has NO UV
+  rotation in 1.8.9 — nozzle `"rotation"` keys are silently ignored (cosmetic only,
+  outer nozzle faces carry none); `addInventoryGrid` row math fits 10 slots in 2x5.
+- Nozzle model (TankFrameModel precedent): new `VacuumHopperModel` ISmartBlockModel
+  installed at ModelBakeEvent over the static body — body ALWAYS renders, plus one
+  nozzle piece per side present in the output state. New `HopperOutputState` unlisted
+  property (`Map<String,String>`, TankNeighbourState pattern) fed from TE.
+  `getOutputState()` via `ExtendedBlockState`; 18 nozzle JSONs script-generated from
+  the 6 side geometries × items/fluids/both textures (1.8.9 variants can't override
+  textures). Item model = body parent + verbatim block-item display (shower pattern).
+  Bare `vacuum_hopper.png` unreferenced in 1.12.2 (VERIFIED by grep) — skipped.

@@ -20,6 +20,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import openblocks.common.block.BlockAutoAnvil;
 import openblocks.common.block.BlockAutoEnchantmentTable;
 import openblocks.common.block.BlockTank;
+import openblocks.common.block.BlockVacuumHopper;
 import openblocks.common.block.BlockXPDrain;
 import openblocks.common.block.BlockXPShower;
 import openblocks.common.entity.EntityHangGlider;
@@ -28,6 +29,7 @@ import openblocks.common.item.ItemHangGlider;
 import openblocks.common.item.ItemOBGeneric;
 import openblocks.common.item.ItemTankBlock;
 import openblocks.common.tileentity.TileEntityAutoAnvil;
+import openblocks.common.tileentity.TileEntityVacuumHopper;
 import openblocks.common.tileentity.TileEntityAutoEnchantmentTable;
 import openblocks.common.tileentity.TileEntityTank;
 import openblocks.common.tileentity.TileEntityXPDrain;
@@ -72,6 +74,7 @@ public class OpenBlocks {
 		public static BlockXPShower xpShower;
 		public static BlockAutoEnchantmentTable autoEnchantmentTable;
 		public static BlockAutoAnvil autoAnvil;
+		public static BlockVacuumHopper vacuumHopper;
 	}
 
 	public static class Fluids {
@@ -120,7 +123,12 @@ public class OpenBlocks {
 		GameRegistry.registerBlock(Blocks.autoAnvil, net.minecraft.item.ItemBlock.class, "auto_anvil");
 		GameRegistry.registerTileEntity(TileEntityAutoAnvil.class, "openblocks_auto_anvil");
 
+		Blocks.vacuumHopper = new BlockVacuumHopper();
+		GameRegistry.registerBlock(Blocks.vacuumHopper, net.minecraft.item.ItemBlock.class, "vacuum_hopper");
+		GameRegistry.registerTileEntity(TileEntityVacuumHopper.class, "openblocks_vacuum_hopper");
+
 		// syncable field types (local table — 1.8.9 has no data registries)
+		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableBoolean.class);
 		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableInt.class);
 		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableTank.class);
 		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableSides.class);
@@ -181,6 +189,10 @@ public class OpenBlocks {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.autoAnvil),
 				"iii", "iai", "rrr",
 				'i', "ingotIron", 'a', net.minecraft.init.Blocks.anvil, 'r', "dustRedstone"));
+
+		// vacuum hopper (mirrors 1.12.2 vacuum_hopper_0.json: shapeless hopper + obsidian + ender eye)
+		GameRegistry.addShapelessRecipe(new ItemStack(Blocks.vacuumHopper),
+				net.minecraft.init.Blocks.hopper, net.minecraft.init.Blocks.obsidian, net.minecraft.init.Items.ender_eye);
 
 		proxy.init();
 		proxy.registerRenderInformation();

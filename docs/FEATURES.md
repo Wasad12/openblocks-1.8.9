@@ -5,7 +5,9 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-_none — awaiting next feature instruction._
+- Vacuum Hopper (`BlockVacuumHopper` + `TileEntityVacuumHopper` +
+  `ContainerVacuumHopper` + `GuiVacuumHopper` + nozzle smart model + shapeless
+  recipe). Phase B planned 2026-09-12, implementing.
 
 ## COMPLETED
 

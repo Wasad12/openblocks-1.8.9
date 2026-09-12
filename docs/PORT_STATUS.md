@@ -11,14 +11,13 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-12 (`924d78d`, Auto Anvil complete — all work through `571b15f`).
-- **Current feature:** none — Auto Anvil COMPLETED (user-confirmed 2026-09-12).
-  Awaiting next feature instruction.
-- **Feature status:** no active feature. May revisit completed features if issues surface later.
+- **Current feature:** Vacuum Hopper — Phase B planned, implementing (Phase C).
+- **Feature status:** Vacuum Hopper IN PROGRESS. May revisit completed features if issues surface later.
 - **Last completed feature:** Auto Anvil (user-confirmed COMPLETED 2026-09-12).
   Prior: Auto Enchantment Table, XP Drain + XP Shower, Tank, Hang Glider (all user-confirmed).
 - **Current problem:** none — no open problems, no TEMPORARY code.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (463,781 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (Auto Anvil Phase C, first try, zero compile iterations)
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (503,784 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (Vacuum Hopper Phase C, first try, zero compile iterations)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-12 (unrelated mods untouched)
 - **Last user test result (2026-09-12):** Auto Enchantment Table COMPLETED ("works exactly
   like 1.12.2" — visuals/tabs identical, settings persist, auto-drink works). Prior: XP
@@ -34,7 +33,7 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Await user's next feature instruction — no active feature, tree clean, all issues closed.
+  1. Implement Vacuum Hopper (Phase C) — build, deploy, await user test.
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `f4a74bb` 2026-09-12
      (all local work through `2375167` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
