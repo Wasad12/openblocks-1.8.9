@@ -213,19 +213,20 @@ Source: `BlockXPDrain`/`TileEntityXPDrain`, `BlockXPShower`/`TileEntityXPShower`
   and rock shower behave like vanilla glass/stone. No custom sounds beyond `random.orb`.
 - Shower blockstate (fix loop 1): must enumerate facing x powered (8 combos) — 1.8.9
   falls back to the missing model for any valid state without a variant entry.
-- Drain item display (fix loop 1): flat plate gets the verbatim vanilla flat-item
-  `display` (thirdperson [-90,0,0]/[0,1,-3]/0.55 + firstperson sword values — shared by
-  redstone/hopper/torch/cauldron, VERIFIED in the client jar), same family as the
-  glider TPP fix. OPEN: shower-held and tank-held TPP symptoms need screenshots first.
-- TPP-held block look (fix loop 2): 1.12.2 renders these via `forge:default-block`
-  (TPP = convert(0, 2.5, 0, 75, 45, 0, 0.375) — read from the real 1.12.x
-  `ForgeBlockStateV1` source). 1.8.9 JSON cannot express the center-to-corner fold, so
-  new `HeldBlockPerspective` composes the identical matrix in vecmath and applies it
-  through `IPerspectiveAwareModel` on tank (empty + filled) and shower items, TPP only.
-  1.8.9 applies plain-model transforms unwrapped (VERIFIED: `handleCameraTransforms`
-  takes the vanilla branch for non-perspective models) — third confirmation that 1.12.2
-  numbers never transfer literally. Drain keeps its flat display (its 1.12.2 blockstate
-  is plain vanilla = different case).
+- Drain item display (fix loop 1, SUPERSEDED by fix loop 3): flat plate first got the
+  verbatim vanilla flat-item `display` — wrong family (1.12.2 renders ALL THREE via
+  `forge:default-block`, i.e. 3D block look, not flat).
+- TPP-held block look (fix loop 2, SUPERSEDED by fix loop 3): custom
+  `HeldBlockPerspective` vecmath fold via `IPerspectiveAwareModel` rendered tank/shower
+  invisible in hand (non-TPP zero-matrix `new Matrix4f()` collapses to a point — PROVED
+  by vecmath run; TPP fold degenerate in-game). DELETED. Fix loop 3 (faithful,
+  glider-lesson): all three item JSONs carry the verbatim vanilla 1.8.9 block-item
+  `display` (thirdperson [10,-45,170]/[0,1.5,-2.75]/0.375 — stone/glass, read from the
+  client jar); FPP has no override (vanilla block default, like stone). `TankItemModel`
+  stays as a plain `ISmartItemModel` (fluid box only, no perspective).
+- Shower hitbox (fix loop 3): `unionForFacing` returned full-length axis boxes
+  (N+S both z0-16, E+W both x0-16). Fixed to directional half-boxes matching the
+  per-facing arm (N:z0-9, S:z7-16, E:x7-16, W:x0-9; y7-9).
 - Compiler lessons (fix loop 1, all 1.9-isms caught at build): `Vec3d`→`Vec3`;
   `BlockStateContainer`→`BlockState`; `getStateForPlacement`→`onBlockPlaced` (same args);
   no `resetPositionToBB` (inlined from boundingBox); `slipperiness` is a public field.

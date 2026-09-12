@@ -6,6 +6,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import openblocks.OpenBlocks;
 
@@ -40,7 +41,12 @@ public class BlockXPDrain extends Block {
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
-		return AABB;
+		return AABB.offset(pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
+		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.0625F, 1.0F);
 	}
 
 	@Override

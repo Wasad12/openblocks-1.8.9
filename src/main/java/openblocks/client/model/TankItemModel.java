@@ -6,17 +6,13 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.model.IFlexibleBakedModel;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -34,8 +30,15 @@ import openblocks.common.tileentity.TileEntityTank;
  *
  * <p>Installed over the static frame item model at {@link ModelBakeEvent} (the static
  * model stays for empty tanks).</p>
+ *
+ * <p>Deliberately a plain {@link ISmartItemModel} with NO perspective wrapper:
+ * held transforms come from the item JSON {@code display} block (vanilla block-item
+ * values, stone/glass verbatim), the 1.8.9-native equivalent of 1.12.2's
+ * {@code forge:default-block}. A custom {@code IPerspectiveAwareModel} matrix here
+ * rendered tank/shower held items invisible (zero-matrix fallback for non-TPP +
+ * degenerate TPP fold), so it was removed.</p>
  */
-public class TankItemModel implements ISmartItemModel, IPerspectiveAwareModel {
+public class TankItemModel implements ISmartItemModel {
 
 	public static final ModelResourceLocation LOCATION = new ModelResourceLocation("openblocks:tank", "inventory");
 
@@ -50,8 +53,8 @@ public class TankItemModel implements ISmartItemModel, IPerspectiveAwareModel {
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
 		final FluidStack fluid = ItemTankBlock.getTankFluid(stack);
-		// Empty returns this (not raw base) so THIRD_PERSON handling below applies;
-		// quads still come straight from base, so every other context is unchanged.
+		// Empty returns this (frame quads from base); held transforms come from the
+		// item JSON display block either way, so no perspective wrapper is needed.
 		if (fluid == null) return this;
 
 		final int capacity = TileEntityTank.getTankCapacity();
@@ -163,23 +166,12 @@ public class TankItemModel implements ISmartItemModel, IPerspectiveAwareModel {
 	}
 
 	@Override
-	public ItemCameraTransforms getItemCameraTransforms() {
+	public net.minecraft.client.renderer.block.model.ItemCameraTransforms getItemCameraTransforms() {
 		return base.getItemCameraTransforms();
 	}
 
-	@Override
-	public VertexFormat getFormat() {
-		return DefaultVertexFormats.ITEM;
-	}
-
-	@Override
-	public org.apache.commons.lang3.tuple.Pair<? extends IFlexibleBakedModel, javax.vecmath.Matrix4f> handlePerspective(
-			ItemCameraTransforms.TransformType cameraTransformType) {
-		return HeldBlockPerspective.handlePerspective(this, base, cameraTransformType);
-	}
-
 	/** Frame quads from base + procedural fluid box in general quads. */
-	private static final class FilledModel implements IFlexibleBakedModel, IPerspectiveAwareModel {
+	private static final class FilledModel implements IBakedModel {
 		private final IBakedModel base;
 		private final List<BakedQuad> fluid;
 
@@ -221,19 +213,8 @@ public class TankItemModel implements ISmartItemModel, IPerspectiveAwareModel {
 		}
 
 		@Override
-		public ItemCameraTransforms getItemCameraTransforms() {
+		public net.minecraft.client.renderer.block.model.ItemCameraTransforms getItemCameraTransforms() {
 			return base.getItemCameraTransforms();
-		}
-
-		@Override
-		public VertexFormat getFormat() {
-			return DefaultVertexFormats.ITEM;
-		}
-
-		@Override
-		public org.apache.commons.lang3.tuple.Pair<? extends IFlexibleBakedModel, javax.vecmath.Matrix4f> handlePerspective(
-				ItemCameraTransforms.TransformType cameraTransformType) {
-			return HeldBlockPerspective.handlePerspective(this, base, cameraTransformType);
 		}
 	}
 

@@ -28,7 +28,6 @@ import openblocks.OpenBlocks;
 import openblocks.client.bindings.KeyInputHandler;
 import openblocks.client.fx.FXLiquidSpray;
 import openblocks.client.model.GliderItemModel;
-import openblocks.client.model.ShowerItemModel;
 import openblocks.client.model.TankFrameModel;
 import openblocks.client.model.TankItemModel;
 import openblocks.client.renderer.entity.EntityHangGliderRenderer;
@@ -74,10 +73,6 @@ public class ClientProxy implements IOpenBlocksProxy {
 			// connected frame edges (fix 1) + fluid in item (fix 2); both reload-safe.
 			MinecraftForge.EVENT_BUS.register(new TankFrameModel.BakeHandler());
 			MinecraftForge.EVENT_BUS.register(new TankItemModel.BakeHandler());
-		}
-
-		if (OpenBlocks.Blocks.xpShower != null) {
-			MinecraftForge.EVENT_BUS.register(new ShowerItemModel.BakeHandler());
 		}
 	}
 

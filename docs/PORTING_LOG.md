@@ -897,3 +897,67 @@ body-tilt already uses). Covers all modes/perspectives; SMP-correct (your glider
 hands). The superseded scan (`isStackDeployedGlider`) is deleted; the faithful
 `isHeldStackDeployedGlider` stays (unused, as before). Rebuilt (BUILD SUCCESSFUL,
 154,310 bytes), redeployed. Awaiting retest in BOTH modes.
+
+---
+
+## 2026-09-12 — Feature: XP Drain + XP Shower (fix loop 3 — held invisible + shower hitbox)
+
+User screenshots (1.8.9 vs 1.12.2 sets): (1) tank + shower invisible held-TPP,
+(2) drain held-TPP wrong orientation, (3) drain + shower invisible held-FPP,
+(4) shower selection box wrong. Root causes found by comparison + code read:
+
+1-3. Fix loop 2's `HeldBlockPerspective` (custom vecmath default-block fold via
+`IPerspectiveAwareModel`) rendered tank/shower invisible: for non-TPP it returned
+`new Matrix4f()` (PROVED all-zero via vecmath run — collapses item to a point),
+and the TPP fold itself proved degenerate in-game (empty hands). Drain looked
+"wrong" for the opposite reason: it kept the flat-item display (redstone family,
+[-90,0,0]) while 1.12.2 renders ALL THREE via `forge:default-block` (3D block
+look). Fix follows the glider redstone-convergence lesson (vanilla JSON, no custom
+matrices): DELETED `HeldBlockPerspective` + `ShowerItemModel`; `TankItemModel`
+stripped to plain `ISmartItemModel` (fluid box kept, perspective removed);
+all three item JSONs now carry the verbatim vanilla 1.8.9 block-item `display`
+(thirdperson [10,-45,170]/[0,1.5,-2.75]/0.375 — stone/glass, read from client jar).
+FPP intentionally has no override (vanilla block default, like stone).
+
+4. `BlockXPShower.unionForFacing` returned full-length axis boxes (N+S both
+z0-16, E+W both x0-16) — selection stretched through the tank side. Fixed to
+directional half-boxes matching the per-facing rendered arm (N:z0-9, S:z7-16,
+E:x7-16, W:x0-9; y7-9, cross 7-9), consistent with the y90/180/270 blockstate
+rotations.
+
+Build: `:reobfJar` BUILD SUCCESSFUL → 176,453 bytes (no Shower/Held classes,
+fixed JSONs VERIFIED inside), deployed (unrelated mods untouched). Awaiting retest:
+held-TPP/FPP tank(empty+filled)/shower/drain vs 1.12.2, shower box per facing,
+inventory icons, placed-shower texture.
+
+---
+
+## 2026-09-12 — Feature: XP Drain + XP Shower (fix loop 4 — shower solid + selectable)
+
+User: held looks now correct/identical ✓; remaining: shower pass-through + hitbox
+miss (aiming at arm selects tank behind). Two 1.8.9 mechanism bugs, both PROVED via
+`javap` on the 1722 `forgeBin` jar:
+
+1. `addCollisionBoxesToList` adds `getCollisionBoundingBox` DIRECTLY with no offset
+(the default impl builds a world box from min/max fields). Ours returned the LOCAL
+0-1 box, so the solid sat at the world origin — entities at the block never touched
+it. Fixed: both blocks return `.offset(pos)` (shower directional, drain plate).
+2. `collisionRayTrace` uses min/max fields (via `setBlockBoundsBasedOnState`), NOT
+either box method — which we never overrode, so the ray never matched the thin arm
+and fell through to the tank. Fixed: `setBlockBoundsBasedOnState` sets the same
+directional/thin bounds (shower per-facing, drain 1/16 plate).
+
+Build: `:reobfJar` BUILD SUCCESSFUL → 176,716 bytes, deployed (unrelated mods
+untouched). Awaiting retest: walk into shower (should collide), aim at arm (thin
+outline, no tank fall-through), drain bounds unchanged.
+
+---
+
+## 2026-09-12 — Feature: XP Drain + XP Shower (fix loops 3-4 user-verified, pushed)
+
+User: tank held correct, shower + drain held 100% identical to 1.12.2, shower solid +
+hitbox fixed ("all fixed now, push"). Fix loops 3 (perspective-wrapper removal +
+block-item display) and 4 (offset collision + block bounds) both VERIFIED. Committed
+and subtree-pushed to `Wasad12/openblocks-1.8.9` on explicit user request. Feature
+stays IN PROGRESS per §7 until explicit completion confirmation (next feature
+instruction or "completed").

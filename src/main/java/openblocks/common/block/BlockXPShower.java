@@ -68,16 +68,20 @@ public class BlockXPShower extends Block {
 	}
 
 	private static AxisAlignedBB unionForFacing(EnumFacing facing) {
+		// Directional half-boxes matching the rendered arm per blockstate rotation
+		// (authored-north arm x7-9/y7-9/z0-9; east y90, south y180, west y270).
+		// Previous code returned full-length axis boxes (0-16) for both directions
+		// on each axis, so the selection outline extended through the tank side.
 		switch (facing) {
 			case EAST:
-				return box(0, 7, 7, 16, 9, 9);
+				return box(7, 7, 7, 16, 9, 9);
 			case SOUTH:
-				return box(7, 7, 0, 9, 9, 16);
+				return box(7, 7, 7, 9, 9, 16);
 			case WEST:
-				return box(0, 7, 7, 16, 9, 9);
+				return box(0, 7, 7, 9, 9, 9);
 			case NORTH:
 			default:
-				return box(7, 7, 0, 9, 9, 16);
+				return box(7, 7, 0, 9, 9, 9);
 		}
 	}
 
@@ -89,7 +93,19 @@ public class BlockXPShower extends Block {
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
-		return unionForFacing(state.getValue(FACING));
+		// 1.8.9 expects a WORLD-space box here (addCollisionBoxesToList adds it
+		// directly with no offset). Returning the local box made the shower
+		// non-solid (box stuck at origin) — entities passed through.
+		return unionForFacing(state.getValue(FACING)).offset(pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
+		// Mouse picking (collisionRayTrace) uses min/max fields, NOT the boxes
+		// above — without this the ray used a full cube and never matched the
+		// thin rendered arm, so aiming at the shower selected the tank behind.
+		final AxisAlignedBB b = unionForFacing(facingOf(world, pos));
+		setBlockBounds((float)b.minX, (float)b.minY, (float)b.minZ, (float)b.maxX, (float)b.maxY, (float)b.maxZ);
 	}
 
 	@Override

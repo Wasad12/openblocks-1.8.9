@@ -11,16 +11,17 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-12 (`c8fd7d5`, code + docs, verified: 39 files incl. `docs/`).
-- **Current feature:** XP Drain + XP Shower (IN PROGRESS — implemented, built, deployed 2026-09-12; awaiting user test)
+- **Current feature:** XP Drain + XP Shower (IN PROGRESS — fix loops 3-4 user-verified 2026-09-12, ready to push)
 - **Feature status:** Phase C done — both blocks + TEs + NoFly orb (id 709) + spray FX + recipes.
 - **Last completed feature:** Tank (user-confirmed COMPLETED 2026-09-12)
-- **Current problem:** none — all issues closed, tree clean, no TEMPORARY code.
+- **Current problem:** none — all reported visuals verified fixed, tree ready to commit + push.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (182,015 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (XP fix loop 2: default-block TPP matrices)
-- **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-12 03:52 (unrelated mods untouched)
-- **Last user test result (2026-09-12):** Tank COMPLETED (user-confirmed working + looking
-  fine; incl. connected frames, item fluid, silent fills, survival NBT drops) + glider
-  survival hand-hiding fix user-confirmed FIXED. No active testing.
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (176,716 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (XP fix loop 4: solid shower/drain collision + bounds)
+- **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-12 (unrelated mods untouched)
+- **Last user test result (2026-09-12):** XP fix loops 3-4 user-verified — tank held
+  correct, shower + drain held 100% identical to 1.12.2, shower solid + hitbox fixed
+  ("all fixed now"). Prior: Tank COMPLETED (connected frames, item fluid, silent fills,
+  survival NBT drops) + glider survival hand-hiding FIXED.
 - **Known issues:** see `KNOWN_ISSUES.md`
 - **Important discoveries:**
   - `OpenBlocks-1.12.X/OpenModsLib/` submodule directory is EMPTY — the lib source of truth is the
@@ -32,14 +33,11 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. SESSION HANDOFF — new session starts here: tree clean at `e1f3596`, XP Drain/Shower
-     IN PROGRESS (fix loop 2 deployed, UNTESTED). Read §16 order, then await user retest:
-     held-TPP look of drain/shower/tank(empty+filled), placed-shower texture, FPP sanity.
-     Fix loop 1 (shower states, drain display) also UNTESTED — same retest covers it.
-  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `0ae6267` 2026-09-12
-     (all local work through handoff `11c6794` now visible). Future pushes need explicit
-     request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
-- **Last known-good Git commit:** `e1f3596` (XP fix loop 2, built 182,015 bytes + deployed 2026-09-12; src matches deployed JAR)
+  1. COMMIT fix loops 3-4 + PUSH subtree to GitHub on user request ("push").
+  2. GitHub (`Wasad12/openblocks-1.8.9`) last RECEIVED subtree push `0ae6267` 2026-09-12
+     (all local work through handoff `11c6794` now visible). This push brings it current.
+- **Last known-good Git commit:** `e1f3596` (XP fix loop 2) + uncommitted fix loops 3-4
+  (src matches deployed 176,716-byte JAR; commit after user confirms).
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
   `git status` permanently list 1369 phantom-modified reference files (content PROVEN identical via
