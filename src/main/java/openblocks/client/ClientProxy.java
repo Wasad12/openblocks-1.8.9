@@ -33,6 +33,17 @@ public class ClientProxy implements IOpenBlocksProxy {
 	static final java.util.Set<String> probeActive =
 			java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<String, Boolean>());
 
+	// TEMPORARY DEBUG (fix loop 4)
+	static void testProbeResource(org.apache.logging.log4j.Logger log, IResourceManager mgr,
+			String tag, ResourceLocation loc) {
+		try {
+			mgr.getResource(loc);
+			log.info("[MODELPROBE] {} getResource OK: {}", tag, loc);
+		} catch (Exception e) {
+			log.info("[MODELPROBE] {} getResource FAIL: {} : {}", tag, loc, e.toString());
+		}
+	}
+
 	@Override
 	public void preInit() {
 		new KeyInputHandler().setup();
@@ -90,29 +101,35 @@ public class ClientProxy implements IOpenBlocksProxy {
 							probeLog.info("[MODELPROBE] bake-manager getResource FAIL: {} : {}", exact, e.toString());
 						}
 					}
-					// TEMPORARY DEBUG v4: run the EXACT failing call ourselves and log the full
-					// exception chain (Forge swallows the FNFE path). Guarded against re-entrancy.
-					if (modelLocation.getResourcePath().startsWith("models/")
-							&& ClientProxy.probeActive.add(modelLocation.toString())) {
-						try {
-							ResourceLocation file = new ResourceLocation(
-									modelLocation.getResourceDomain(),
-									modelLocation.getResourcePath().substring("models/".length()));
-							try {
-								IModel m = ModelLoaderRegistry.getModel(file);
-								probeLog.info("[MODELPROBE] instrumented getModel OK: {} -> {}",
-										file, m == null ? "null" : m.getClass().getName());
-							} catch (Throwable t) {
-								StringBuilder chain = new StringBuilder(t.toString());
-								for (Throwable c = t.getCause(); c != null; c = c.getCause()) {
-									chain.append(" <= ").append(c.toString());
-								}
-								probeLog.info("[MODELPROBE] instrumented getModel THROW: {} : {}",
-										file, chain.toString());
-							}
-						} finally {
-							ClientProxy.probeActive.remove(modelLocation.toString());
+					// TEMPORARY DEBUG v5: identify the manager VanillaLoader's loader actually uses
+					// (ModelLoader.resourceManager field) and test OUR + TE + vanilla files through it.
+					try {
+						Class<?> vlClass = Class.forName(
+								"net.minecraftforge.client.model.ModelLoader$VanillaLoader");
+						Object instance = vlClass.getField("instance").get(null);
+						java.lang.reflect.Method getLoader = vlClass.getDeclaredMethod("getLoader");
+						getLoader.setAccessible(true);
+						Object loader = getLoader.invoke(instance);
+						java.lang.reflect.Field rmField = loader.getClass().getSuperclass()
+								.getDeclaredField("resourceManager");
+						rmField.setAccessible(true);
+						Object loaderRm = rmField.get(loader);
+						probeLog.info("[MODELPROBE] loader.resourceManager: {}@{}",
+								loaderRm == null ? "null" : loaderRm.getClass().getName(),
+								loaderRm == null ? "?"
+										: Integer.toHexString(System.identityHashCode(loaderRm)));
+						if (loaderRm instanceof IResourceManager) {
+							IResourceManager loaderMgr = (IResourceManager)loaderRm;
+							probeLog.info("[MODELPROBE] loaderRm domains: {}", loaderMgr.getResourceDomains());
+							testProbeResource(probeLog, loaderMgr, "loaderRm",
+									new ResourceLocation("openblocks", "models/item/glider_wing.json"));
+							testProbeResource(probeLog, loaderMgr, "loaderRm",
+									new ResourceLocation("thermalexpansion", "models/item/DustWood.json"));
+							testProbeResource(probeLog, loaderMgr, "loaderRm",
+									new ResourceLocation("minecraft", "models/item/diamond_sword.json"));
 						}
+					} catch (Throwable t) {
+						probeLog.info("[MODELPROBE] reflection FAILED: {}", t.toString());
 					}
 				}
 				return false;
