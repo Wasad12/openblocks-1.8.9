@@ -1229,3 +1229,16 @@ state (with unlisted values) into the model lookup, which misses the bake store
 Fix: dispatcher order restored (lookup plain, render extended). Rebuilt (BUILD
 SUCCESSFUL, 504,067 bytes), redeployed. Awaiting retest: textured body + nozzles
 in-tab, everything else unchanged.
+
+---
+
+## 2026-09-12 — Feature: Vacuum Hopper (fix loop 3 — nozzles missing in-tab, ROOT CAUSE FOUND)
+
+User: tab body textured again, but still no nozzles in-tab (in-world fine). Root
+cause, same bytecode proof as fix loop 2: the DISPATCHER itself calls
+`handleBlockState` — `BlockModelRenderer.renderModel` only consumes plain quads.
+`drawBlock` handed the still-wrapped smart model straight to the renderer, whose
+base-delegating quad getters yield just the body. (In-world never broke because
+the dispatcher unwraps there.) Fix: `drawBlock` mirrors the dispatcher exactly
+(lookup plain → extend → unwrap-if-smart → render). Rebuilt (BUILD SUCCESSFUL,
+504,167 bytes), redeployed. Awaiting retest: nozzles visible + updating in-tab.

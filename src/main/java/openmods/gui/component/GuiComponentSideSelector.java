@@ -126,8 +126,14 @@ public class GuiComponentSideSelector extends BaseComponent implements IValueRec
 		// is exactly the untextured-tab regression), and only the render takes
 		// the extended state. Plain blocks return the state unchanged (Block
 		// default), so their previews are unaffected.
-		final net.minecraft.client.resources.model.IBakedModel model = dispatcher.getBlockModelShapes().getModelForState(blockState);
+		net.minecraft.client.resources.model.IBakedModel model = dispatcher.getBlockModelShapes().getModelForState(blockState);
 		final IBlockState renderState = blockState.getBlock().getExtendedState(blockState, access, FakeBlockAccess.ORIGIN);
+		// Unwrap smart models exactly like BlockRendererDispatcher does (PROVED
+		// via bytecode: getModelForState → getExtendedState → handleBlockState):
+		// the renderer only sees plain quads, so a still-wrapped model renders
+		// just its base (the tab showed the body but never the hopper nozzles).
+		if (model instanceof net.minecraftforge.client.model.ISmartBlockModel)
+			model = ((net.minecraftforge.client.model.ISmartBlockModel)model).handleBlockState(renderState);
 		wr.setTranslation(-0.5, -0.5, -0.5);
 		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 		dispatcher.getBlockModelRenderer().renderModel(access, model, renderState, FakeBlockAccess.ORIGIN, wr, false);
