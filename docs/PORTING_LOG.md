@@ -1261,16 +1261,12 @@ hash-verified untouched; zero pixels still white, verified after save). Rebuilt
 
 ---
 
-## 2026-09-12 — Feature: Vacuum Hopper (fix loop 4 — white nozzle edges, ROOT CAUSE FOUND)
+## 2026-09-12 — Feature: Auto Anvil (post-completion fix — white edge fringes)
 
-User: everything works except thin white lines on nozzle edges, absent in 1.12.2
-(screenshots). Investigation only until approved, per user instruction. Pixel dump
-PROVED all 166 transparent pixels per nozzle texture are white RGB + zero alpha,
-and the nozzle faces sample 1px-narrow strips directly abutting them — filtering
-interpolates grey with neighbouring white (no blending in the opaque pass), while
-1.12.2's upload pipeline bleeds opaque colours outward (INFERRED mechanism for the
-version difference; the white source + strip adjacency are VERIFIED facts).
-User approved the texture colour-bleed fix: nearest-opaque RGB flooded into all
-transparent pixels, alpha kept 0, our 3 copies only (1.12.2 originals
-hash-verified untouched; zero pixels still white, verified after save). Rebuilt
-(BUILD SUCCESSFUL, 504,234 bytes), redeployed. Awaiting retest: edges clean.
+User asked for the same white-fringe fix on the Auto Anvil (COMPLETED feature,
+revisited per the standing agreement). Pixel maps VERIFIED all 6 anvil textures
+contain white-transparent pixels abutting the sampled UV strips (side fringes on
+every face, top-face long edges, a few directly-sampled transparent texels).
+Same user-approved fix: nearest-opaque colour bleed, alpha preserved, zero white
+left (verified after save); 1.12.2 originals untouched. Rebuilt (BUILD
+SUCCESSFUL, 504,320 bytes), redeployed. Awaiting retest: anvil edges clean.
