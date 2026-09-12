@@ -1240,5 +1240,37 @@ cause, same bytecode proof as fix loop 2: the DISPATCHER itself calls
 `drawBlock` handed the still-wrapped smart model straight to the renderer, whose
 base-delegating quad getters yield just the body. (In-world never broke because
 the dispatcher unwraps there.) Fix: `drawBlock` mirrors the dispatcher exactly
-(lookup plain → extend → unwrap-if-smart → render). Rebuilt (BUILD SUCCESSFUL,
-504,167 bytes), redeployed. Awaiting retest: nozzles visible + updating in-tab.
+  (lookup plain → extend → unwrap-if-smart → render). Rebuilt (BUILD SUCCESSFUL,
+  504,167 bytes), redeployed. Awaiting retest: nozzles visible + updating in-tab.
+
+---
+
+## 2026-09-12 — Feature: Vacuum Hopper (fix loop 4 — white nozzle edges, ROOT CAUSE FOUND)
+
+User: everything works except thin white lines on nozzle edges, absent in 1.12.2
+(screenshots). Investigation only until approved, per user instruction. Pixel dump
+PROVED all 166 transparent pixels per nozzle texture are white RGB + zero alpha,
+and the nozzle faces sample 1px-narrow strips directly abutting them — filtering
+interpolates grey with neighbouring white (no blending in the opaque pass), while
+1.12.2's upload pipeline bleeds opaque colours outward (INFERRED mechanism for the
+version difference; the white source + strip adjacency are VERIFIED facts).
+User approved the texture colour-bleed fix: nearest-opaque RGB flooded into all
+transparent pixels, alpha kept 0, our 3 copies only (1.12.2 originals
+hash-verified untouched; zero pixels still white, verified after save). Rebuilt
+(BUILD SUCCESSFUL, 504,234 bytes), redeployed. Awaiting retest: edges clean.
+
+---
+
+## 2026-09-12 — Feature: Vacuum Hopper (fix loop 4 — white nozzle edges, ROOT CAUSE FOUND)
+
+User: everything works except thin white lines on nozzle edges, absent in 1.12.2
+(screenshots). Investigation only until approved, per user instruction. Pixel dump
+PROVED all 166 transparent pixels per nozzle texture are white RGB + zero alpha,
+and the nozzle faces sample 1px-narrow strips directly abutting them — filtering
+interpolates grey with neighbouring white (no blending in the opaque pass), while
+1.12.2's upload pipeline bleeds opaque colours outward (INFERRED mechanism for the
+version difference; the white source + strip adjacency are VERIFIED facts).
+User approved the texture colour-bleed fix: nearest-opaque RGB flooded into all
+transparent pixels, alpha kept 0, our 3 copies only (1.12.2 originals
+hash-verified untouched; zero pixels still white, verified after save). Rebuilt
+(BUILD SUCCESSFUL, 504,234 bytes), redeployed. Awaiting retest: edges clean.
