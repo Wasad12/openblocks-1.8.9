@@ -10,7 +10,7 @@
 - **GitHub:** `https://github.com/Wasad12/openblocks-1.8.9` (public) — receives ONLY the
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
-  Last push 2026-09-12 (`b57f968`, XP completion mark).
+  Last push 2026-09-12 (`154070a`, Auto Enchantment Table COMPLETED).
 - **Current feature:** none — Auto Enchantment Table COMPLETED (user-confirmed 2026-09-12).
   Awaiting next feature instruction.
 - **Feature status:** no active feature. May revisit completed features if issues surface later.
@@ -34,12 +34,12 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. COMMIT Auto Enchantment Table + PUSH subtree to GitHub on user request ("ready to push").
-  2. GitHub (`Wasad12/openblocks-1.8.9`) last RECEIVED subtree push `b57f968` 2026-09-12
-     (all local work through `3fd8906` now visible). Future pushes need explicit
+  1. Await user's next feature instruction — no active feature, tree clean, all issues closed.
+  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `154070a` 2026-09-12
+     (all local work through `ebcc4aa` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
-- **Last known-good Git commit:** `3fd8906` (XP COMPLETED mark; code at `80551c6` matches
-  deployed 176,716-byte JAR).
+- **Last known-good Git commit:** `ebcc4aa` (Auto Enchantment Table COMPLETED; code
+  matches deployed 436,283-byte JAR).
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
   `git status` permanently list 1369 phantom-modified reference files (content PROVEN identical via
