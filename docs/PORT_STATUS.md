@@ -36,9 +36,9 @@
      IN PROGRESS (fix loop 2 deployed, UNTESTED). Read §16 order, then await user retest:
      held-TPP look of drain/shower/tank(empty+filled), placed-shower texture, FPP sanity.
      Fix loop 1 (shower states, drain display) also UNTESTED — same retest covers it.
-  2. GitHub (`Wasad12/openblocks-1.8.9`) is BEHIND local (last subtree push `c8fd7d5`);
-     push with `git subtree push --prefix OpenBlocks-1.8.9 origin master` once the user
-     confirms, or on explicit push request (pushes need explicit request).
+  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `0ae6267` 2026-09-12
+     (all local work through handoff `11c6794` now visible). Future pushes need explicit
+     request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
 - **Last known-good Git commit:** `e1f3596` (XP fix loop 2, built 182,015 bytes + deployed 2026-09-12; src matches deployed JAR)
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
