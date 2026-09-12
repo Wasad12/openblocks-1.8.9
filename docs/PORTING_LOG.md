@@ -973,3 +973,81 @@ tank below, redstone-gated shower pours NoFly orbs + spray, arm touches tank, ex
 orb renderer, recipes) with user-verified parity on behavior, held looks (block-item
 display), solidity and hitboxes — plus the standing agreement to revisit if issues
 surface later. No active feature; awaiting next instruction.
+
+---
+
+## 2026-09-12 — Feature: Auto Enchantment Table (Phase A — investigate, 1.12.2 source only)
+
+Source (all VERIFIED by reading): `BlockAutoEnchantmentTable` (0.75 AABB, book
+particles, non-solid sides), `TileEntityAutoEnchantmentTable` (484 lines: 3 slots,
+xpJuice tank for 30 levels, 4 side-maps + auto flags, power limit/level sync, seed,
+BookState math, movers, enchant gating), `ContainerAutoEnchantmentTable` (3 slots +
+player inv), `GuiAutoEnchantmentTable` (slider/labels/tank gauge/level button/4 tabs —
+user screenshots are the target), `TileEntityAutoEnchantmentTableRenderer` (book),
+`rpc/ILevelChanger`, recipe (iron + enchanting table + redstone), block model (12px
+base), textures x3 (+top animation mcmeta), lang keys present.
+OpenModsLib deps: full GUI component stack + SyncMap/RPC/network + inventory
+(surveyed file-by-file via subagent — see ARCHITECTURE.md).
+
+---
+
+## 2026-09-12 — Feature: Auto Enchantment Table (Phase B — plan)
+
+Full plan in ARCHITECTURE.md. User correction enforced: FAITHFUL port of the real
+OpenMods systems under the same `openmods.*` packages (not a vanilla lookalike).
+1.8.9 API facts VERIFIED via `javap`: calcItemStackEnchantability same;
+buildEnchantmentList 3-arg (no treasure enchants in 1.8.9); EnchantmentData.
+enchantmentobj; instance ItemEnchantedBook.addEnchantment; item-handler caps exist;
+NO fluid caps; level icons present in 1.8.9 enchanting_table.png (pixel check).
+
+---
+
+## 2026-09-12 — Feature: Auto Enchantment Table (Phase C — implemented, built, deployed)
+
+~60 new files: full `openmods` stack (sync/Map/Client/Server/Tile + all Syncable* +
+local type registry, inventory + ItemMover + adapters, container, GUI framework +
+all components + SideSelector/Trackball/SidePicker, RPC interfaces + local
+method registry + 1.8.9 SimpleNetworkWrapper transport, TE bases, VanillaEnchantLogic,
+EnchantmentUtils.getPower, GUI handlers) + feature files (block/TE/container/GUI/
+book TESR/rpc) + registration (block/TE/GUI handlers/network/sync types/RPC
+methods/recipe) + resources (blockstate, block/item models with block-item display,
+3 textures + animation mcmeta, components.png).
+Notable adaptations (all in ARCHITECTURE.md): nullable stacks, void writeToNBT,
+isUseableByPlayer, crafters, xDisplayPosition, readNBTTagCompoundFromBuffer,
+getDimensionId, RenderItem.entity package, no MoreObjects/fastFloor/NonNullList/
+ItemStackHelper/ClickType/IContainerListener, NBT-safe pre-world sync read,
+TE-side fluid gating inline (no fluid caps), single-pass block preview (no render
+layers). One compile pass after 18 mechanical fixes, all 1.8.9 namings.
+`:reobfJar` BUILD SUCCESSFUL → 436,189 bytes (contents VERIFIED), deployed
+(unrelated mods untouched). Awaiting user test against the 1.12.2 screenshots.
+
+---
+
+## 2026-09-12 — Feature: Auto Enchantment Table (fix loop 1 — RPC world lookup)
+
+User: visuals 100% identical ✓ (tabs, tab block preview, everything); two failures:
+(1) GUI settings (auto flags, side selection) reset on GUI reopen, (2) adjacent tank
+not drained even when its side is selected (user suspected related — correct).
+Root cause PROVED via the runtime log (`fml-client-latest.log`: NPE "Invalid world
+dimension 0" in `WorldUtils.getWorld` → `TileEntityRpcTarget.readFromStreamStream`,
+every GUI edit): on an INTEGRATED server `OpenBlocks.proxy` IS the client proxy
+(`@SidedProxy` picks by physical side), so the SERVER branch of `WorldUtils.getWorld`
+called `ClientProxy.getServerWorld`, which returned null — every client→server RPC
+died server-side, server state never changed, reopen re-read defaults, and xpSides
+stayed empty so `fillFromSides` pulled nothing. Fix: `ClientProxy.getServerWorld`
+resolves via FML exactly like `ServerProxy` (valid on the server thread in both
+singleplayer and dedicated). Rebuilt (436,283 bytes), redeployed. Awaiting retest:
+toggle auto/sides → reopen (must stick), then auto-drink from the adjacent tank.
+
+---
+
+## 2026-09-12 — Feature: Auto Enchantment Table COMPLETED (user-confirmed)
+
+User: "now it works exactly like 1.12.2 ready to push". Per §7 this is explicit
+completion confirmation: feature moves to COMPLETED. Final state: faithful 1.8.9
+port — block (0.75 box, particles, GUI open), TE (slots/tank/sides/level/seed,
+movers, enchant gating, book math), container, full tabbed GUI (slider, power
+label, XP gauge, level button, 4 side tabs with 3D previews), book TESR, real
+openmods sync/RPC/GUI stack over the 1.8.9 transport, recipe — with user-verified
+parity on visuals, tabs, setting persistence and auto-drink. Committed and
+subtree-pushed on explicit user request.

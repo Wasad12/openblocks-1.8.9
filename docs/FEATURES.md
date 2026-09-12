@@ -9,6 +9,8 @@ _none — awaiting next feature instruction._
 
 ## COMPLETED
 
+## COMPLETED
+
 - Hang Glider (`ItemHangGlider` + `EntityHangGlider` + renderer + vario/thermal + recipes +
   perspective-aware item model + unstackable glider). User-confirmed COMPLETED 2026-09-12.
   Post-completion survival hand-hiding fix (player-scoped, no identity scan) user-confirmed FIXED 2026-09-12.
@@ -19,6 +21,11 @@ _none — awaiting next feature instruction._
   `TileEntityXPShower` + `EntityXPOrbNoFly` + spray FX). User-confirmed COMPLETED 2026-09-12
   ("all fixed now" — drain/shower behavior, held looks identical to 1.12.2, shower solid +
   hitbox fixed; fix loops 1-4 included). May revisit if issues surface later.
+- Auto Enchantment Table (`BlockAutoEnchantmentTable` + `TileEntityAutoEnchantmentTable` +
+  `ContainerAutoEnchantmentTable` + `GuiAutoEnchantmentTable` + book TESR +
+  `VanillaEnchantLogic` + side-tab automation + recipe). User-confirmed COMPLETED 2026-09-12
+  ("works exactly like 1.12.2" — visuals/tabs/block preview identical, settings persist,
+  auto-drink works; fix loop 1 included).
 
 ## NOT STARTED
 

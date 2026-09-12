@@ -11,17 +11,18 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-12 (`b57f968`, XP completion mark).
-- **Current feature:** none — XP Drain + XP Shower COMPLETED (user-confirmed 2026-09-12).
+- **Current feature:** none — Auto Enchantment Table COMPLETED (user-confirmed 2026-09-12).
   Awaiting next feature instruction.
-- **Feature status:** no active feature. May revisit XP Drain/Shower if issues surface later.
+- **Feature status:** no active feature. May revisit completed features if issues surface later.
+- **Last completed feature:** Auto Enchantment Table (user-confirmed COMPLETED 2026-09-12)
 - **Last completed feature:** XP Drain + XP Shower (user-confirmed COMPLETED 2026-09-12)
 - **Current problem:** none — all reported visuals verified fixed, tree ready to commit + push.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (176,716 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (XP fix loop 4: solid shower/drain collision + bounds)
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (436,283 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (Auto Enchantment Table fix loop 1: integrated-server RPC world lookup)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-12 (unrelated mods untouched)
-- **Last user test result (2026-09-12):** XP Drain + XP Shower COMPLETED ("all fixed now,
-  we can move" — revisit later if issues surface). Prior: Tank COMPLETED + glider survival
-  hand-hiding FIXED.
+- **Last user test result (2026-09-12):** Auto Enchantment Table COMPLETED ("works exactly
+  like 1.12.2" — visuals/tabs identical, settings persist, auto-drink works). Prior: XP
+  Drain/Shower COMPLETED + Tank COMPLETED + glider fixes verified.
 - **Known issues:** see `KNOWN_ISSUES.md`
 - **Important discoveries:**
   - `OpenBlocks-1.12.X/OpenModsLib/` submodule directory is EMPTY — the lib source of truth is the
@@ -33,8 +34,8 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Await user's next feature instruction — no active feature, tree clean, all issues closed.
-  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `b57f968` 2026-09-12
+  1. COMMIT Auto Enchantment Table + PUSH subtree to GitHub on user request ("ready to push").
+  2. GitHub (`Wasad12/openblocks-1.8.9`) last RECEIVED subtree push `b57f968` 2026-09-12
      (all local work through `3fd8906` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
 - **Last known-good Git commit:** `3fd8906` (XP COMPLETED mark; code at `80551c6` matches

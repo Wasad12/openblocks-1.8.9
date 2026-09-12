@@ -255,3 +255,57 @@ Source: `BlockXPDrain`/`TileEntityXPDrain`, `BlockXPShower`/`TileEntityXPShower`
   with fluid NBT, comparator output, light emission, creative-search filled-tank listing
   (gated on `tabAllSearch` like the glider's `isInCreativeTab` equivalent), recipe
   (obsidian + `paneGlass` → 2), all five `tanks` config keys + `xpToLiquidRatio`.
+
+### Auto Enchantment Table (2026-09-12, Phase B plan — behavior preserved, OpenMods GUI stack replaced)
+
+Source: `BlockAutoEnchantmentTable`, `TileEntityAutoEnchantmentTable` (484 lines),
+`ContainerAutoEnchantmentTable`, `GuiAutoEnchantmentTable` (screenshots = target GUI),
+`TileEntityAutoEnchantmentTableRenderer` (book), `rpc/ILevelChanger`, recipe
+(iii/iei/rrr iron + enchanting table + redstone), block model (12px base, 3 textures),
+lang keys (already in our `en_US.lang`, incl. autoextract/autoeject/autodrink/limit/
+available_power).
+
+- NO OpenModsLib port (§9: per-feature local equivalents). The whole `openmods.gui`
+  component stack + RPC + SyncMap is ported as real local equivalents under the SAME
+  `openmods.*` packages (faithful port, not a vanilla lookalike): `ContainerBase`,
+  `GuiConfigurableSlots` + components (Panel/Slider/Label/TankLevel/ToggleButton/Tab/
+  SideSelector/Checkbox), `SyncMap` + all `Syncable*`, `GenericInventory`/
+  `TileEntityInventory`/`ItemMover`, `SidedInventoryAdapter`/`SidedItemHandlerAdapter`
+  (1.8.9 HAS item-handler caps — VERIFIED `CapabilityItemHandler` in the 1722
+  `forgeBin` jar), `SyncedTileEntity`/`OpenTileEntity`, `CommonGuiHandler`, RPC
+  interfaces. Dropped only: fixers (no 1.8.9 framework), fluid caps (don't exist —
+  `IFluidHandler` + `FluidTank` like the Tank). The single invisible adaptation is the
+  byte transport behind the SAME seams (`RpcCallDispatcher.senders`, `SyncRpcTarget`):
+  1.8.9 `SimpleNetworkWrapper` instead of the 1.12.2 FML channel wiring.
+- 1.8.9 API facts (all VERIFIED via `javap` on the 1722 `forgeBin` jar unless noted):
+  `calcItemStackEnchantability` same signature; `buildEnchantmentList` is 3-arg
+  (no treasure flag — 1.8.9 has no treasure enchants, faithful by construction);
+  `EnchantmentData.enchantmentobj` (not `enchantment`); `ItemEnchantedBook.
+  addEnchantment` is an INSTANCE method; `ItemStack.isItemEnchantable`/
+  `addEnchantment` exist; `ForgeHooks.getEnchantPower` exists; `ModelBook` exists
+  (TESR port is mechanical, `WorldRenderer` signature); level icons at
+  `enchanting_table.png` (0/16/32,223) + lapis slot (34,46) VERIFIED present with
+  content in the 1.8.9 texture (pixel check).
+- TE: `SyncedTileEntity` + `GenericInventory`/`TileEntityInventory` (3 slots,
+  tool=enchantable / lapis=`gemLapis` ore dict / output) + `SyncableTank` xpJuice
+  (capacity = liquid-for-30-levels via restored `LiquidXpUtils.getLiquidForLevel` +
+  `FLUID_TO_LEVELS`) + `SyncableSides` x4 + `SyncableFlags` + `SyncableInt` x2 +
+  `SyncableEnum<Level>`, NBT (inventory + seed), `S35` + `SyncMap` updates.
+  Update + `tryEnchantItem` verbatim (power check every 20 ticks, auto in/out movers,
+  lapis/XP gating, seed reseed). Item caps via `SidedItemHandlerAdapter` (verbatim);
+  fluids via old `IFluidHandler` (no 1.8.9 fluid caps).
+- Container: ported `ContainerInventoryProvider` (3 slots at 1.12.2 coords + player
+  inventory at y=93, 176x175) with its shift-click `transferStackInSlot`.
+- GUI: the REAL ported `GuiConfigurableSlots` + components replicating the screenshots —
+  power-limit slider (1-30), available-power label, XP tank gauge (levels display),
+  L1/L2/L3 toggle button, lapis slot icon, 4 side tabs (tool/lapis/output/xp with
+  pickaxe/dye/enchanted-pickaxe/bucket icons + autoextract/autoeject/autodrink labels),
+  each tab with side selector + auto checkbox. Client→server edits go through the
+  ported RPC (`ILevelChanger`, side/auto receivers) over the 1.8.9 transport.
+  `CommonGuiHandler` dispatches `IHasGui` like 1.12.2.
+- Block: plain `Block` (rock, hardness 1.0F), 0.75-height AABB with the shower-lesson
+  bounds pattern (`setBlockBoundsBasedOnState` + offset collision, raytraceable),
+  `getRenderType` MODEL (tank lesson), `randomDisplayTick` particles verbatim,
+  `onBlockActivated` opens GUI.
+- Book rotation math (`BookState`) ported verbatim (`MathHelper` + `getClosestPlayer`
+  exist in 1.8.9).

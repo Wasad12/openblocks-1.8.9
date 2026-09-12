@@ -16,6 +16,10 @@ public interface IOpenBlocksProxy {
 
 	public boolean isClientPlayer(EntityPlayer player);
 
+	public World getServerWorld(int dimensionId);
+
+	public World getClientWorld();
+
 	public int getParticleSettings();
 
 	public void spawnLiquidSpray(World world, FluidStack fluid, double x, double y, double z, float scale, float gravity, Vec3 velocity);

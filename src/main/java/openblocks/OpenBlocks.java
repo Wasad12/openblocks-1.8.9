@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import openblocks.common.block.BlockAutoEnchantmentTable;
 import openblocks.common.block.BlockTank;
 import openblocks.common.block.BlockXPDrain;
 import openblocks.common.block.BlockXPShower;
@@ -25,6 +26,7 @@ import openblocks.common.entity.EntityXPOrbNoFly;
 import openblocks.common.item.ItemHangGlider;
 import openblocks.common.item.ItemOBGeneric;
 import openblocks.common.item.ItemTankBlock;
+import openblocks.common.tileentity.TileEntityAutoEnchantmentTable;
 import openblocks.common.tileentity.TileEntityTank;
 import openblocks.common.tileentity.TileEntityXPDrain;
 import openblocks.common.tileentity.TileEntityXPShower;
@@ -66,6 +68,7 @@ public class OpenBlocks {
 		public static BlockTank tank;
 		public static BlockXPDrain xpDrain;
 		public static BlockXPShower xpShower;
+		public static BlockAutoEnchantmentTable autoEnchantmentTable;
 	}
 
 	public static class Fluids {
@@ -106,6 +109,26 @@ public class OpenBlocks {
 		GameRegistry.registerBlock(Blocks.xpShower, net.minecraft.item.ItemBlock.class, "xp_shower");
 		GameRegistry.registerTileEntity(TileEntityXPShower.class, "openblocks_xp_shower");
 
+		Blocks.autoEnchantmentTable = new BlockAutoEnchantmentTable();
+		GameRegistry.registerBlock(Blocks.autoEnchantmentTable, net.minecraft.item.ItemBlock.class, "auto_enchantment_table");
+		GameRegistry.registerTileEntity(TileEntityAutoEnchantmentTable.class, "openblocks_auto_enchantment_table");
+
+		// syncable field types (local table — 1.8.9 has no data registries)
+		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableInt.class);
+		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableTank.class);
+		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableSides.class);
+		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableFlags.ByteFlags.class);
+		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableFlags.ShortFlags.class);
+		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableFlags.IntFlags.class);
+		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableEnum.class, openmods.sync.SyncableEnum.DUMMY_SUPPLIER);
+
+		// RPC methods (local table — same call sites as 1.12.2)
+		openmods.network.rpc.RpcMethodRegistry.registerInterface(openblocks.rpc.ILevelChanger.class);
+		openmods.network.rpc.RpcMethodRegistry.registerInterface(openmods.utils.bitmap.IRpcDirectionBitMap.class);
+		openmods.network.rpc.RpcMethodRegistry.registerInterface(openmods.utils.bitmap.IRpcIntBitMap.class);
+		openmods.network.rpc.RpcCallDispatcher.init();
+		openblocks.common.network.OpenBlocksChannel.init();
+
 		EntityRegistry.registerModEntity(EntityHangGlider.class, "hang_glider", ENTITY_HANGGLIDER_ID, instance, 64, 1, true);
 		EntityRegistry.registerModEntity(EntityXPOrbNoFly.class, "xp_orb_no_fly", ENTITY_XP_ID, instance, 64, 1, true);
 
@@ -141,6 +164,11 @@ public class OpenBlocks {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.xpShower),
 				"iii", "  o",
 				'i', "ingotIron", 'o', net.minecraft.init.Blocks.obsidian));
+
+		// auto enchantment table (mirrors 1.12.2 auto_enchantment_table_0.json)
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.autoEnchantmentTable),
+				"iii", "iei", "rrr",
+				'i', "ingotIron", 'e', net.minecraft.init.Blocks.enchanting_table, 'r', "dustRedstone"));
 
 		proxy.init();
 		proxy.registerRenderInformation();

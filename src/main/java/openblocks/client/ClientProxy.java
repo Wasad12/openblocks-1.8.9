@@ -31,9 +31,11 @@ import openblocks.client.model.GliderItemModel;
 import openblocks.client.model.TankFrameModel;
 import openblocks.client.model.TankItemModel;
 import openblocks.client.renderer.entity.EntityHangGliderRenderer;
+import openblocks.client.renderer.tileentity.TileEntityAutoEnchantmentTableRenderer;
 import openblocks.client.renderer.tileentity.TileEntityTankRenderer;
 import openblocks.common.entity.EntityHangGlider;
 import openblocks.common.entity.EntityXPOrbNoFly;
+import openblocks.common.tileentity.TileEntityAutoEnchantmentTable;
 import openblocks.common.tileentity.TileEntityTank;
 
 public class ClientProxy implements IOpenBlocksProxy {
@@ -74,11 +76,16 @@ public class ClientProxy implements IOpenBlocksProxy {
 			MinecraftForge.EVENT_BUS.register(new TankFrameModel.BakeHandler());
 			MinecraftForge.EVENT_BUS.register(new TankItemModel.BakeHandler());
 		}
+
+		if (OpenBlocks.Blocks.autoEnchantmentTable != null) {
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAutoEnchantmentTable.class, new TileEntityAutoEnchantmentTableRenderer());
+		}
 	}
 
 	@Override
 	public void init() {
 		MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
+		net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler(OpenBlocks.instance, new openmods.gui.ClientGuiHandler());
 	}
 
 	@Override
@@ -144,11 +151,32 @@ public class ClientProxy implements IOpenBlocksProxy {
 				ModelLoader.setCustomModelResourceLocation(showerItem, 0,
 						new ModelResourceLocation("openblocks:xp_shower", "inventory"));
 		}
+
+		if (OpenBlocks.Blocks.autoEnchantmentTable != null) {
+			final Item tableItem = Item.getItemFromBlock(OpenBlocks.Blocks.autoEnchantmentTable);
+			if (tableItem != null)
+				ModelLoader.setCustomModelResourceLocation(tableItem, 0,
+						new ModelResourceLocation("openblocks:auto_enchantment_table", "inventory"));
+		}
 	}
 
 	@Override
 	public boolean isClientPlayer(EntityPlayer player) {
 		return player == Minecraft.getMinecraft().thePlayer;
+	}
+
+	@Override
+	public World getServerWorld(int dimensionId) {
+		// NOTE: on an integrated server OpenBlocks.proxy IS the client proxy (SidedProxy
+		// picks by physical side), so this must resolve the server world via FML just
+		// like ServerProxy does — returning null here broke ALL client→server RPC in
+		// singleplayer (settings never reached the server).
+		return net.minecraftforge.fml.common.FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimensionId);
+	}
+
+	@Override
+	public World getClientWorld() {
+		return Minecraft.getMinecraft().theWorld;
 	}
 
 	@Override

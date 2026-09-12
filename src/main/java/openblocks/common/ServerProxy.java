@@ -5,6 +5,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import openblocks.IOpenBlocksProxy;
+import openblocks.OpenBlocks;
 
 public class ServerProxy implements IOpenBlocksProxy {
 
@@ -12,7 +13,9 @@ public class ServerProxy implements IOpenBlocksProxy {
 	public void preInit() {}
 
 	@Override
-	public void init() {}
+	public void init() {
+		net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler(OpenBlocks.instance, new openmods.gui.CommonGuiHandler());
+	}
 
 	@Override
 	public void postInit() {}
@@ -23,6 +26,16 @@ public class ServerProxy implements IOpenBlocksProxy {
 	@Override
 	public boolean isClientPlayer(EntityPlayer player) {
 		return false;
+	}
+
+	@Override
+	public World getServerWorld(int dimensionId) {
+		return net.minecraftforge.fml.common.FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dimensionId);
+	}
+
+	@Override
+	public World getClientWorld() {
+		return null;
 	}
 
 	@Override

@@ -1,10 +1,14 @@
 package openmods.utils;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 
-// Subset port of OpenModsLib 1.12.2 EnchantmentUtils: only the XP math the XP
-// Drain/Shower need. getPower/addAllBooks dropped per §19 (enchant-table systems).
-// Imports adjusted (1.8.9: no util.math package); logic verbatim.
+// Port of OpenModsLib 1.12.2 EnchantmentUtils: XP math verbatim; getPower ported
+// (bookshelf scan via ForgeHooks.getEnchantPower — VERIFIED present in 1.8.9).
+// addAllBooks dropped per §19 (creative-tab system). Imports adjusted (1.8.9: no
+// util.math package); logic verbatim.
 public class EnchantmentUtils {
 
 	/**
@@ -61,5 +65,27 @@ public class EnchantmentUtils {
 			level++;
 			targetXp -= xpToNextLevel;
 		}
+	}
+
+	public static float getPower(World world, BlockPos position) {
+		float power = 0;
+
+		for (int deltaZ = -1; deltaZ <= 1; ++deltaZ) {
+			for (int deltaX = -1; deltaX <= 1; ++deltaX) {
+				if ((deltaZ != 0 || deltaX != 0)
+						&& world.isAirBlock(position.add(deltaX, 0, deltaZ))
+						&& world.isAirBlock(position.add(deltaX, 1, deltaZ))) {
+					power += ForgeHooks.getEnchantPower(world, position.add(deltaX * 2, 0, deltaZ * 2));
+					power += ForgeHooks.getEnchantPower(world, position.add(deltaX * 2, 1, deltaZ * 2));
+					if (deltaX != 0 && deltaZ != 0) {
+						power += ForgeHooks.getEnchantPower(world, position.add(deltaX * 2, 0, deltaZ));
+						power += ForgeHooks.getEnchantPower(world, position.add(deltaX * 2, 1, deltaZ));
+						power += ForgeHooks.getEnchantPower(world, position.add(deltaX, 0, deltaZ * 2));
+						power += ForgeHooks.getEnchantPower(world, position.add(deltaX, 1, deltaZ * 2));
+					}
+				}
+			}
+		}
+		return power;
 	}
 }
