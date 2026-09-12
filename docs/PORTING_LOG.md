@@ -1084,3 +1084,36 @@ subtree-pushed on explicit user request.
   `2>/dev/null` (Windows — use `-ErrorAction SilentlyContinue`); `jar xf` dumps
   into CWD. 1.8 branches are BANNED sources. Theories marked INFERRED are disproven
   until VERIFIED; trust only log/bytecode/probe evidence.
+
+---
+
+## 2026-09-12 — Feature: Auto Anvil (Phase A — investigate, 1.12.2 source only)
+
+Source (all VERIFIED by reading): `BlockAutoAnvil` (TwoDirections anvil, non-opaque,
+non-solid sides), `TileEntityAutoAnvil` (329 lines: Slots tool/modifier/output,
+AutoSlots tool/modifier/output/xp, 4 SyncableSides + SyncableTank (45 levels) +
+SyncableFlags, 40-tick cooldown, VanillaAnvilLogic repair gated on atomic liquid
+drain, ItemMover auto in/out, `random` anvil sound), `ContainerAutoAnvil` (slots at
+(14/56/110,40) + player inv at 93), `GuiAutoAnvil` (hammer + plus sprites, tank
+gauge in levels, 4 tabs: blue pickaxe / lightblue book / green enchanted pickaxe /
+yellow bucket), recipe iii/iai/rrr (iron + anvil + redstone), block model (4
+elements, 6 textures, `block/block` parent + `fixed` display), blockstate
+(orientation xp_yp/zn_yp), lang keys present in our `en_US.lang`.
+OpenModsLib deps: `VanillaAnvilLogic` (232 lines, adapted from ContainerRepair),
+`GuiComponentSprite`, full sync/inventory/RPC/GUI stack (ALL already ported for the
+Auto Enchantment Table — reused, see ARCHITECTURE.md).
+
+---
+
+## 2026-09-12 — Feature: Auto Anvil (Phase B — plan)
+
+Full plan in ARCHITECTURE.md ("Auto Anvil" section). Key 1.8.9 facts, all VERIFIED
+via `javap` on the 1722 `forgeBin` jar (+ client jar for models): enchantment maps
+are ID-based (`Map<Integer,Integer>`, object maps are 1.9+); `canApplyTogether`
+replaces `isCompatibleWith`; no `Enchantment.getRarity` (weight thresholds instead,
+exact for all vanilla enchants); `AnvilUpdateEvent` has public fields;
+`ItemEnchantedBook.getEnchantments` is an instance method returning NBTTagList;
+`Block$SoundType` is an inner class (`soundTypeAnvil` + `setStepSound`);
+`block/block` parent does NOT exist in 1.8.9 (parentless block model like our
+shower); bare `auto_anvil.png` unreferenced (skipped). TwoDirections → vanilla-style
+`FACING` + `rotateY` placement (same perpendicular long axis).

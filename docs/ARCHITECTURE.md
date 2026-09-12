@@ -309,3 +309,59 @@ available_power).
   `onBlockActivated` opens GUI.
 - Book rotation math (`BookState`) ported verbatim (`MathHelper` + `getClosestPlayer`
   exist in 1.8.9).
+
+### Auto Anvil (2026-09-12, Phase B plan — behavior preserved, anvil logic adapted to 1.8.9 IDs)
+
+Source: `BlockAutoAnvil` (TwoDirections anvil, non-opaque/solid sides), `TileEntityAutoAnvil`
+(3 slots tool/modifier/output, xpJuice tank for 45 levels, 4 side-maps + auto flags,
+40-tick cooldown repair), `ContainerAutoAnvil` (3 slots at (14/56/110,40) + player inv),
+`GuiAutoAnvil` (hammer + plus sprites, XP tank gauge in levels, 4 tabs), recipe
+(iii/iai/rrr iron + anvil + redstone), block model (4 elements, 6 textures), lang keys
+(already in our `en_US.lang`).
+
+- All GUI/sync/inventory/RPC infra REUSED from the Auto Enchantment Table port (same
+  `openmods.*` packages, no new framework): `SyncedTileEntity`, `SyncableSides` x4 +
+  `SyncableTank` + `SyncableFlags`, `TileEntityInventory`, `SidedInventoryAdapter`/
+  `SidedItemHandlerAdapter`, `ItemMover`, `ContainerInventoryProvider`/`RestrictedSlot`,
+  `GuiConfigurableSlots` + components, existing `IRpcDirectionBitMap`/`IRpcIntBitMap`
+  (no new RPC interfaces — the anvil has no level/power setting). One new component:
+  `GuiComponentSprite` (hammer/plus/result icons) ported verbatim — `Icon.
+  createSheetIcon(WIDGETS,...)`, `BaseComponent.drawSprite` and `TextureAtlasSprite.
+  getIconWidth/getIconHeight` all exist in 1.8.9.
+- `VanillaAnvilLogic` ported to 1.8.9 enchantment IDs (all VERIFIED via `javap` on the
+  1722 `forgeBin` jar): 1.8.9 `EnchantmentHelper.getEnchantments/setEnchantments` use
+  `Map<Integer,Integer>` (effect IDs, not `Enchantment` objects — the object-map form is
+  1.9+), so the logic resolves `Enchantment.getEnchantmentById` per key; `isCompatibleWith`
+  → `canApplyTogether` (VERIFIED exists); `getRarity()` does NOT exist (Rarity enum is
+  1.9+) — cost uses `getWeight()` (VERIFIED exists) with the threshold mapping
+  >=10→1 / >=5→2 / >=2→4 / else 8, which agrees EXACTLY with COMMON/UNCOMMON/RARE/
+  VERY_RARE→1/2/4/8 for every vanilla enchant (weights are 10/5/2/1; INFERRED for modded
+  weights, same numbers Mojang used); `AnvilUpdateEvent` EXISTS with PUBLIC fields
+  (`output`/`cost`/`materialCost`, null-able output — no getters yet); `ItemEnchantedBook.
+  getEnchantments` is an INSTANCE method returning `NBTTagList` (`tagCount() > 0`
+  replaces `hasNoTags()`); `getCount()`→`stackSize`, `shrink`→manual decrement,
+  `isEmpty`/`EMPTY`→null. Null-tolerant (null input = empty path, null modifier = empty
+  path — 1.12.2 relied on EMPTY singletons). `Optional<String>` itemName kept (guava
+  ships with MC); TE always passes `absent()` (no rename feature, like 1.12.2).
+- TE: same shape as the enchant table (movers: output-push / tool-pull-if-empty /
+  modifier-pull, auto-drink 100 mB via `fillFromSides` on xp sides, `needsTankUpdate`
+  flag, `S35` + `SyncMap`, NBT inventory, `dropContents` on break, old `IFluidHandler`
+  fill-only on xp sides + item-handler cap). `repairItem` verbatim (level→XP→liquid
+  cost, atomic drain check, `removeModifiers`, clear tool, set output) except the sound:
+  no `SoundEvents`/`playSoundAtBlock` helper in 1.8.9 — inline
+  `worldObj.playSoundEffect(..., "random.anvil_use", 0.3f, 1f)` (vanilla 1.8.9 anvil
+  sound string). `MAX_STORED_LEVELS` 45 (vs 30 for the enchant table).
+- Block: plain `Block` (`Material.anvil`, `setStepSound(Block.soundTypeAnvil)` — VERIFIED
+  inner-class field via `javap`; hardness 1.0F like every `OpenBlock`), full-cube bounds
+  (1.12.2 has no custom AABB), `isOpaqueCube` false + `isSideSolid` false,
+  `getRenderType` MODEL (tank lesson), GUI open + neighbour dispatch + break drops
+  (enchant-table pattern). `TwoDirections` (ZN_YP/XP_YP, long axis perpendicular to
+  placer) → vanilla-style horizontal `FACING` with `rotateY` placement (same
+  perpendicular result, the 1.8.9-native anvil mechanism); 4-variant blockstate in the
+  shower convention (authored long-axis-Z = north).
+- Models: `models/block/auto_anvil.json` keeps the 4 elements/UVs verbatim but drops
+  `parent: block/block` (DOES NOT EXIST in 1.8.9 — VERIFIED absent from the client jar;
+  our shower block model is parentless too) and the `display.fixed` key (no `fixed`
+  transform in 1.8.9); `models/item/auto_anvil.json` = parent + verbatim block-item
+  `thirdperson` display (fix-loop-3 lesson, shower precedent). 6 textures copied;
+  bare `auto_anvil.png` is unreferenced anywhere in 1.12.2 (VERIFIED by grep) — skipped.

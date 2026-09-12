@@ -11,9 +11,8 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-12 (`f4a74bb`, docs handoff fixes).
-- **Current feature:** none — Auto Enchantment Table COMPLETED (user-confirmed 2026-09-12).
-  Awaiting next feature instruction.
-- **Feature status:** no active feature. May revisit completed features if issues surface later.
+- **Current feature:** Auto Anvil — Phase B planned, implementing (Phase C).
+- **Feature status:** Auto Anvil IN PROGRESS. May revisit completed features if issues surface later.
 - **Last completed feature:** Auto Enchantment Table (user-confirmed COMPLETED 2026-09-12).
   Prior: XP Drain + XP Shower, Tank, Hang Glider (all user-confirmed).
 - **Current problem:** none — no open problems, no TEMPORARY code.
@@ -34,7 +33,7 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Await user's next feature instruction — no active feature, tree clean, all issues closed.
+  1. Implement Auto Anvil (Phase C) — build, deploy, await user test.
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `f4a74bb` 2026-09-12
      (all local work through `2375167` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.

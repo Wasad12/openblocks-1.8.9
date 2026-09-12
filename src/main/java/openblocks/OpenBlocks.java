@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import openblocks.common.block.BlockAutoAnvil;
 import openblocks.common.block.BlockAutoEnchantmentTable;
 import openblocks.common.block.BlockTank;
 import openblocks.common.block.BlockXPDrain;
@@ -26,6 +27,7 @@ import openblocks.common.entity.EntityXPOrbNoFly;
 import openblocks.common.item.ItemHangGlider;
 import openblocks.common.item.ItemOBGeneric;
 import openblocks.common.item.ItemTankBlock;
+import openblocks.common.tileentity.TileEntityAutoAnvil;
 import openblocks.common.tileentity.TileEntityAutoEnchantmentTable;
 import openblocks.common.tileentity.TileEntityTank;
 import openblocks.common.tileentity.TileEntityXPDrain;
@@ -69,6 +71,7 @@ public class OpenBlocks {
 		public static BlockXPDrain xpDrain;
 		public static BlockXPShower xpShower;
 		public static BlockAutoEnchantmentTable autoEnchantmentTable;
+		public static BlockAutoAnvil autoAnvil;
 	}
 
 	public static class Fluids {
@@ -112,6 +115,10 @@ public class OpenBlocks {
 		Blocks.autoEnchantmentTable = new BlockAutoEnchantmentTable();
 		GameRegistry.registerBlock(Blocks.autoEnchantmentTable, net.minecraft.item.ItemBlock.class, "auto_enchantment_table");
 		GameRegistry.registerTileEntity(TileEntityAutoEnchantmentTable.class, "openblocks_auto_enchantment_table");
+
+		Blocks.autoAnvil = new BlockAutoAnvil();
+		GameRegistry.registerBlock(Blocks.autoAnvil, net.minecraft.item.ItemBlock.class, "auto_anvil");
+		GameRegistry.registerTileEntity(TileEntityAutoAnvil.class, "openblocks_auto_anvil");
 
 		// syncable field types (local table — 1.8.9 has no data registries)
 		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableInt.class);
@@ -169,6 +176,11 @@ public class OpenBlocks {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.autoEnchantmentTable),
 				"iii", "iei", "rrr",
 				'i', "ingotIron", 'e', net.minecraft.init.Blocks.enchanting_table, 'r', "dustRedstone"));
+
+		// auto anvil (mirrors 1.12.2 auto_anvil_0.json: iron + anvil + redstone)
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.autoAnvil),
+				"iii", "iai", "rrr",
+				'i', "ingotIron", 'a', net.minecraft.init.Blocks.anvil, 'r', "dustRedstone"));
 
 		proxy.init();
 		proxy.registerRenderInformation();

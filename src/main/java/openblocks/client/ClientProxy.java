@@ -158,6 +158,13 @@ public class ClientProxy implements IOpenBlocksProxy {
 				ModelLoader.setCustomModelResourceLocation(tableItem, 0,
 						new ModelResourceLocation("openblocks:auto_enchantment_table", "inventory"));
 		}
+
+		if (OpenBlocks.Blocks.autoAnvil != null) {
+			final Item anvilItem = Item.getItemFromBlock(OpenBlocks.Blocks.autoAnvil);
+			if (anvilItem != null)
+				ModelLoader.setCustomModelResourceLocation(anvilItem, 0,
+						new ModelResourceLocation("openblocks:auto_anvil", "inventory"));
+		}
 	}
 
 	@Override

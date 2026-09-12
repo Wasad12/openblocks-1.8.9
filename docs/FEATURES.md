@@ -5,7 +5,9 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-_none — awaiting next feature instruction._
+- Auto Anvil (`BlockAutoAnvil` + `TileEntityAutoAnvil` + `ContainerAutoAnvil` +
+  `GuiAutoAnvil` + `VanillaAnvilLogic` + recipe). Phase B planned 2026-09-12,
+  implementing.
 
 ## COMPLETED
 
