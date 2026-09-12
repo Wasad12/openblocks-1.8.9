@@ -1,0 +1,19 @@
+# OpenBlocks 1.8.9 port — ignores
+# Build outputs
+build/
+run/
+out/
+bin/
+# Gradle
+.gradle/
+# Compiled artifacts (built via :reobfJar, deployed by hand, never committed)
+*.jar
+# IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+# OS
+Thumbs.db
+Desktop.ini
