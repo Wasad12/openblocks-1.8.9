@@ -5,9 +5,7 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-- Auto Anvil (`BlockAutoAnvil` + `TileEntityAutoAnvil` + `ContainerAutoAnvil` +
-  `GuiAutoAnvil` + `VanillaAnvilLogic` + recipe). Phase B planned 2026-09-12,
-  implementing.
+_none — awaiting next feature instruction._
 
 ## COMPLETED
 
@@ -26,6 +24,9 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
   `VanillaEnchantLogic` + side-tab automation + recipe). User-confirmed COMPLETED 2026-09-12
   ("works exactly like 1.12.2" — visuals/tabs/block preview identical, settings persist,
   auto-drink works; fix loop 1 included).
+- Auto Anvil (`BlockAutoAnvil` + `TileEntityAutoAnvil` + `ContainerAutoAnvil` +
+  `GuiAutoAnvil` + `VanillaAnvilLogic` + `GuiComponentSprite` + recipe).
+  User-confirmed COMPLETED 2026-09-12 ("everything works" — no fix loops needed).
 
 ## NOT STARTED
 

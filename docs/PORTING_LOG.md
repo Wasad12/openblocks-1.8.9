@@ -1135,3 +1135,15 @@ classes + models + textures VERIFIED inside), deployed (unrelated mods untouched
 committed (`bfa3bb8`). Awaiting user test: recipe crafts; placed anvil renders +
 orients; GUI (hammer/plus sprites, XP gauge, 4 tabs) matches 1.12.2; manual repair
 consumes liquid XP + plays anvil sound; auto in/out/drink via side tabs.
+
+---
+
+## 2026-09-12 — Feature: Auto Anvil COMPLETED (user-confirmed)
+
+User: "everything works, complited". Per §7 this is explicit completion confirmation:
+feature moves to COMPLETED with zero fix loops — first-try build held up in-game
+(recipe, placement/orientation, GUI, liquid-gated repair + sound, automation all
+correct on first test). Final build 463,781 bytes deployed in
+`1.8.9(6)/minecraft/mods`. Tree clean. Completed tally: Hang Glider, Tank,
+XP Drain + XP Shower, Auto Enchantment Table, Auto Anvil (all user-confirmed).
+Awaiting next feature instruction.
