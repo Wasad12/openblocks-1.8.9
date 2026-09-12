@@ -17,7 +17,7 @@
   Prior: Auto Enchantment Table, XP Drain + XP Shower, Tank, Hang Glider (all user-confirmed).
 - **Current problem:** none — no open problems, no TEMPORARY code.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (503,784 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (Vacuum Hopper Phase C, first try, zero compile iterations)
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (504,066 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (Vacuum Hopper fix loop 1: nozzle stitch + in-tab extended state)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-12 (unrelated mods untouched)
 - **Last user test result (2026-09-12):** Auto Enchantment Table COMPLETED ("works exactly
   like 1.12.2" — visuals/tabs identical, settings persist, auto-drink works). Prior: XP

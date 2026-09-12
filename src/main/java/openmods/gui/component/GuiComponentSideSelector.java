@@ -116,10 +116,16 @@ public class GuiComponentSideSelector extends BaseComponent implements IValueRec
 		final Tessellator tessellator = Tessellator.getInstance();
 		final WorldRenderer wr = tessellator.getWorldRenderer();
 		final net.minecraft.client.renderer.BlockRendererDispatcher dispatcher = parent.getMinecraft().getBlockRendererDispatcher();
-		final net.minecraft.client.resources.model.IBakedModel model = dispatcher.getBlockModelShapes().getModelForState(blockState);
+		// Resolve the extended state (fix loop 1 — vacuum hopper): the preview
+		// FakeBlockAccess carries the real TE, so state-dependent smart models
+		// (hopper nozzles) render in-tab exactly like in-world and update as the
+		// server state syncs back — the tab click feedback. Plain blocks return
+		// the state unchanged (Block default), so their previews are unaffected.
+		final IBlockState renderState = blockState.getBlock().getExtendedState(blockState, access, FakeBlockAccess.ORIGIN);
+		final net.minecraft.client.resources.model.IBakedModel model = dispatcher.getBlockModelShapes().getModelForState(renderState);
 		wr.setTranslation(-0.5, -0.5, -0.5);
 		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		dispatcher.getBlockModelRenderer().renderModel(access, model, blockState, FakeBlockAccess.ORIGIN, wr, false);
+		dispatcher.getBlockModelRenderer().renderModel(access, model, renderState, FakeBlockAccess.ORIGIN, wr, false);
 		tessellator.draw();
 		wr.setTranslation(0.0D, 0.0D, 0.0D);
 	}

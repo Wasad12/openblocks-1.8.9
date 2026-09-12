@@ -1195,3 +1195,23 @@ deployed (unrelated mods untouched). Awaiting user test: recipe crafts; placed
 hopper renders (body + nozzle indicators per output side); items/XP orbs get sucked
 in; GUI gauge + item/xp side tabs match 1.12.2; sneak-toggle disables vacuum;
 auto-output to adjacent inventories/tanks.
+
+---
+
+## 2026-09-12 — Feature: Vacuum Hopper (fix loop 1 — untextured nozzles, ROOT CAUSE FOUND)
+
+User: clicks work (nozzles grow) but nozzles render purple-black; tab shows no
+effect. Root cause of the textures: `VacuumHopperModel` bakes its 18 nozzle models
+LAZILY at runtime via `ModelLoaderRegistry.getModel`, which never passes through
+the blockstate bake — so the items/fluids/both sprites are never stitched into the
+block atlas (body renders because it bakes normally; tank edges never hit this
+because they reuse the already-stitched tank sprite). Fix: the 3 nozzle sprites
+are now stitched explicitly at `TextureStitchEvent.Pre` (standing lesson recorded
+in ARCHITECTURE.md). Tab feedback: `drawBlock` now renders the EXTENDED state over
+the preview FakeBlockAccess (which carries the real TE), so the nozzles show
+in-tab and update as server state syncs back; plain-block previews are unaffected
+(`getExtendedState` default is identity). The click chain itself (selector →
+`toggle` RPC → `SyncableSides.toggle` → sync → render update) was VERIFIED correct
+by the user-observed nozzle growth — no changes there. Rebuilt (BUILD SUCCESSFUL,
+504,066 bytes), redeployed. Awaiting retest: textured nozzles in-world + in-tab,
+output flow to adjacent inventories/tanks.

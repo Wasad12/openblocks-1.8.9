@@ -409,3 +409,16 @@ physics + portal particles, neighbour output every 10 ticks, sneak-toggle),
   the 6 side geometries × items/fluids/both textures (1.8.9 variants can't override
   textures). Item model = body parent + verbatim block-item display (shower pattern).
   Bare `vacuum_hopper.png` unreferenced in 1.12.2 (VERIFIED by grep) — skipped.
+- Nozzle texture stitch (fix loop 1, 2026-09-12): nozzles grew correctly but
+  purple-black. Root cause: models baked LAZILY at runtime via
+  `ModelLoaderRegistry` (smart-model pieces) never pass through the blockstate
+  bake, so their textures are never stitched into the atlas (the body renders
+  because it bakes normally; tank edges never hit this because they reuse the
+  already-stitched tank sprite). STANDING LESSON: any lazily-baked model texture
+  must be registered explicitly at `TextureStitchEvent.Pre`. Fix: stitch the 3
+  nozzle sprites in the texture listener.
+- In-tab nozzles (fix loop 1): `GuiComponentSideSelector.drawBlock` now renders
+  the EXTENDED state (`getExtendedState` over the preview FakeBlockAccess, which
+  carries the real TE), so state-dependent smart models show in-tab and update as
+  server state syncs back — the tab click feedback. Plain blocks return the state
+  unchanged, so other previews are unaffected.

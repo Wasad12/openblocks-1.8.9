@@ -209,7 +209,12 @@ public class ClientProxy implements IOpenBlocksProxy {
 		Minecraft.getMinecraft().effectRenderer.addEffect(new FXLiquidSpray(world, fluid, x, y, z, scale, gravity, velocity));
 	}
 
-	// same listener as 1.12.2 ClientProxy.FluidTextureRegisterListener (verbatim).
+	// same listener as 1.12.2 ClientProxy.FluidTextureRegisterListener (verbatim),
+	// plus the vacuum hopper nozzle sprites (fix loop 1): VacuumHopperModel bakes
+	// its 18 nozzle models lazily at runtime via ModelLoaderRegistry (never through
+	// the normal blockstate bake), so their textures are never stitched — the body
+	// renders (normal bake) while the nozzles came out purple-black. Explicit
+	// stitch here fixes it, same reason mod fluid stills need stitching above.
 	private static class FluidTextureRegisterListener {
 		@SubscribeEvent
 		public void onTextureStitch(TextureStitchEvent.Pre evt) {
@@ -217,6 +222,12 @@ public class ClientProxy implements IOpenBlocksProxy {
 				final ResourceLocation fluidTexture = f.getStill();
 				if (fluidTexture != null)
 					evt.map.registerSprite(fluidTexture);
+			}
+
+			if (OpenBlocks.Blocks.vacuumHopper != null) {
+				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/vacuum_hopper_items"));
+				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/vacuum_hopper_fluids"));
+				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/vacuum_hopper_both"));
 			}
 		}
 	}
