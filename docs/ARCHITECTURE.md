@@ -217,6 +217,15 @@ Source: `BlockXPDrain`/`TileEntityXPDrain`, `BlockXPShower`/`TileEntityXPShower`
   `display` (thirdperson [-90,0,0]/[0,1,-3]/0.55 + firstperson sword values — shared by
   redstone/hopper/torch/cauldron, VERIFIED in the client jar), same family as the
   glider TPP fix. OPEN: shower-held and tank-held TPP symptoms need screenshots first.
+- TPP-held block look (fix loop 2): 1.12.2 renders these via `forge:default-block`
+  (TPP = convert(0, 2.5, 0, 75, 45, 0, 0.375) — read from the real 1.12.x
+  `ForgeBlockStateV1` source). 1.8.9 JSON cannot express the center-to-corner fold, so
+  new `HeldBlockPerspective` composes the identical matrix in vecmath and applies it
+  through `IPerspectiveAwareModel` on tank (empty + filled) and shower items, TPP only.
+  1.8.9 applies plain-model transforms unwrapped (VERIFIED: `handleCameraTransforms`
+  takes the vanilla branch for non-perspective models) — third confirmation that 1.12.2
+  numbers never transfer literally. Drain keeps its flat display (its 1.12.2 blockstate
+  is plain vanilla = different case).
 - Compiler lessons (fix loop 1, all 1.9-isms caught at build): `Vec3d`→`Vec3`;
   `BlockStateContainer`→`BlockState`; `getStateForPlacement`→`onBlockPlaced` (same args);
   no `resetPositionToBB` (inlined from boundingBox); `slipperiness` is a public field.

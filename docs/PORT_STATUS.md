@@ -16,7 +16,7 @@
 - **Last completed feature:** Tank (user-confirmed COMPLETED 2026-09-12)
 - **Current problem:** none — all issues closed, tree clean, no TEMPORARY code.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (176,394 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (XP fix loop 1: shower states + drain display)
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (182,015 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (XP fix loop 2: default-block TPP matrices)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-12 03:52 (unrelated mods untouched)
 - **Last user test result (2026-09-12):** Tank COMPLETED (user-confirmed working + looking
   fine; incl. connected frames, item fluid, silent fills, survival NBT drops) + glider

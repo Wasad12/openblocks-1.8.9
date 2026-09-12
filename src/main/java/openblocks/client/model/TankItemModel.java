@@ -16,6 +16,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
+import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -34,7 +35,7 @@ import openblocks.common.tileentity.TileEntityTank;
  * <p>Installed over the static frame item model at {@link ModelBakeEvent} (the static
  * model stays for empty tanks).</p>
  */
-public class TankItemModel implements ISmartItemModel {
+public class TankItemModel implements ISmartItemModel, IPerspectiveAwareModel {
 
 	public static final ModelResourceLocation LOCATION = new ModelResourceLocation("openblocks:tank", "inventory");
 
@@ -49,7 +50,9 @@ public class TankItemModel implements ISmartItemModel {
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
 		final FluidStack fluid = ItemTankBlock.getTankFluid(stack);
-		if (fluid == null) return base;
+		// Empty returns this (not raw base) so THIRD_PERSON handling below applies;
+		// quads still come straight from base, so every other context is unchanged.
+		if (fluid == null) return this;
 
 		final int capacity = TileEntityTank.getTankCapacity();
 		final int level = Math.max(1, Math.min(16, Math.round(16.0f * fluid.amount / capacity)));
@@ -164,8 +167,19 @@ public class TankItemModel implements ISmartItemModel {
 		return base.getItemCameraTransforms();
 	}
 
+	@Override
+	public VertexFormat getFormat() {
+		return DefaultVertexFormats.ITEM;
+	}
+
+	@Override
+	public org.apache.commons.lang3.tuple.Pair<? extends IFlexibleBakedModel, javax.vecmath.Matrix4f> handlePerspective(
+			ItemCameraTransforms.TransformType cameraTransformType) {
+		return HeldBlockPerspective.handlePerspective(this, base, cameraTransformType);
+	}
+
 	/** Frame quads from base + procedural fluid box in general quads. */
-	private static final class FilledModel implements IFlexibleBakedModel {
+	private static final class FilledModel implements IFlexibleBakedModel, IPerspectiveAwareModel {
 		private final IBakedModel base;
 		private final List<BakedQuad> fluid;
 
@@ -214,6 +228,12 @@ public class TankItemModel implements ISmartItemModel {
 		@Override
 		public VertexFormat getFormat() {
 			return DefaultVertexFormats.ITEM;
+		}
+
+		@Override
+		public org.apache.commons.lang3.tuple.Pair<? extends IFlexibleBakedModel, javax.vecmath.Matrix4f> handlePerspective(
+				ItemCameraTransforms.TransformType cameraTransformType) {
+			return HeldBlockPerspective.handlePerspective(this, base, cameraTransformType);
 		}
 	}
 

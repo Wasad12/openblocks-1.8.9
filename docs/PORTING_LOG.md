@@ -838,6 +838,25 @@ screenshots before touching). Rebuilt (176,394 bytes), deployed.
 
 ---
 
+## 2026-09-12 — Feature: XP Drain + XP Shower (fix loop 2 — TPP-held look)
+
+User classifies: shower-held = wrong size/angle, tank-held = empty frame wrong too
+(no screenshots). Both 1.12.2 items render TPP via forge:default-block, so the fix
+replicates it exactly instead of guessing JSON numbers: read the real 1.12.x
+ForgeBlockStateV1 source (defaults: TPP = convert(0, 2.5, 0, 75, 45, 0, 0.375)) and
+1.8.9's application path (RenderItem routes EVERYTHING through
+ForgeHooksClient.handleCameraTransforms; plain models take the vanilla unwrapped
+branch, which is why 1.12.2 numbers cannot transfer literally — third independent
+confirmation of the glider finding). New HeldBlockPerspective composes the identical
+folded matrix in vecmath (T(0.5).T(t).Rx.Ry.S.T(-0.5)) and installs it via
+IPerspectiveAwareModel on tank items (empty + filled) and a new shower item wrapper;
+all other contexts keep today's behavior. Residual: hardcoded arm poses differ by
+version (accepted, glider-proven small). Drain keeps its shipped flat display
+(1.12.2 drain is a plain blockstate = vanilla path, different case). Rebuilt
+(182,015 bytes), deployed. Awaiting TPP screenshots for all three held items.
+
+---
+
 ## 2026-09-12 — Feature: Hang Glider (post-completion fix — survival hand-hiding)
 
 User: deployed glider hides in hand in creative but NOT in survival (flight itself works
