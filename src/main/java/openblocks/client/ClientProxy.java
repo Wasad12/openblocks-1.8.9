@@ -2,7 +2,6 @@ package openblocks.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -10,10 +9,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ICustomModelLoader;
-import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -27,23 +23,6 @@ public class ClientProxy implements IOpenBlocksProxy {
 
 	public ClientProxy() {}
 
-	// TEMPORARY DEBUG (fix loop 4) — holds the resource manager handed to reload listeners.
-	static volatile IResourceManager probeManager = null;
-	// TEMPORARY DEBUG (fix loop 4) — re-entrancy guard for the instrumented probe call below.
-	static final java.util.Set<String> probeActive =
-			java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<String, Boolean>());
-
-	// TEMPORARY DEBUG (fix loop 4)
-	static void testProbeResource(org.apache.logging.log4j.Logger log, IResourceManager mgr,
-			String tag, ResourceLocation loc) {
-		try {
-			mgr.getResource(loc);
-			log.info("[MODELPROBE] {} getResource OK: {}", tag, loc);
-		} catch (Exception e) {
-			log.info("[MODELPROBE] {} getResource FAIL: {} : {}", tag, loc, e.toString());
-		}
-	}
-
 	@Override
 	public void preInit() {
 		new KeyInputHandler().setup();
@@ -56,100 +35,6 @@ public class ClientProxy implements IOpenBlocksProxy {
 		});
 
 		registerItemModels();
-
-		// TEMPORARY DEBUG (fix loop 4, bake forensics) — remove once file-first failure is explained.
-		// Passive listener: logs every model location the bake requests for our domain, changes nothing.
-		ModelLoaderRegistry.registerLoader(new ICustomModelLoader() {
-			@Override
-			public void onResourceManagerReload(IResourceManager resourceManager) {
-				ClientProxy.probeManager = resourceManager;
-				org.apache.logging.log4j.LogManager.getLogger().info(
-						"[MODELPROBE] reload manager: {}@{}",
-						resourceManager.getClass().getName(),
-						Integer.toHexString(System.identityHashCode(resourceManager)));
-			}
-
-			@Override
-			public boolean accepts(ResourceLocation modelLocation) {
-				if ("openblocks".equals(modelLocation.getResourceDomain())) {
-					org.apache.logging.log4j.Logger probeLog = org.apache.logging.log4j.LogManager.getLogger();
-					probeLog.info("[MODELPROBE] loader asked for '{}' (class {})",
-							modelLocation, modelLocation.getClass().getSimpleName());
-					// Same-thread, bake-time visibility check for the exact file VanillaLoader will request.
-					ResourceLocation exact = new ResourceLocation(modelLocation.getResourceDomain(),
-							modelLocation.getResourcePath() + ".json");
-					IResourceManager game = Minecraft.getMinecraft().getResourceManager();
-					IResourceManager bake = ClientProxy.probeManager;
-					probeLog.info("[MODELPROBE] managers: game={}@{} bake={}@{}",
-							game == null ? "null" : game.getClass().getName(),
-							game == null ? "?" : Integer.toHexString(System.identityHashCode(game)),
-							bake == null ? "null" : bake.getClass().getName(),
-							bake == null ? "?" : Integer.toHexString(System.identityHashCode(bake)));
-					if (game != null) {
-						try {
-							game.getResource(exact);
-							probeLog.info("[MODELPROBE] game-manager getResource OK: {}", exact);
-						} catch (Exception e) {
-							probeLog.info("[MODELPROBE] game-manager getResource FAIL: {} : {}", exact, e.toString());
-						}
-					}
-					if (bake != null) {
-						try {
-							bake.getResource(exact);
-							probeLog.info("[MODELPROBE] bake-manager getResource OK: {}", exact);
-						} catch (Exception e) {
-							probeLog.info("[MODELPROBE] bake-manager getResource FAIL: {} : {}", exact, e.toString());
-						}
-					}
-					// TEMPORARY DEBUG v5: identify the manager VanillaLoader's loader actually uses
-					// (ModelLoader.resourceManager field) and test OUR + TE + vanilla files through it.
-					try {
-						Class<?> vlClass = Class.forName(
-								"net.minecraftforge.client.model.ModelLoader$VanillaLoader");
-						Object instance = vlClass.getField("instance").get(null);
-						java.lang.reflect.Method getLoader = vlClass.getDeclaredMethod("getLoader");
-						getLoader.setAccessible(true);
-						Object loader = getLoader.invoke(instance);
-						java.lang.reflect.Field rmField = loader.getClass().getSuperclass()
-								.getDeclaredField("resourceManager");
-						rmField.setAccessible(true);
-						Object loaderRm = rmField.get(loader);
-						probeLog.info("[MODELPROBE] loader.resourceManager: {}@{}",
-								loaderRm == null ? "null" : loaderRm.getClass().getName(),
-								loaderRm == null ? "?"
-										: Integer.toHexString(System.identityHashCode(loaderRm)));
-						if (loaderRm instanceof IResourceManager) {
-							IResourceManager loaderMgr = (IResourceManager)loaderRm;
-							probeLog.info("[MODELPROBE] loaderRm domains: {}", loaderMgr.getResourceDomains());
-							testProbeResource(probeLog, loaderMgr, "loaderRm",
-									new ResourceLocation("openblocks", "models/item/glider_wing.json"));
-							testProbeResource(probeLog, loaderMgr, "loaderRm",
-									new ResourceLocation("thermalexpansion", "models/item/DustWood.json"));
-							testProbeResource(probeLog, loaderMgr, "loaderRm",
-									new ResourceLocation("minecraft", "models/item/diamond_sword.json"));
-						}
-					} catch (Throwable t) {
-						probeLog.info("[MODELPROBE] reflection FAILED: {}", t.toString());
-					}
-				}
-				return false;
-			}
-
-			@Override
-			public IModel loadModel(ResourceLocation modelLocation) {
-				return null; // never reached (accepts always false)
-			}
-		});
-
-		// TEMPORARY DEBUG (fix loop 4) — direct resource-manager visibility check for the exact
-		// file the bake should resolve. Runs in preInit; result approximates bake-time visibility.
-		try {
-			Minecraft.getMinecraft().getResourceManager()
-					.getResource(new ResourceLocation("openblocks", "models/item/hang_glider.json"));
-			org.apache.logging.log4j.LogManager.getLogger().info("[MODELPROBE] direct getResource models/item/hang_glider.json OK");
-		} catch (Exception e) {
-			org.apache.logging.log4j.LogManager.getLogger().info("[MODELPROBE] direct getResource models/item/hang_glider.json FAIL: {}", e.toString());
-		}
 	}
 
 	@Override
@@ -173,9 +58,10 @@ public class ClientProxy implements IOpenBlocksProxy {
 		if (OpenBlocks.Items.hangGlider != null) {
 			final ModelResourceLocation normalLocation = new ModelResourceLocation("openblocks:hang_glider", "inventory");
 			final ModelResourceLocation hiddenLocation = new ModelResourceLocation("openblocks:hang_glider_hidden", "inventory");
-			// NOTE: plain ResourceLocations (NOT ModelResourceLocations): 1.8.9 resolves item model
-			// files from these strings, and MRL-style "name#inventory" strings break file lookup
-			// (no "#" stripping on this Forge line). See docs/ARCHITECTURE.md.
+			// NOTE: plain ResourceLocations (NOT ModelResourceLocations): matches vanilla 1.8.9
+			// convention (e.g. vanilla "bow", "coal"). Forge maps these to models/item/*.json.
+			// Item JSONs must use "builtin/generated" as parent: 1.8.9 has no models/item/generated.json
+			// (added in 1.9); builtin/generated is its 1.8.9 equivalent (vanilla items use it too).
 			ModelBakery.registerItemVariants(OpenBlocks.Items.hangGlider,
 					new ResourceLocation("openblocks:hang_glider"),
 					new ResourceLocation("openblocks:hang_glider_hidden"));
