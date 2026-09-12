@@ -16,6 +16,9 @@ public class ItemHangGlider extends Item {
 	public ItemHangGlider() {
 		setUnlocalizedName("openblocks.hang_glider");
 		setCreativeTab(OpenBlocks.tabOpenBlocks);
+		// DELIBERATE deviation from 1.12.2 (user request 2026-09-12): the glider is
+		// unstackable there it stacks to 64; a glider stacking makes no sense.
+		setMaxStackSize(1);
 	}
 
 	@Override
