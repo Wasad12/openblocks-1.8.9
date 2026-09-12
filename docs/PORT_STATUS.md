@@ -11,17 +11,17 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-12 (`00acc15`, fix loops 3-4 + docs).
-- **Current feature:** XP Drain + XP Shower (IN PROGRESS — fix loops 3-4 user-verified 2026-09-12, ready to push)
-- **Feature status:** Phase C done — both blocks + TEs + NoFly orb (id 709) + spray FX + recipes.
-- **Last completed feature:** Tank (user-confirmed COMPLETED 2026-09-12)
+- **Current feature:** none — XP Drain + XP Shower COMPLETED (user-confirmed 2026-09-12).
+  Awaiting next feature instruction.
+- **Feature status:** no active feature. May revisit XP Drain/Shower if issues surface later.
+- **Last completed feature:** XP Drain + XP Shower (user-confirmed COMPLETED 2026-09-12)
 - **Current problem:** none — all reported visuals verified fixed, tree ready to commit + push.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
 - **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (176,716 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (XP fix loop 4: solid shower/drain collision + bounds)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-12 (unrelated mods untouched)
-- **Last user test result (2026-09-12):** XP fix loops 3-4 user-verified — tank held
-  correct, shower + drain held 100% identical to 1.12.2, shower solid + hitbox fixed
-  ("all fixed now"). Prior: Tank COMPLETED (connected frames, item fluid, silent fills,
-  survival NBT drops) + glider survival hand-hiding FIXED.
+- **Last user test result (2026-09-12):** XP Drain + XP Shower COMPLETED ("all fixed now,
+  we can move" — revisit later if issues surface). Prior: Tank COMPLETED + glider survival
+  hand-hiding FIXED.
 - **Known issues:** see `KNOWN_ISSUES.md`
 - **Important discoveries:**
   - `OpenBlocks-1.12.X/OpenModsLib/` submodule directory is EMPTY — the lib source of truth is the
@@ -33,11 +33,10 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Await next instruction — XP Drain/Shower fixes verified + pushed; feature stays
-     IN PROGRESS per §7 until explicit completion confirmation.
+  1. Await user's next feature instruction — no active feature, tree clean, all issues closed.
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `00acc15` 2026-09-12
-     (all local work through `80551c6` now visible). Future pushes need explicit
-     request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
+     (all code work through `80551c6` now visible; this completion-mark commit pushes on
+     next explicit request).
 - **Last known-good Git commit:** `80551c6` (XP fix loops 3-4 user-verified, built
   176,716 bytes + deployed 2026-09-12; src matches deployed JAR).
 - **Last known-good Git commit:** `e1f3596` (XP fix loop 2) + uncommitted fix loops 3-4

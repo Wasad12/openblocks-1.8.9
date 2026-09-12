@@ -5,9 +5,7 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-- XP Drain (`BlockXPDrain` + `TileEntityXPDrain`) + XP Shower (`BlockXPShower` +
-  `TileEntityXPShower` + `EntityXPOrbNoFly` + spray FX). Phase A/B done 2026-09-12;
-  implementing.
+_none — awaiting next feature instruction._
 
 ## COMPLETED
 
@@ -17,6 +15,10 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 - Tank (`BlockTank` + `TileEntityTank` + `ItemTankBlock` + connected-frame smart model +
   TESR fluid + item fluid box + xpJuice fluid + recipe + silent fills + harvest-stash NBT
   drops). User-confirmed COMPLETED 2026-09-12 ("working and looking fine").
+- XP Drain (`BlockXPDrain` + `TileEntityXPDrain`) + XP Shower (`BlockXPShower` +
+  `TileEntityXPShower` + `EntityXPOrbNoFly` + spray FX). User-confirmed COMPLETED 2026-09-12
+  ("all fixed now" — drain/shower behavior, held looks identical to 1.12.2, shower solid +
+  hitbox fixed; fix loops 1-4 included). May revisit if issues surface later.
 
 ## NOT STARTED
 

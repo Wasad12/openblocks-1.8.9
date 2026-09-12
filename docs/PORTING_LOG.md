@@ -961,3 +961,15 @@ block-item display) and 4 (offset collision + block bounds) both VERIFIED. Commi
 and subtree-pushed to `Wasad12/openblocks-1.8.9` on explicit user request. Feature
 stays IN PROGRESS per §7 until explicit completion confirmation (next feature
 instruction or "completed").
+
+---
+
+## 2026-09-12 — Feature: XP Drain + XP Shower COMPLETED (user-confirmed)
+
+User: "xp drain + shower now complete we can move but if i found issue in them in the
+future we can go back and fix them". Per §7 this is explicit completion confirmation:
+feature moves to COMPLETED. Final state: faithful 1.8.9 port (drain players/orbs into
+tank below, redstone-gated shower pours NoFly orbs + spray, arm touches tank, explicit
+orb renderer, recipes) with user-verified parity on behavior, held looks (block-item
+display), solidity and hitboxes — plus the standing agreement to revisit if issues
+surface later. No active feature; awaiting next instruction.
