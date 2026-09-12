@@ -211,6 +211,12 @@ Source: `BlockXPDrain`/`TileEntityXPDrain`, `BlockXPShower`/`TileEntityXPShower`
   `spawnLiquidSpray` (server: 2 / no-op).
 - Harvest rules: vanilla defaults both versions (`OpenBlock` sets none) — glass drain
   and rock shower behave like vanilla glass/stone. No custom sounds beyond `random.orb`.
+- Shower blockstate (fix loop 1): must enumerate facing x powered (8 combos) — 1.8.9
+  falls back to the missing model for any valid state without a variant entry.
+- Drain item display (fix loop 1): flat plate gets the verbatim vanilla flat-item
+  `display` (thirdperson [-90,0,0]/[0,1,-3]/0.55 + firstperson sword values — shared by
+  redstone/hopper/torch/cauldron, VERIFIED in the client jar), same family as the
+  glider TPP fix. OPEN: shower-held and tank-held TPP symptoms need screenshots first.
 - Compiler lessons (fix loop 1, all 1.9-isms caught at build): `Vec3d`→`Vec3`;
   `BlockStateContainer`→`BlockState`; `getStateForPlacement`→`onBlockPlaced` (same args);
   no `resetPositionToBB` (inlined from boundingBox); `slipperiness` is a public field.

@@ -1,8 +1,12 @@
 {
     "variants": {
-        "facing=north": { "model": "openblocks:xp_shower" },
-        "facing=east": { "model": "openblocks:xp_shower", "y": 90 },
-        "facing=south": { "model": "openblocks:xp_shower", "y": 180 },
-        "facing=west": { "model": "openblocks:xp_shower", "y": 270 }
+        "facing=north,powered=false": { "model": "openblocks:xp_shower" },
+        "facing=east,powered=false": { "model": "openblocks:xp_shower", "y": 90 },
+        "facing=south,powered=false": { "model": "openblocks:xp_shower", "y": 180 },
+        "facing=west,powered=false": { "model": "openblocks:xp_shower", "y": 270 },
+        "facing=north,powered=true": { "model": "openblocks:xp_shower" },
+        "facing=east,powered=true": { "model": "openblocks:xp_shower", "y": 90 },
+        "facing=south,powered=true": { "model": "openblocks:xp_shower", "y": 180 },
+        "facing=west,powered=true": { "model": "openblocks:xp_shower", "y": 270 }
     }
 }

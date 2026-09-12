@@ -823,6 +823,21 @@ orb renderer visible; recipes craft.
 
 ---
 
+## 2026-09-12 — Feature: XP Drain + XP Shower (fix loop 1 — shower states + held TPP)
+
+User test: drain behavior (drain + take-back), shower behavior (orbs + redstone) all
+CORRECT. Visual issues: (2) placed shower = missing-texture cube — ROOT CAUSE: my
+blockstate listed only 4 facing variants while the block has facing x powered = 8
+states; unmatched states fall back to missing. Fixed by enumerating all 8 (powered
+changes nothing visually, like 1.12.2). (1) drain held-TPP wrong — drain is a flat
+plate with no display block; gave the item the verbatim vanilla flat-item display
+(redstone/hopper/torch/cauldron all share it — VERIFIED in the client jar), same
+proven family as the glider fix. OPEN, needs eyes: (3) shower held-TPP, (6) tank
+held-TPP (tank TPP was confirmed identical pre-TankItemModel; need current symptom +
+screenshots before touching). Rebuilt (176,394 bytes), deployed.
+
+---
+
 ## 2026-09-12 — Feature: Hang Glider (post-completion fix — survival hand-hiding)
 
 User: deployed glider hides in hand in creative but NOT in survival (flight itself works
