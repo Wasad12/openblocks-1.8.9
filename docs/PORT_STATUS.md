@@ -32,10 +32,14 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. USER TEST XP pair in `1.8.9(6)`: craft both; drain over tank + stand on it (XP falls,
-     tank fills, orb sound); throw XP orbs onto drain; shower on tank wall + redstone power
-     (orbs pour below + green spray); unpowered shower idle; shower arm visually touches tank.
-- **Last known-good Git commit:** `39651c2` (Tank implemented, built 132,610 bytes + deployed 2026-09-12; src matches deployed JAR, docs-only changes after build do not affect it)
+  1. SESSION HANDOFF — new session starts here: tree clean at `e1f3596`, XP Drain/Shower
+     IN PROGRESS (fix loop 2 deployed, UNTESTED). Read §16 order, then await user retest:
+     held-TPP look of drain/shower/tank(empty+filled), placed-shower texture, FPP sanity.
+     Fix loop 1 (shower states, drain display) also UNTESTED — same retest covers it.
+  2. GitHub (`Wasad12/openblocks-1.8.9`) is BEHIND local (last subtree push `c8fd7d5`);
+     push with `git subtree push --prefix OpenBlocks-1.8.9 origin master` once the user
+     confirms, or on explicit push request (pushes need explicit request).
+- **Last known-good Git commit:** `e1f3596` (XP fix loop 2, built 182,015 bytes + deployed 2026-09-12; src matches deployed JAR)
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
   `git status` permanently list 1369 phantom-modified reference files (content PROVEN identical via

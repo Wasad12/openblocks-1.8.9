@@ -857,6 +857,30 @@ version (accepted, glider-proven small). Drain keeps its shipped flat display
 
 ---
 
+## 2026-09-12 — SESSION HANDOFF (next session starts here)
+
+- State: XP Drain + XP Shower IN PROGRESS. Comitted work: Phase C (`8a842f9`), fix loop 1
+  (`b33eaf1`: shower 8-state blockstate, drain flat-item display), fix loop 2 (`e1f3596`:
+  HeldBlockPerspective default-block TPP matrices for tank/shower). Deployed build
+  182,015 bytes matches source (`e1f3596`). Tree clean, no TEMPORARY code.
+- UNTESTED: everything from fix loops 1-2 (shower placed texture, drain/shower/tank
+  held-TPP, FPP sanity). User was asked for TPP screenshots per item; none received yet.
+- GitHub BEHIND: `Wasad12/openblocks-1.8.9` last received subtree push `c8fd7d5`
+  (Hang Glider era). Local master is ~14 commits ahead (Tank + glider fix + XP).
+  Push ONLY on explicit user request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
+- Completed and verified: Hang Glider (COMPLETED + survival-hiding fix verified),
+  Tank (COMPLETED 2026-09-12).
+- Read order (§16): `OpenBlocks-1.8.9/docs/PORT_STATUS.md` → `FEATURES.md` → this log
+  tail → `git log --oneline -5`. Then await user retest / next instruction.
+- Standing traps: reference trees are `assume-unchanged` (phantom mtime noise — verify
+  via `git hash-object` vs `git rev-parse`, never mass-touch); Gradle needs `-g
+  C:\Users\wassi\.gradle-189` + Java 8 (`jdk-8.0.492.9-hotspot`) + `--offline` is fine;
+  PowerShell: no `head`, no piping paths into `git --stdin`; `jar xf` dumps into CWD.
+  1.8 branches are BANNED sources. Theories marked INFERRED are disproven until
+  VERIFIED; trust only log/bytecode/probe evidence.
+
+---
+
 ## 2026-09-12 — Feature: Hang Glider (post-completion fix — survival hand-hiding)
 
 User: deployed glider hides in hand in creative but NOT in survival (flight itself works
