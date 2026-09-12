@@ -1117,3 +1117,21 @@ exact for all vanilla enchants); `AnvilUpdateEvent` has public fields;
 `block/block` parent does NOT exist in 1.8.9 (parentless block model like our
 shower); bare `auto_anvil.png` unreferenced (skipped). TwoDirections → vanilla-style
 `FACING` + `rotateY` placement (same perpendicular long axis).
+
+---
+
+## 2026-09-12 — Feature: Auto Anvil (Phase C — implemented, built, deployed)
+
+New: `common/block/BlockAutoAnvil`, `common/tileentity/TileEntityAutoAnvil`,
+`common/container/ContainerAutoAnvil`, `client/gui/GuiAutoAnvil`,
+`openmods/utils/VanillaAnvilLogic` (ID-map port), `openmods/gui/component/
+GuiComponentSprite` (verbatim) + registration (block/TE/recipe) + ClientProxy item
+model + blockstate/block-item models + 6 textures (lang already had all keys).
+Zero compile iterations — every INFERRED 1.8.9 name (`Material.anvil`,
+`Block.soundTypeAnvil`/`setStepSound`, `Items.enchanted_book`,
+`TextureMap.locationBlocksTexture`, `Blocks.anvil`, `NBTTagList.tagCount`)
+compiled clean first try. `:reobfJar` BUILD SUCCESSFUL → 463,781 bytes (all anvil
+classes + models + textures VERIFIED inside), deployed (unrelated mods untouched),
+committed (`bfa3bb8`). Awaiting user test: recipe crafts; placed anvil renders +
+orients; GUI (hammer/plus sprites, XP gauge, 4 tabs) matches 1.12.2; manual repair
+consumes liquid XP + plays anvil sound; auto in/out/drink via side tabs.
