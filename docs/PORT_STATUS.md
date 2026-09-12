@@ -10,7 +10,7 @@
 - **GitHub:** `https://github.com/Wasad12/openblocks-1.8.9` (public) — receives ONLY the
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
-  Last push 2026-09-12 (`d204756`, Hang Glider complete; docs move pushes separately).
+  Last push 2026-09-12 (`c8fd7d5`, code + docs, verified: 39 files incl. `docs/`).
 - **Current feature:** none (Hang Glider COMPLETED 2026-09-12; awaiting next instruction)
 - **Feature status:** Idle — no active feature.
 - **Last completed feature:** Hang Glider (user-confirmed COMPLETED 2026-09-12)
