@@ -49,8 +49,18 @@ public class ClientProxy implements IOpenBlocksProxy {
 			@Override
 			public boolean accepts(ResourceLocation modelLocation) {
 				if ("openblocks".equals(modelLocation.getResourceDomain())) {
-					org.apache.logging.log4j.LogManager.getLogger().info("[MODELPROBE] loader asked for '{}' (class {})",
+					org.apache.logging.log4j.Logger probeLog = org.apache.logging.log4j.LogManager.getLogger();
+					probeLog.info("[MODELPROBE] loader asked for '{}' (class {})",
 							modelLocation, modelLocation.getClass().getSimpleName());
+					// Same-thread, bake-time visibility check for the exact file VanillaLoader will request.
+					try {
+						Minecraft.getMinecraft().getResourceManager().getResource(
+								new ResourceLocation(modelLocation.getResourceDomain(),
+										modelLocation.getResourcePath() + ".json"));
+						probeLog.info("[MODELPROBE] bake-time getResource OK: {}", modelLocation);
+					} catch (Exception e) {
+						probeLog.info("[MODELPROBE] bake-time getResource FAIL: {} : {}", modelLocation, e.toString());
+					}
 				}
 				return false;
 			}
