@@ -175,6 +175,10 @@ lang keys (already in our `en_US.lang`: `tile.openblocks.tank.*`, `fluid.openblo
 - `xpJuice` fluid registered as part of this feature (required by tank XP drain; §19):
   same name/props (`luminosity 10, density 800, viscosity 1500`), sounds adapted to 1.8.9
   string form. XP Bucket item itself stays a separate future feature (no `BucketFillHandler`).
+- Invisible-block fix (2026-09-12): 1.8.9 `BlockContainer.getRenderType()` returns -1
+  (INVISIBLE — VERIFIED via `javap`: `iconst_m1`), which is why the placed tank rendered
+  nothing while the TESR fluid showed. 1.12.2 `OpenBlock` extends plain `Block` (MODEL),
+  so 1.12.2 never hits this. Fix: `BlockTank.getRenderType()` returns 3 (MODEL).
 - Faithful details kept: 16-bucket capacity, neighbour balancing + bottom-fill column logic,
   pick-block NBT (incl. the 1.12.2 quirk of normalizing `Amount` to capacity), harvest drops
   with fluid NBT, comparator output, light emission, creative-search filled-tank listing

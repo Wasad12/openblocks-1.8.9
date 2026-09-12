@@ -56,6 +56,12 @@ public class BlockTank extends BlockContainer {
 	}
 
 	@Override
+	public int getRenderType() {
+		// 1.8.9 BlockContainer returns -1 (INVISIBLE); we have a static frame model + TESR.
+		return 3;
+	}
+
+	@Override
 	public EnumWorldBlockLayer getBlockLayer() {
 		return EnumWorldBlockLayer.CUTOUT;
 	}
