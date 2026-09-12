@@ -9,8 +9,6 @@ _none — awaiting next feature instruction._
 
 ## COMPLETED
 
-## COMPLETED
-
 - Hang Glider (`ItemHangGlider` + `EntityHangGlider` + renderer + vario/thermal + recipes +
   perspective-aware item model + unstackable glider). User-confirmed COMPLETED 2026-09-12.
   Post-completion survival hand-hiding fix (player-scoped, no identity scan) user-confirmed FIXED 2026-09-12.
@@ -32,7 +30,6 @@ _none — awaiting next feature instruction._
 ### Blocks (+ tile entities where present)
 
 - Auto Anvil (`BlockAutoAnvil` + `TileEntityAutoAnvil`)
-- Auto Enchantment Table (`BlockAutoEnchantmentTable` + `TileEntityAutoEnchantmentTable`)
 - Bear Trap (`BlockBearTrap` + `TileEntityBearTrap`)
 - Big Button (`BlockBigButton` + `TileEntityBigButton`)
 - Block Breaker (`BlockBlockBreaker` + `TileEntityBlockBreaker`)

@@ -1051,3 +1051,36 @@ label, XP gauge, level button, 4 side tabs with 3D previews), book TESR, real
 openmods sync/RPC/GUI stack over the 1.8.9 transport, recipe — with user-verified
 parity on visuals, tabs, setting persistence and auto-drink. Committed and
 subtree-pushed on explicit user request.
+
+---
+
+## 2026-09-12 — SESSION HANDOFF (next session starts here)
+
+- State: Auto Enchantment Table COMPLETED (user-confirmed). No active feature, no
+  open problems, no TEMPORARY code. Deployed build 436,283 bytes matches source
+  (`ebcc4aa`). Completed tally: Hang Glider, Tank, XP Drain + XP Shower, Auto
+  Enchantment Table (all user-confirmed; XP/auto-enchant may be revisited if issues
+  surface later).
+- Debug audit PASSED this session: zero hits for TEMPORARY/GLIDERDBG/MODELPROBE/
+  System.out/printStackTrace/FIXME across `OpenBlocks-1.8.9/src` (the single TODO
+  hit is `GenericInventory.java:231`, verbatim from the 1.12.2 original — kept
+  faithfully, not our leftover); no stray dirs in the project (`assets/` absent,
+  `jar xf` hygiene kept).
+- GitHub: `Wasad12/openblocks-1.8.9` received subtree push `154070a` 2026-09-12
+  (all work through `ebcc4aa` now visible). Local master is one record commit ahead
+  (`4603401`, push bookkeeping — same pattern as before). Push ONLY on explicit
+  user request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
+- Untracked at repo root: `open1.8.9.zip` (26MB, dated 2026-09-12, origin unknown —
+  NOT created by this session). Left untouched; do not touch without asking.
+- Docs fixed this session: FEATURES.md duplicate `## COMPLETED` header removed +
+  Auto Enchantment Table removed from NOT STARTED; PORT_STATUS.md duplicate
+  last-completed lines merged + stale lines refreshed.
+- Read order (§16): `OpenBlocks-1.8.9/docs/PORT_STATUS.md` → `FEATURES.md` → this log
+  tail → `git log --oneline -5`. Then await user's next feature instruction.
+- Standing traps: reference trees are `assume-unchanged` (phantom mtime noise —
+  verify via `git hash-object` vs `git rev-parse`, never mass-touch); Gradle needs
+  `-g C:\Users\wassi\.gradle-189` + Java 8 (`jdk-8.0.492.9-hotspot`) + `--offline`
+  is fine; PowerShell: no `head`, no piping paths into `git --stdin`, no
+  `2>/dev/null` (Windows — use `-ErrorAction SilentlyContinue`); `jar xf` dumps
+  into CWD. 1.8 branches are BANNED sources. Theories marked INFERRED are disproven
+  until VERIFIED; trust only log/bytecode/probe evidence.

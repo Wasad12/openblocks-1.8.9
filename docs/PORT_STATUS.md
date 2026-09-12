@@ -14,9 +14,9 @@
 - **Current feature:** none — Auto Enchantment Table COMPLETED (user-confirmed 2026-09-12).
   Awaiting next feature instruction.
 - **Feature status:** no active feature. May revisit completed features if issues surface later.
-- **Last completed feature:** Auto Enchantment Table (user-confirmed COMPLETED 2026-09-12)
-- **Last completed feature:** XP Drain + XP Shower (user-confirmed COMPLETED 2026-09-12)
-- **Current problem:** none — all reported visuals verified fixed, tree ready to commit + push.
+- **Last completed feature:** Auto Enchantment Table (user-confirmed COMPLETED 2026-09-12).
+  Prior: XP Drain + XP Shower, Tank, Hang Glider (all user-confirmed).
+- **Current problem:** none — no open problems, no TEMPORARY code.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
 - **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (436,283 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-12 (Auto Enchantment Table fix loop 1: integrated-server RPC world lookup)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-12 (unrelated mods untouched)
@@ -38,8 +38,8 @@
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `154070a` 2026-09-12
      (all local work through `ebcc4aa` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
-- **Last known-good Git commit:** `ebcc4aa` (Auto Enchantment Table COMPLETED; code
-  matches deployed 436,283-byte JAR).
+- **Last known-good Git commit:** `4603401` (push record; code at `ebcc4aa` matches
+  deployed 436,283-byte JAR).
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
   `git status` permanently list 1369 phantom-modified reference files (content PROVEN identical via
