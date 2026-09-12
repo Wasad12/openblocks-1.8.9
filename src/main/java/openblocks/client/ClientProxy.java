@@ -29,6 +29,9 @@ public class ClientProxy implements IOpenBlocksProxy {
 
 	// TEMPORARY DEBUG (fix loop 4) — holds the resource manager handed to reload listeners.
 	static volatile IResourceManager probeManager = null;
+	// TEMPORARY DEBUG (fix loop 4) — re-entrancy guard for the instrumented probe call below.
+	static final java.util.Set<String> probeActive =
+			java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<String, Boolean>());
 
 	@Override
 	public void preInit() {
@@ -85,6 +88,30 @@ public class ClientProxy implements IOpenBlocksProxy {
 							probeLog.info("[MODELPROBE] bake-manager getResource OK: {}", exact);
 						} catch (Exception e) {
 							probeLog.info("[MODELPROBE] bake-manager getResource FAIL: {} : {}", exact, e.toString());
+						}
+					}
+					// TEMPORARY DEBUG v4: run the EXACT failing call ourselves and log the full
+					// exception chain (Forge swallows the FNFE path). Guarded against re-entrancy.
+					if (modelLocation.getResourcePath().startsWith("models/")
+							&& ClientProxy.probeActive.add(modelLocation.toString())) {
+						try {
+							ResourceLocation file = new ResourceLocation(
+									modelLocation.getResourceDomain(),
+									modelLocation.getResourcePath().substring("models/".length()));
+							try {
+								IModel m = ModelLoaderRegistry.getModel(file);
+								probeLog.info("[MODELPROBE] instrumented getModel OK: {} -> {}",
+										file, m == null ? "null" : m.getClass().getName());
+							} catch (Throwable t) {
+								StringBuilder chain = new StringBuilder(t.toString());
+								for (Throwable c = t.getCause(); c != null; c = c.getCause()) {
+									chain.append(" <= ").append(c.toString());
+								}
+								probeLog.info("[MODELPROBE] instrumented getModel THROW: {} : {}",
+										file, chain.toString());
+							}
+						} finally {
+							ClientProxy.probeActive.remove(modelLocation.toString());
 						}
 					}
 				}
