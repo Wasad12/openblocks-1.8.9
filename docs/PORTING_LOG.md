@@ -1495,3 +1495,19 @@ upside-down blob; 1.12.2-verbatim = flat at hand; now stood-up 1.12.2-yaw.
 JSON-only: rebuilt (BUILD SUCCESSFUL, 523,049 bytes, same size — two chars),
 redeployed (unrelated mods untouched). Awaiting TPP-held screenshot: ring
 vertical in fist? then position/tilt next only if needed.
+
+---
+
+## 2026-09-13 — Feature: Fan (fix loop 7 — held size 4x, MEASURED)
+
+Side-by-side comparison (1.12.2 vs 1.8.9 TPP): orientation now reads correctly
+(ring vertical, facing camera) and position is close (both at the fist), but
+ours renders far smaller — fan/head px ratio 0.20 vs 0.92 (camera-independent,
+same player model), i.e. ~4.6x too small DESPITE the same 0.375 value in both
+JSONs. Same-numbers≠same-pixels once more (scale joins rotation on the
+doesn't-transfer-literally list — the 1.12-to-1.8 display pipelines compose
+scale differently). Single-variable step: scale 0.375 → 1.5 (4x, just under the
+measured 4.6x to avoid overshoot; rotation/translation untouched, so position
+cannot move — scale is about the model center). JSON-only: rebuilt (BUILD
+SUCCESSFUL, 523,047 bytes), redeployed (unrelated mods untouched). Awaiting
+TPP-held screenshot: compare SIZE now; position next only if size lands.
