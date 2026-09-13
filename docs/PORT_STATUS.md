@@ -11,19 +11,22 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-13 (`3851fee`, Fan complete — all work through `84bfe04`).
-- **Current feature:** Last Stand enchantment — Phase C implemented, built, deployed, UNTESTED.
-- **Feature status:** Last Stand IN PROGRESS. May revisit completed features if issues surface later.
-- **Last completed feature:** Fan (user-confirmed COMPLETED 2026-09-13).
-  Prior: Vacuum Hopper, Auto Anvil, Auto Enchantment Table, XP Drain + XP Shower,
-  Tank, Hang Glider (all user-confirmed).
+- **Current feature:** none — Last Stand COMPLETED (user-confirmed 2026-09-13).
+  Awaiting next feature instruction.
+- **Feature status:** no active feature. May revisit completed features if issues surface later.
+- **Last completed feature:** Last Stand (user-confirmed COMPLETED 2026-09-13).
+  Prior: Fan, Vacuum Hopper, Auto Anvil, Auto Enchantment Table,
+  XP Drain + XP Shower, Tank, Hang Glider (all user-confirmed).
 - **Current problem:** none — no open problems, no TEMPORARY code.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
 - **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (528,596 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-13 (Last Stand fix loop 1: tab book listing)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-13 (unrelated mods untouched)
-- **Last user test result (2026-09-13):** Last Stand "works fine" (no fix loops).
-  Prior: Fan COMPLETED + Vacuum Hopper COMPLETED + Auto Anvil COMPLETED + Auto
-  Enchantment Table COMPLETED + XP Drain/Shower COMPLETED + Tank COMPLETED +
-  glider fixes verified. Anvil texture color-bleed deployed, awaiting retest.
+- **Last user test result (2026-09-13):** Last Stand COMPLETED ("works fine" +
+  "it is complete" — lethal hits trade XP for survival, both books list; fix
+  loop 1 included). Prior: Fan COMPLETED + Vacuum Hopper COMPLETED + Auto Anvil
+  COMPLETED + Auto Enchantment Table COMPLETED + XP Drain/Shower COMPLETED +
+  Tank COMPLETED + glider fixes verified. Anvil texture color-bleed deployed,
+  awaiting retest.
 - **Known issues:** see `KNOWN_ISSUES.md`
 - **Important discoveries:**
   - `OpenBlocks-1.12.X/OpenModsLib/` submodule directory is EMPTY — the lib source of truth is the
@@ -35,7 +38,8 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Await user retest of Last Stand books on the OpenBlocks tab.
+  1. Subtree-push Last Stand to GitHub (user-requested).
+  2. Await user's next feature instruction — no active feature, tree clean.
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `3851fee`
      2026-09-13 (all local work through `84bfe04` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.

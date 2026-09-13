@@ -1599,3 +1599,15 @@ the OpenBlocks tab; Combat keeps the vanilla max-only book like every other
 enchantment. `:reobfJar` BUILD SUCCESSFUL → 528,596 bytes, deployed (unrelated
 mods untouched). Awaiting retest: Last Stand I + II books on the OpenBlocks
 tab; Combat listing unchanged.
+
+---
+
+## 2026-09-13 — Feature: Last Stand COMPLETED (user-confirmed)
+
+User: "works fine", then "it is complete , push to github". Per §7 this is
+explicit completion confirmation: feature moves to COMPLETED, with the standing
+revisit agreement. Final state: faithful 1.8.9 port — armor enchantment (ID
+180, 2 levels, 15/25 +10 curve), near-death XP-for-survival handler with
+configurable Nashorn formula + inline fallback, both books on the OpenBlocks
+tab — with user-verified parity on behavior and listing (fix loop 1 included).
+Tree clean, no TEMPORARY code. Pushing to GitHub on explicit user request.
