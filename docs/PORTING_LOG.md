@@ -1511,3 +1511,5 @@ measured 4.6x to avoid overshoot; rotation/translation untouched, so position
 cannot move — scale is about the model center). JSON-only: rebuilt (BUILD
 SUCCESSFUL, 523,047 bytes), redeployed (unrelated mods untouched). Awaiting
 TPP-held screenshot: compare SIZE now; position next only if size lands.
+
+User 2026-09-13: "now is good enough" — held size accepted, no further tuning.

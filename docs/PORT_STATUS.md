@@ -36,7 +36,8 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Await user TPP-held screenshot (SIZE vs 1.12.2).
+  1. Confirm with user whether the Fan is COMPLETE (§7) or more verifying remains
+     (airflow-vs-head check, click adjust, recipe, particles, stripe orientation).
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `93e6a20` 2026-09-12
      (all local work through `9316e9d` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
