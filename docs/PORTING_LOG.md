@@ -1577,3 +1577,5 @@ obtainable (table/creative); Last Stand I/II appliable to armor; lethal hit
 with XP levels drains XP and leaves 1 HP (no death); lethal hit WITHOUT enough
 XP kills normally; non-lethal hits untouched; custom formula in config works
 after restart.
+
+User 2026-09-13: "works fine" — test pass, no fix loops needed.

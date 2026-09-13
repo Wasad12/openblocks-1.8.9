@@ -20,11 +20,10 @@
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
 - **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (527,898 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-13 (Last Stand Phase C, one compile iteration)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-13 (unrelated mods untouched)
-- **Last user test result (2026-09-13):** Fan COMPLETED ("now is good enough"
-  — placed head + blades, repaint, drops, held size; fix loops 1-7). Prior:
-  Vacuum Hopper COMPLETED + Auto Anvil COMPLETED + Auto Enchantment Table
-  COMPLETED + XP Drain/Shower COMPLETED + Tank COMPLETED + glider fixes
-  verified. Anvil texture color-bleed deployed, awaiting retest.
+- **Last user test result (2026-09-13):** Last Stand "works fine" (no fix loops).
+  Prior: Fan COMPLETED + Vacuum Hopper COMPLETED + Auto Anvil COMPLETED + Auto
+  Enchantment Table COMPLETED + XP Drain/Shower COMPLETED + Tank COMPLETED +
+  glider fixes verified. Anvil texture color-bleed deployed, awaiting retest.
 - **Known issues:** see `KNOWN_ISSUES.md`
 - **Important discoveries:**
   - `OpenBlocks-1.12.X/OpenModsLib/` submodule directory is EMPTY — the lib source of truth is the
