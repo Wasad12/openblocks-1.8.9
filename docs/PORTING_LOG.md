@@ -1457,3 +1457,25 @@ re-verified INSIDE the built JAR (E4E3DC dominant, red 2x2 present). No code
 touched. `:reobfJar` BUILD SUCCESSFUL → 523,055 bytes, deployed (unrelated mods
 untouched). Awaiting user retest: 1.12.2 look (gray-white, pinwheel, stripe),
 stripe orientation.
+
+---
+
+## 2026-09-13 — Feature: Fan (fix loop 5 — held-TPP orientation, ROOT CAUSE FOUND)
+
+User screenshots (1.8.9 vs 1.12.2): ours shows a small gray blob off the fist,
+1.12.2 a big ring in the fist. Root cause: the item carried the verbatim vanilla
+block-item display (thirdperson [10,-45,170], the stone/glass family — right for
+CUBES like tank/shower, whose symmetry hides orientation, and forgiven on the
+thin drain plate). The tall asymmetric fan under a 170° Z-flip presents its base
+plate to the camera — the "small gray blob". Bytecode side-proof: 1.8.9
+`renderItem` centers the model (`translate(-0.5)`, PROVED via `javap`) before the
+display, so rotation is about the model center in both versions — orientation is
+the whole delta, not scale or position math. Fix (glider redstone-convergence
+lesson applied in reverse — use the REAL 1.12.2 numbers, not vanilla lookalikes):
+`thirdperson` now carries 1.12.2 `forge:default-block`'s TPP verbatim (rot
+[75,45,0] / trans [0,2.5,0] / scale 0.375, key respelled to the 1.8.9 `thirdperson`;
+`firstperson` deliberately untouched — no complaint there). If the frames still
+differ (glider precedent: 1.12.2 wraps display in `blockCenterToCorner`), the
+screenshot shows HOW and tuning continues from the true baseline. JSON-only (no
+code): rebuilt (BUILD SUCCESSFUL, 523,049 bytes), redeployed (unrelated mods
+untouched). Awaiting TPP-held screenshot at the same angle as the 1.12.2 shot.
