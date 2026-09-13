@@ -1479,3 +1479,19 @@ differ (glider precedent: 1.12.2 wraps display in `blockCenterToCorner`), the
 screenshot shows HOW and tuning continues from the true baseline. JSON-only (no
 code): rebuilt (BUILD SUCCESSFUL, 523,049 bytes), redeployed (unrelated mods
 untouched). Awaiting TPP-held screenshot at the same angle as the 1.12.2 shot.
+
+---
+
+## 2026-09-13 — Feature: Fan (fix loop 6 — TPP convergence: stand the ring up)
+
+User screenshots of the 1.12.2-verbatim values: item sits AT the hand now
+(translation (0,2.5,0) ports fine — units match) but reads small and flat.
+Reading: Rx(75) lays the tall axis near-horizontal, so the ring goes edge-on to
+the TPP camera. The 1.12.2 orientation evidently relies on its extra frame shift
+to read vertical (glider precedent again). Single-variable step, keeping the
+1.12.2 yaw/scale/translation: rotation [10,45,0] (stone's battle-tested Rx=10
+tilt, ring stood back up facing the camera). Scoreboard: stone-flip =
+upside-down blob; 1.12.2-verbatim = flat at hand; now stood-up 1.12.2-yaw.
+JSON-only: rebuilt (BUILD SUCCESSFUL, 523,049 bytes, same size — two chars),
+redeployed (unrelated mods untouched). Awaiting TPP-held screenshot: ring
+vertical in fist? then position/tilt next only if needed.

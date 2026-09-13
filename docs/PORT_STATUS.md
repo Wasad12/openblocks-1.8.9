@@ -11,7 +11,7 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-12 (`93e6a20`, Vacuum Hopper complete — all work through `9316e9d`).
-- **Current feature:** Fan — fix loop 5 (held TPP) built, deployed, UNTESTED.
+- **Current feature:** Fan — fix loop 6 (held TPP convergence) built, deployed, UNTESTED.
 - **Feature status:** Fan IN PROGRESS. May revisit completed features if issues surface later.
 - **Last completed feature:** Vacuum Hopper (user-confirmed COMPLETED 2026-09-12).
   Prior: Auto Anvil, Auto Enchantment Table, XP Drain + XP Shower, Tank, Hang Glider
@@ -36,7 +36,7 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Await user TPP-held screenshot at the same angle as the 1.12.2 shot.
+  1. Await user TPP-held screenshot (ring vertical in fist?).
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `93e6a20` 2026-09-12
      (all local work through `9316e9d` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
