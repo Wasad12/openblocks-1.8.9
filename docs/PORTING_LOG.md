@@ -1670,3 +1670,16 @@ Awaiting user test: recipe crafts; placed elevator renders white; jump on it
 teleports up to the next white elevator (≤20 blocks, ≤4 blocks pass-through);
 sneak teleports down; teleport plays the sound; NO XP drained; single color
 only (no dyeing); travel limits/centering per config.
+
+---
+
+## 2026-09-13 — Feature: Elevator COMPLETED (user-confirmed)
+
+User: "work exactly like 1.12.2". Per §7 this is explicit completion
+confirmation (same phrasing as the Auto Enchantment Table close-out): feature
+moves to COMPLETED, with the standing revisit agreement. Final state: faithful
+1.8.9 port — single white block, jump/sneak column teleport with pass-through
+limits, free at default ratio, teleport sound, white-wool recipe — with
+user-verified 1.12.2 parity and zero fix loops. Final build 557,455 bytes
+deployed in `1.8.9(6)/minecraft/mods`. Tree clean, no TEMPORARY code. No active
+feature; awaiting next feature instruction.
