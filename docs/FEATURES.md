@@ -54,7 +54,6 @@ _none — awaiting next feature instruction._
 
 ### Blocks (+ tile entities where present)
 
-- Auto Anvil (`BlockAutoAnvil` + `TileEntityAutoAnvil`)
 - Bear Trap (`BlockBearTrap` + `TileEntityBearTrap`)
 - Big Button (`BlockBigButton` + `TileEntityBigButton`)
 - Block Breaker (`BlockBlockBreaker` + `TileEntityBlockBreaker`)
@@ -65,8 +64,8 @@ _none — awaiting next feature instruction._
 - Canvas (`BlockCanvas` + `TileEntityCanvas`) / Canvas Glass (`BlockCanvasGlass` + `TileEntityCanvasGlass`)
 - Donation Station (`BlockDonationStation` + `TileEntityDonationStation`)
 - Drawing Table (`BlockDrawingTable` + `TileEntityDrawingTable`)
-- Elevator (`BlockElevator`) / Elevator Rotating (`BlockElevatorRotating` + `TileEntityElevatorRotating`)
-- Fan (`BlockFan` + `TileEntityFan`)
+- Elevator Rotating (`BlockElevatorRotating` + `TileEntityElevatorRotating`)
+  (basic elevator COMPLETED 2026-09-13 — white, no XP)
 - Flag (`BlockFlag` + `TileEntityFlag`)
 - Golden Egg (`BlockGoldenEgg` + `TileEntityGoldenEgg`)
 - Grave (`BlockGrave` + `TileEntityGrave`)
@@ -82,23 +81,19 @@ _none — awaiting next feature instruction._
 - Sky (`BlockSky` + `TileEntitySky`)
 - Sponge (`BlockSponge`)
 - Sprinkler (`BlockSprinkler` + `TileEntitySprinkler`)
-- Tank (`BlockTank` + `TileEntityTank`)
 - Target (`BlockTarget` + `TileEntityTarget`)
 - Trophy (`BlockTrophy` + `TileEntityTrophy`)
-- Vacuum Hopper (`BlockVacuumHopper` + `TileEntityVacuumHopper`)
 - Village Highlighter (`BlockVillageHighlighter` + `TileEntityVillageHighlighter`)
 - XP Bottler (`BlockXPBottler` + `TileEntityXPBottler`)
-- XP Drain (`BlockXPDrain` + `TileEntityXPDrain`)
-- XP Shower (`BlockXPShower` + `TileEntityXPShower`)
 
 ### Items
 
-- Cartographer, Crane Backpack, Crane Control, Cursor, Dev Null, Elevator item,
-  Empty Map, Epic Eraser, Flag Block item, Golden Eye, Guide item, Hang Glider,
+- Cartographer, Crane Backpack, Crane Control, Cursor, Dev Null,
+  Empty Map, Epic Eraser, Flag Block item, Golden Eye, Guide item,
   Height Map, Imaginary item, Imagination Glasses, Info Book, Luggage,
   Generic (OBGeneric/Unstackable/Meta variants), Paint Brush, Paint Can item,
   Pedometer, Sky Block item, Sleeping Bag, Slimalyzer, Sonic Glasses,
-  Sponge On A Stick, Squeegee, Stencil, Tank Block item, Tasty Clay,
+  Sponge On A Stick, Squeegee, Stencil, Tasty Clay,
   Trophy Block item, Wrench, XP Bucket, Miracle Magnet, Pointer
 
 ### Systems (cross-cutting, port only as required by features per §19)

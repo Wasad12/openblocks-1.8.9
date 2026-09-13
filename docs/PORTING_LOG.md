@@ -1683,3 +1683,36 @@ limits, free at default ratio, teleport sound, white-wool recipe — with
 user-verified 1.12.2 parity and zero fix loops. Final build 557,455 bytes
 deployed in `1.8.9(6)/minecraft/mods`. Tree clean, no TEMPORARY code. No active
 feature; awaiting next feature instruction.
+
+---
+
+## 2026-09-13 — SESSION HANDOFF (next session starts here)
+
+- State: Elevator COMPLETED (user-confirmed). No active feature, no open
+  problems, no TEMPORARY code. Deployed build 557,455 bytes matches source.
+- Completed tally (9, all user-confirmed, all revisit-able): Hang Glider, Tank,
+  XP Drain + XP Shower, Auto Enchantment Table, Auto Anvil, Vacuum Hopper, Fan,
+  Last Stand, Elevator.
+- Debug audit PASSED this session: zero hits for TEMPORARY/GLIDERDBG/MODELPROBE/
+  FANDGB/System.out/printStackTrace across `OpenBlocks-1.8.9/src`.
+- Docs refreshed this session: FEATURES.md NOT STARTED no longer lists completed
+  block features (Auto Anvil, Tank, Vacuum Hopper, XP Drain/Shower, Fan gone;
+  Elevator line now points at the rotating variant only); completed items
+  (Hang Glider, Tank Block, Elevator) removed from the Items inventory.
+- GitHub: `Wasad12/openblocks-1.8.9` last received subtree push `8c5cef1`
+  (Last Stand era — UPDATE PENDING, see PORT_STATUS.md). Push ONLY on explicit
+  user request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
+- Read order (§16): `OpenBlocks-1.8.9/docs/PORT_STATUS.md` → `FEATURES.md` → this log
+  tail → `git log --oneline -5`. Then await user's next feature instruction.
+- Standing traps: reference trees are `assume-unchanged` (phantom mtime noise —
+  verify via `git hash-object` vs `git rev-parse`, never mass-touch); Gradle needs
+  `-g C:\Users\wassi\.gradle-189` + Java 8 (`jdk-8.0.492.9-hotspot`) + `--offline`
+  is fine; PowerShell: no `head`/`sed`, no piping paths into `git --stdin`, no
+  `2>/dev/null` (use `-ErrorAction SilentlyContinue`); `jar xf` dumps into CWD —
+  check for and delete stray dirs afterwards; NEVER use GDI+/System.Drawing for
+  textures (palette corruption — Java ImageIO only); NEVER `Set-Content` docs
+  (encoding mangling — use the file tools; byte-surgery only with ASCII anchors).
+  1.8 branches are BANNED sources EXCEPT the user-authorized fan-rendering
+  exception (ARCHITECTURE.md). Theories marked INFERRED are disproven until
+  VERIFIED; trust only log/bytecode/probe evidence. Commits go out as Wasad12
+  (no author overrides).
