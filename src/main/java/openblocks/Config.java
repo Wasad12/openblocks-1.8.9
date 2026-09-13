@@ -19,6 +19,9 @@ public class Config {
 	public static double fanRange = 10;
 	public static boolean redstoneActivatedFan = true;
 
+	public static boolean lastStandEnchantmentEnabled = true;
+	public static String lastStandEnchantmentFormula = "max(1, 50*(1-(hp-dmg))/ench)";
+
 	public static void init(File configFile) {
 		Configuration config = new Configuration(configFile);
 		config.load();
@@ -46,6 +49,12 @@ public class Config {
 				"Range of fan in blocks").getDouble(10);
 		redstoneActivatedFan = config.get("fan", "isRedstoneActivated", true,
 				"Is fan force controlled by redstone current").getBoolean(true);
+
+		lastStandEnchantmentEnabled = config.get("features", "lastStandEnchantment", true,
+				"Is 'Last Stand' enchantment enabled").getBoolean(true);
+		lastStandEnchantmentFormula = config.get("features", "lastStandFormula",
+				"max(1, 50*(1-(hp-dmg))/ench)",
+				"Formula for XP cost (variables: hp,dmg,ench,xp). Note: calculation only triggers when hp - dmg < 1.").getString();
 
 		if (config.hasChanged()) config.save();
 	}

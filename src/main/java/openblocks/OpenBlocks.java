@@ -1,10 +1,12 @@
 package openblocks;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -36,6 +38,8 @@ import openblocks.common.tileentity.TileEntityAutoEnchantmentTable;
 import openblocks.common.tileentity.TileEntityTank;
 import openblocks.common.tileentity.TileEntityXPDrain;
 import openblocks.common.tileentity.TileEntityXPShower;
+import openblocks.enchantments.EnchantmentLastStand;
+import openblocks.enchantments.LastStandEnchantmentsHandler;
 
 @Mod(modid = OpenBlocks.MODID, name = OpenBlocks.NAME, version = OpenBlocks.VERSION, updateJSON = OpenBlocks.UPDATE_JSON)
 public class OpenBlocks {
@@ -78,6 +82,10 @@ public class OpenBlocks {
 		public static BlockAutoAnvil autoAnvil;
 		public static BlockVacuumHopper vacuumHopper;
 		public static BlockFan fan;
+	}
+
+	public static class Enchantments {
+		public static Enchantment lastStand;
 	}
 
 	public static class Fluids {
@@ -133,6 +141,13 @@ public class OpenBlocks {
 		Blocks.fan = new BlockFan();
 		GameRegistry.registerBlock(Blocks.fan, net.minecraft.item.ItemBlock.class, "fan");
 		GameRegistry.registerTileEntity(TileEntityFan.class, "openblocks_fan");
+
+		// last stand enchantment (mirrors 1.12.2 Config registration: handler + enchantment)
+		if (Config.lastStandEnchantmentEnabled) {
+			MinecraftForge.EVENT_BUS.register(new LastStandEnchantmentsHandler());
+			Enchantments.lastStand = new EnchantmentLastStand();
+			Enchantment.addToBookList(Enchantments.lastStand);
+		}
 
 		// syncable field types (local table — 1.8.9 has no data registries)
 		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableBoolean.class);

@@ -522,3 +522,42 @@ our `en_US.lang`).
   hand at normal scales, shower pattern); the block model doubles as the
   blockstate particle source (particle key → `fan_particle.png`). Placed render
   stays 1.8.X-verbatim.
+
+### Last Stand enchantment (2026-09-13, Phase B plan — behavior preserved, formula engine swapped)
+
+Source: `EnchantmentLastStand` (armor, max 2, UNCOMMON, 15/25 +10),
+`LastStandEnchantmentsHandler` (131 lines with imports: `LivingHurtEvent` →
+formula XP cost → health 1 + XP drain + cancel), `Config` keys
+(`lastStandEnchantmentEnabled` true, `lastStandEnchantmentFormula`
+`"max(1, 50*(1-(hp-dmg))/ench)"`), lang key (already in our `en_US.lang` in
+1.8-style `enchantment.openblocks.laststand` — matches 1.8.9's lookup).
+
+- 1.8.9 enchantment shape (all VERIFIED via `javap`): numeric-ID ctor
+  `(int, ResourceLocation, weight, type)` — no `Rarity` (1.9+), no equipment
+  slots (1.9+); UNCOMMON → weight 5 (anvil precedent); `effectId` public;
+  `addToBookList` registers + lists books (drops 1.12.2's custom-tab
+  `addAllBooks`). ID 180 (above vanilla's max 62; documented free choice —
+  make it config only if a pack conflict ever surfaces). `EnumEnchantmentType.
+  ARMOR` governs applicability (no slot array needed).
+- `LivingHurtEvent` is field-based in 1.8.9 (PROVED: public `ammount` field —
+  note the vanilla typo — no getters/setters): `e.getAmount()` → `e.ammount`,
+  `e.setAmount(0)` → `e.ammount = 0`; `setCanceled` is the base-Event method
+  (kept).   `EnchantmentHelper.getEnchantmentLevel` is int-based
+  (`effectId` passed); armor iterated via `getEquipmentInSlot(1-4)`
+  (no `getArmorInventoryList` pre-1.9 — compiler-VERIFIED).
+- Formula engine: `info.openmods.calc` is an EXTERNAL shaded lib (0.3), NOT
+  in-tree and NOT in the offline Gradle cache — cannot be depended on. Swap:
+  JDK8 Nashorn evaluates the configured formula with hp/dmg/ench/xp + max/min/
+  sqrt/abs/pow/floor/ceil/round prebound (the default formula is valid JS under
+  those bindings, bit-identical result); ANY eval failure falls back to the
+  inline default math — mirroring 1.12.2's own evaluate-with-fallback structure.
+  Compiled script cached per formula string (recompiles live if the string
+  changes). Dropped: `ConfigurationChange.Post` listener (our Config has no live
+  events — formula applies at startup/restart, documented).
+- `EnchantmentUtils.getPlayerXP`/`addPlayerXP` already ported (used verbatim).
+  Registration in `OpenBlocks.preInit` (config-gated handler + enchantment,
+  1.12.2 shape); minimal `Enchantments.lastStand` holder for the handler.
+  Dropped: info-book page (unrelated system).
+- Compiler schooling (one iteration): 1.8.9 `LivingEvent` exposes the entity as
+  a public `entityLiving` FIELD — no `getEntityLiving()` getter (1.9+). Fixed at
+  both use sites; everything else from Phase B compiled clean first try.

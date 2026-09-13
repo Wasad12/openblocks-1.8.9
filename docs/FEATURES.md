@@ -5,7 +5,9 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-_none — awaiting next feature instruction._
+- Last Stand enchantment (`EnchantmentLastStand` +
+  `LastStandEnchantmentsHandler` + config keys). Phase C implemented 2026-09-13,
+  built and deployed, UNTESTED.
 
 ## COMPLETED
 

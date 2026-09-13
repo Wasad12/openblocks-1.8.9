@@ -1528,3 +1528,52 @@ recipe — with user-verified parity on placed look, repaint, drops, particles
 path and held size (fix loops 1-7 included). Final build 523,047 bytes deployed
 in `1.8.9(6)/minecraft/mods`. Tree clean, no TEMPORARY code. No active feature;
 awaiting next feature instruction.
+
+---
+
+## 2026-09-13 — Feature: Last Stand enchantment (Phase A — investigate, 1.12.2 source only)
+
+Source (all VERIFIED by reading): `EnchantmentLastStand` (armor, max 2,
+UNCOMMON, 15/25 +10 enchantability), `LastStandEnchantmentsHandler` (lethal
+`LivingHurtEvent` on players with levels worn → formula XP cost → health 1 +
+XP drain + cancel; `max(1, 50*(1-(hp-dmg))/ench)` default with inline fallback),
+`Config` keys (`lastStandEnchantmentEnabled` true, `lastStandEnchantmentFormula`),
+registration (config-gated handler + `last_stand` in `Config`), books via custom
+tab `addAllBooks`, lang key (already in our `en_US.lang`, 1.8-style), info-book
+page (dropped).
+OpenModsLib deps: `info.openmods.calc` expression engine — EXTERNAL shaded lib
+(0.3), not in-tree and absent from the offline Gradle cache (VERIFIED) — plus
+`EnchantmentUtils.getPlayerXP`/`addPlayerXP` (already ported) and the config
+framework (only the key values taken).
+
+---
+
+## 2026-09-13 — Feature: Last Stand enchantment (Phase B — plan)
+
+Full plan in ARCHITECTURE.md ("Last Stand" section). 1.8.9 facts VERIFIED via
+`javap`: numeric-ID enchantment ctor (no Rarity/slots), `effectId`,
+`addToBookList` (covers book listing, drops `addAllBooks`), int-based
+`getEnchantmentLevel`, field-based `LivingHurtEvent.ammount` (vanilla typo, no
+accessors). INFERRED: `getEquipmentInSlot(1-4)` for armor (since VERIFIED by the
+compiler — see Phase C). Formula engine swapped for JDK8 Nashorn (same default
+result, graceful inline fallback, per-string compiled cache); no live-reload
+event (restart to apply). ID 180 (above vanilla max 62).
+
+---
+
+## 2026-09-13 — Feature: Last Stand enchantment (Phase C — implemented, built, deployed)
+
+New: `openblocks/enchantments/EnchantmentLastStand` (ID 180, weight 5, ARMOR,
+name `openblocks.laststand`, 2 levels, 15/25 +10 curve), `openblocks/
+enchantments/LastStandEnchantmentsHandler` (verbatim logic: near-death check,
+Nashorn formula + inline fallback, XP drain, cancel), `Config` keys (1.12.2
+comments kept), `OpenBlocks.Enchantments` holder + config-gated preInit
+registration (handler + `addToBookList`). One compile iteration: the compiler
+schooled `e.getEntityLiving()` — 1.8.9 exposes public field `entityLiving`
+(no getter); fixed at both sites, everything else clean first try.
+`:reobfJar` BUILD SUCCESSFUL → 527,898 bytes (both enchant classes VERIFIED
+inside), deployed (unrelated mods untouched). Awaiting user test: enchant books
+obtainable (table/creative); Last Stand I/II appliable to armor; lethal hit
+with XP levels drains XP and leaves 1 HP (no death); lethal hit WITHOUT enough
+XP kills normally; non-lethal hits untouched; custom formula in config works
+after restart.
