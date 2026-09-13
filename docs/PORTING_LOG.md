@@ -1699,9 +1699,9 @@ feature; awaiting next feature instruction.
   block features (Auto Anvil, Tank, Vacuum Hopper, XP Drain/Shower, Fan gone;
   Elevator line now points at the rotating variant only); completed items
   (Hang Glider, Tank Block, Elevator) removed from the Items inventory.
-- GitHub: `Wasad12/openblocks-1.8.9` last received subtree push `8c5cef1`
-  (Last Stand era — UPDATE PENDING, see PORT_STATUS.md). Push ONLY on explicit
-  user request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
+- GitHub: `Wasad12/openblocks-1.8.9` last received subtree push `9e4e580`
+  (Elevator + docs refresh — everything through `c267850` now visible). Push
+  ONLY on explicit user request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
 - Read order (§16): `OpenBlocks-1.8.9/docs/PORT_STATUS.md` → `FEATURES.md` → this log
   tail → `git log --oneline -5`. Then await user's next feature instruction.
 - Standing traps: reference trees are `assume-unchanged` (phantom mtime noise —

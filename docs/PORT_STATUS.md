@@ -10,7 +10,7 @@
 - **GitHub:** `https://github.com/Wasad12/openblocks-1.8.9` (public) — receives ONLY the
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
-  Last push 2026-09-13 (`8c5cef1`, Last Stand complete — all work through `f3e4b95`).
+  Last push 2026-09-13 (`9e4e580`, Elevator + docs refresh — all work through `c267850`).
 - **Current feature:** none — Elevator COMPLETED (user-confirmed 2026-09-13).
   Awaiting next feature instruction.
 - **Feature status:** no active feature. May revisit completed features if issues surface later.
@@ -34,8 +34,8 @@
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
   1. Await user's next feature instruction — no active feature, tree clean.
-  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `8c5cef1`
-     2026-09-13 (all local work through `f3e4b95` now visible). Future pushes need explicit
+  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `9e4e580`
+     2026-09-13 (all local work through `c267850` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
 - **Last known-good Git commit:** `194a6b8` (Elevator COMPLETED docs; code at
   `0ed9eb8` matches deployed 557,455-byte JAR).
