@@ -34,10 +34,16 @@ public class OpenBlocksChannel {
 
 	private static final int ID_RPC_CALL = 0;
 	private static final int ID_SYNC_UPDATE = 1;
+	private static final int ID_ELEVATOR_ACTION = 2;
 
 	public static void init() {
 		INSTANCE.registerMessage(HandlerRpcCall.class, MessageRpcCall.class, ID_RPC_CALL, Side.SERVER);
 		INSTANCE.registerMessage(HandlerSyncUpdate.class, MessageSyncUpdate.class, ID_SYNC_UPDATE, Side.CLIENT);
+		INSTANCE.registerMessage(MessageElevatorAction.Handler.class, MessageElevatorAction.class, ID_ELEVATOR_ACTION, Side.SERVER);
+	}
+
+	public static void sendElevatorAction(boolean jump) {
+		INSTANCE.sendToServer(new MessageElevatorAction(jump));
 	}
 
 	public static void sendRpcCall(RpcCall call) {

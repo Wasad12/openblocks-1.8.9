@@ -5,7 +5,10 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-_none — awaiting next feature instruction._
+- Elevator, basic only (`BlockElevator` + `ElevatorActionHandler` +
+  `ElevatorBlockRules` + elevator API + movement packet + recipe). Single white,
+  no XP cost, no rotating variant per user scope. Phase C implemented 2026-09-13,
+  built and deployed, UNTESTED.
 
 ## COMPLETED
 

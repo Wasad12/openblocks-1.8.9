@@ -22,8 +22,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import openblocks.common.ElevatorActionHandler;
 import openblocks.common.block.BlockAutoAnvil;
 import openblocks.common.block.BlockAutoEnchantmentTable;
+import openblocks.common.block.BlockElevator;
 import openblocks.common.block.BlockFan;
 import openblocks.common.block.BlockTank;
 import openblocks.common.block.BlockVacuumHopper;
@@ -97,6 +99,7 @@ public class OpenBlocks {
 		public static BlockAutoAnvil autoAnvil;
 		public static BlockVacuumHopper vacuumHopper;
 		public static BlockFan fan;
+		public static BlockElevator elevator;
 	}
 
 	public static class Enchantments {
@@ -156,6 +159,10 @@ public class OpenBlocks {
 		Blocks.fan = new BlockFan();
 		GameRegistry.registerBlock(Blocks.fan, net.minecraft.item.ItemBlock.class, "fan");
 		GameRegistry.registerTileEntity(TileEntityFan.class, "openblocks_fan");
+
+		Blocks.elevator = new BlockElevator();
+		GameRegistry.registerBlock(Blocks.elevator, net.minecraft.item.ItemBlock.class, "elevator");
+		MinecraftForge.EVENT_BUS.register(new ElevatorActionHandler());
 
 		// last stand enchantment (mirrors 1.12.2 Config registration: handler + enchantment)
 		if (Config.lastStandEnchantmentEnabled) {
@@ -238,6 +245,12 @@ public class OpenBlocks {
 				"f", "i", "s",
 				'f', net.minecraft.init.Blocks.iron_bars, 'i', "ingotIron",
 				's', new ItemStack(net.minecraft.init.Blocks.stone_slab, 1, 0)));
+
+		// elevator (mirrors 1.12.2 elevator_0.json: white wool ring + ender pearl)
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.elevator),
+				"www", "wew", "www",
+				'w', new ItemStack(net.minecraft.init.Blocks.wool, 1, 0),
+				'e', net.minecraft.init.Items.ender_pearl));
 
 		proxy.init();
 		proxy.registerRenderInformation();

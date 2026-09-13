@@ -22,6 +22,15 @@ public class Config {
 	public static boolean lastStandEnchantmentEnabled = true;
 	public static String lastStandEnchantmentFormula = "max(1, 50*(1-(hp-dmg))/ench)";
 
+	public static int elevatorTravelDistance = 20;
+	public static boolean elevatorIgnoreBlocks = false;
+	public static boolean elevatorIgnoreHalfBlocks = false;
+	public static int elevatorMaxBlockPassCount = 4;
+	public static boolean elevatorCenter = false;
+	public static String[] elevatorRules = new String[0];
+	public static float elevatorXpDrainRatio = 0;
+	public static boolean irregularBlocksArePassable = true;
+
 	public static void init(File configFile) {
 		Configuration config = new Configuration(configFile);
 		config.load();
@@ -55,6 +64,23 @@ public class Config {
 		lastStandEnchantmentFormula = config.get("features", "lastStandFormula",
 				"max(1, 50*(1-(hp-dmg))/ench)",
 				"Formula for XP cost (variables: hp,dmg,ench,xp). Note: calculation only triggers when hp - dmg < 1.").getString();
+
+		elevatorTravelDistance = config.get("dropblock", "searchDistance", 20,
+				"The range of the drop block").getInt(20);
+		elevatorIgnoreBlocks = config.get("dropblock", "ignoreAllBlocks", false,
+				"Disable limit of blocks between elevators (equivalent to maxPassThrough = infinity)").getBoolean(false);
+		elevatorIgnoreHalfBlocks = config.get("dropblock", "ignoreHalfBlocks", false,
+				"The elevator will ignore half blocks when counting the blocks it can pass through").getBoolean(false);
+		elevatorMaxBlockPassCount = config.get("dropblock", "maxPassThrough", 4,
+				"The maximum amount of blocks the elevator can pass through before the teleport fails").getInt(4);
+		elevatorCenter = config.get("dropblock", "centerOnBlock", false,
+				"Should elevator move player to center of block after teleporting").getBoolean(false);
+		elevatorRules = config.get("dropblock", "specialBlockRules", new String[0],
+				"Defines blocks that are handled specially by elevators. Entries are in form <modId>:<blockName>:<action> or id:<blockId>:<action>. Possible actions: abort (elevator can't pass block), increment (counts for elevatorMaxBlockPassCount limit) and ignore").getStringList();
+		elevatorXpDrainRatio = (float)config.get("dropblock", "elevatorXpDrainRatio", 0,
+				"XP consumed by elevator (total amount = ratio * distance)").getDouble(0);
+		irregularBlocksArePassable = config.get("dropblock", "irregularBlocksArePassable", true,
+				"The elevator will try to pass through blocks that have custom collision boxes").getBoolean(true);
 
 		if (config.hasChanged()) config.save();
 	}

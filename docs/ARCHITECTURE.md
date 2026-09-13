@@ -523,6 +523,62 @@ our `en_US.lang`).
   blockstate particle source (particle key → `fan_particle.png`). Placed render
   stays 1.8.X-verbatim.
 
+### Elevator, basic only (2026-09-13, Phase B plan — behavior preserved, color/metadata dropped per user)
+
+Source: `BlockElevator` (COLOR 16-meta + dye recolor + `IElevatorBlock`),
+`ItemElevator` (16 subitems + tint), `ElevatorActionHandler` (197 lines: column
+scan, pass-through counting, XP gate, teleport + sound), `ElevatorBlockRules`
+(rules/overrides string-config), `IElevatorBlock` + `ElevatorCheckEvent` API,
+`PlayerMovementEvent` + `PlayerMovementManager` (lib jump/sneak edge trigger),
+`ElevatorActionEvent` (lib network event), `dropblock` config (travel 20,
+pass-through 4, XP ratio 0, ...), white-wool + pearl recipe, single grayscale
+texture + tint handlers, `teleport.ogg` behind `elevator.activate`, lang keys
+(already in our `en_US.lang`).
+
+- User scope (PERMANENT for this feature): basic elevator ONLY (no rotating
+  variant, no TE), ONE color (white — the 1.12.2 default meta/recipe), NO XP
+  cost (1.12.2 default ratio is already 0 = free; the gate code stays, so a
+  nonzero ratio would still charge).
+- Single color kills the whole metadata system: no COLOR property/orientation
+  (both vestigial single-variant in practice), no dye recolor, no tints, no
+  `ItemElevator` (plain ItemBlock, default listing), no color handlers. Block
+  hardcodes `WHITE`/`NONE` for the `IElevatorBlock` API (kept verbatim for
+  compat). Texture used raw (white tint = identity). Recipe = `elevator_0`
+  verbatim (white wool ring + pearl). Lang description loses the dye sentence
+  (documented single-color deviation).
+- Trigger path replaced: 1.8.9 Forge has NO `MovementInputUpdateEvent`
+  (VERIFIED absent from the `forgeBin` jar), so the lib's exact hook can't port.
+  Equivalent: `ClientTickEvent` edge-poll of `movementInput.jump/sneak`
+  (same rising-edge semantics as the lib manager) inside the handler class
+  itself (1.12.2 shape: one bus-registered class, side-split methods). The
+  cancelable `PlayerMovementEvent` seam is kept verbatim (own `openmods.
+  movement` package) — unsuppressed input, exactly like 1.12.2 (the hop happens,
+  then the teleport overrides).
+- `ElevatorActionEvent` (lib network event, no 1.8.9 transport in our stack) →
+  native `SimpleNetworkWrapper` C2S message (`ID_ELEVATOR_ACTION`) carrying the
+  direction byte; server handler runs the same logic on the server thread
+  (established `OpenBlocksChannel` pattern).
+- Rules kept lean: `specialBlockRules` string-config ports verbatim
+  (`Block.REGISTRY` only); `overrides` DROPPED — needs
+  `CommandBase.convertArgToBlockState`, VERIFIED absent in 1.8.9 — with it the
+  override map, `ConfigurationChange` listener (our Config has no live events
+  anyway) and `ColorMeta`/`Rotation` plumbing. `configureEvent` stays as the
+  (currently empty) extension point; the check event is still posted for API
+  compat. All other `dropblock` keys port with 1.12.2 comments/defaults.
+- Sound: `sounds.json` (elevator stanza only) + `teleport.ogg` copied; playback
+  via `playSoundEffect` with the string id (anvil precedent — no SoundEvent
+  registry pre-1.9). Static cube model + block-item display (shower pattern);
+  hardness 1.0F, MODEL render type (tank lesson).
+- INFERRED (compiler verifies): `Block.blockRegistry`,
+  `BlockEvent` 3-arg ctor, `MathHelper.ceil`,
+  `AxisAlignedBB.getAverageEdgeLength`, `BlockPos(Vec3i)`,
+  `setPositionAndUpdate`, `movementInput` fields.
+- Compiler schooling (4 errors, all 1.9-isms): `Block.getMapColor` is single-arg
+  in 1.8.9 (color moved to the `Block(Material, MapColor)` ctor — used with
+  `snowColor`, override dropped); `Blocks.AIR` → lowercase `Blocks.air`;
+  `MapColor.snow` → `snowColor`; our `Log` lacked the plain (no-Throwable)
+  `warn` overload the lib has (added). Everything else clean.
+
 ### Last Stand enchantment (2026-09-13, Phase B plan — behavior preserved, formula engine swapped)
 
 Source: `EnchantmentLastStand` (armor, max 2, UNCOMMON, 15/25 +10),

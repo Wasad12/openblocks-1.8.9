@@ -1611,3 +1611,62 @@ revisit agreement. Final state: faithful 1.8.9 port — armor enchantment (ID
 configurable Nashorn formula + inline fallback, both books on the OpenBlocks
 tab — with user-verified parity on behavior and listing (fix loop 1 included).
 Tree clean, no TEMPORARY code. Pushing to GitHub on explicit user request.
+
+---
+
+## 2026-09-13 — Feature: Elevator, basic only (Phase A — investigate, 1.12.2 source only)
+
+Source (all VERIFIED by reading): `BlockElevator` (16-color COLOR property, dye
+recolor, `IElevatorBlock` WHITE/NONE), `ItemElevator` (16 subitems + tint),
+`ElevatorActionHandler` (197 lines: feet-block check, column scan up to travel
+distance, pass-through counting with ABORT/IGNORE/INCREMENT, XP gate, teleport
+y+1.1 + sound; client `PlayerMovementEvent` → C2S packet), `ElevatorBlockRules`
+(rules/overrides string-config + half-block passability), `IElevatorBlock` +
+`ElevatorCheckEvent` API, lib `PlayerMovementManager` (jump/sneak edge trigger)
++ `PlayerMovementEvent` + `ElevatorActionEvent`, `dropblock` config (travel 20,
+pass-through 4, XP ratio 0, irregular passable true, ...), `elevator_0` recipe
+(white wool ring + pearl → white), single grayscale texture + tints,
+`teleport.ogg` behind `elevator.activate`, lang keys (already in our
+`en_US.lang`).
+User scope for this feature (PERMANENT): basic block ONLY (no rotating variant/
+TE), ONE color (white — 1.12.2 default), NO XP cost (already the 1.12.2 default
+ratio 0). OpenModsLib deps: movement events, network event, calc-free (formula
+free), `EnchantmentUtils` XP math (ported), `ColorMeta` (dropped with colors).
+
+---
+
+## 2026-09-13 — Feature: Elevator (Phase B — plan)
+
+Full plan in ARCHITECTURE.md ("Elevator" section). Decisive points: metadata
+system deleted (single white state, texture raw, plain ItemBlock); trigger via
+client-tick edge-poll (1.8.9 Forge has NO `MovementInputUpdateEvent` — VERIFIED
+absent) with the cancelable bus seam kept; lib packet → native
+`SimpleNetworkWrapper` C2S message; `overrides` string-config dropped (needs
+`CommandBase.convertArgToBlockState` — VERIFIED absent), plain rules kept;
+sound via `sounds.json` + `playSoundEffect` (no SoundEvent registry pre-1.9).
+
+---
+
+## 2026-09-13 — Feature: Elevator (Phase C — implemented, built, deployed)
+
+New: `common/block/BlockElevator` (rock, white map color via ctor),
+`common/ElevatorActionHandler` (verbatim scan/teleport/XP logic + tick-poll
+trigger), `common/ElevatorBlockRules` (rules only), `api/IElevatorBlock` +
+`api/ElevatorCheckEvent` (verbatim), `openmods/movement/PlayerMovementEvent`
+(verbatim), `common/network/MessageElevatorAction` (ID 2, C2S) + channel line,
+`openmods/Log.warn` plain overload (lib has it, ours lacked it), `Config`
+`dropblock` keys (1.12.2 comments/defaults), block + white-wool recipe +
+handler registration, `ClientProxy` item model, `blockstates/models/item`
+elevator JSONs (static cube + block-item display), `elevator.png` (copied,
+VERIFIED zero transparent pixels — no fringe risk), `sounds.json` (elevator
+stanza) + `teleport.ogg` (copied), lang dye sentence trimmed (documented
+single-color deviation). Four compile iterations, all 1.9-isms (`getMapColor`
+single-arg/ctor color, `Blocks.air`, `MapColor.snowColor`, `Log.warn`
+overload); everything else (registry, BlockEvent ctor, ceil, bow/arrow AABB
+helper, BlockPos(Vec3i), setPositionAndUpdate, movementInput) clean first try.
+`:reobfJar` BUILD SUCCESSFUL → 557,455 bytes (all elevator classes + models +
+texture + sounds VERIFIED inside), deployed (unrelated mods untouched).
+Awaiting user test: recipe crafts; placed elevator renders white; jump on it
+teleports up to the next white elevator (≤20 blocks, ≤4 blocks pass-through);
+sneak teleports down; teleport plays the sound; NO XP drained; single color
+only (no dyeing); travel limits/centering per config.

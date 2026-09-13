@@ -191,6 +191,13 @@ public class ClientProxy implements IOpenBlocksProxy {
 				ModelLoader.setCustomModelResourceLocation(fanItem, 0,
 						new ModelResourceLocation("openblocks:fan", "inventory"));
 		}
+
+		if (OpenBlocks.Blocks.elevator != null) {
+			final Item elevatorItem = Item.getItemFromBlock(OpenBlocks.Blocks.elevator);
+			if (elevatorItem != null)
+				ModelLoader.setCustomModelResourceLocation(elevatorItem, 0,
+						new ModelResourceLocation("openblocks:elevator", "inventory"));
+		}
 	}
 
 	@Override

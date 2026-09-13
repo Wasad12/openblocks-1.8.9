@@ -1,0 +1,7 @@
+{
+    "elevator.activate": {
+        "sounds": [
+            "openblocks:teleport"
+        ]
+    }
+}
