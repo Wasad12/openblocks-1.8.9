@@ -558,6 +558,12 @@ formula XP cost → health 1 + XP drain + cancel), `Config` keys
   Registration in `OpenBlocks.preInit` (config-gated handler + enchantment,
   1.12.2 shape); minimal `Enchantments.lastStand` holder for the handler.
   Dropped: info-book page (unrelated system).
+- Book listing (fix loop 1, 2026-09-13): vanilla Combat lists exactly the
+  max-level book per enchantment (PROVED — same for all 1.8.9 enchantments, not
+  a port bug), so 1.12.2 parity (every level on its own tab) comes from our tab
+  override appending via the now-ported `EnchantmentUtils.addAllBooks` (verbatim
+  lib logic; 1.8.9 instance-method adaptation). Compiler schooling: vanilla 1.8.9
+  misspells the hook `displayAllReleventItems` (fixed in 1.9+).
 - Compiler schooling (one iteration): 1.8.9 `LivingEvent` exposes the entity as
   a public `entityLiving` FIELD — no `getEntityLiving()` getter (1.9+). Fixed at
   both use sites; everything else from Phase B compiled clean first try.

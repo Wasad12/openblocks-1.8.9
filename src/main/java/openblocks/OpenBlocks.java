@@ -1,5 +1,6 @@
 package openblocks;
 
+import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
@@ -18,6 +19,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import openblocks.common.block.BlockAutoAnvil;
 import openblocks.common.block.BlockAutoEnchantmentTable;
@@ -66,6 +69,18 @@ public class OpenBlocks {
 		public Item getTabIconItem() {
 			// NOTE: fully qualified — our own OpenBlocks.Blocks inner class shadows the import.
 			return Item.getItemFromBlock(net.minecraft.init.Blocks.sponge);
+		}
+
+		@Override
+		@SideOnly(Side.CLIENT)
+		public void displayAllReleventItems(List<ItemStack> result) {
+			super.displayAllReleventItems(result);
+			// 1.12.2 lists every level book on its own tab (vanilla Combat only
+			// ever lists the max level — PROVED via javap, same for all 1.8.9
+			// enchantments, not a port gap). NOTE: vanilla 1.8.9 misspells this
+			// method displayAllReleventItems (fixed in 1.9+).
+			if (Enchantments.lastStand != null)
+				openmods.utils.EnchantmentUtils.addAllBooks(Enchantments.lastStand, result);
 		}
 	};
 

@@ -18,7 +18,7 @@
   Tank, Hang Glider (all user-confirmed).
 - **Current problem:** none — no open problems, no TEMPORARY code.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (527,898 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-13 (Last Stand Phase C, one compile iteration)
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (528,596 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-13 (Last Stand fix loop 1: tab book listing)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-13 (unrelated mods untouched)
 - **Last user test result (2026-09-13):** Last Stand "works fine" (no fix loops).
   Prior: Fan COMPLETED + Vacuum Hopper COMPLETED + Auto Anvil COMPLETED + Auto
@@ -35,7 +35,7 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Await user test of Last Stand (checklist in PORTING_LOG.md Phase C).
+  1. Await user retest of Last Stand books on the OpenBlocks tab.
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `3851fee`
      2026-09-13 (all local work through `84bfe04` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.

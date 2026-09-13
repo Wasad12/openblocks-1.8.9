@@ -1,14 +1,20 @@
 package openmods.utils;
 
+import java.util.List;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
 // Port of OpenModsLib 1.12.2 EnchantmentUtils: XP math verbatim; getPower ported
-// (bookshelf scan via ForgeHooks.getEnchantPower — VERIFIED present in 1.8.9).
-// addAllBooks dropped per §19 (creative-tab system). Imports adjusted (1.8.9: no
-// util.math package); logic verbatim.
+// (bookshelf scan via ForgeHooks.getEnchantPower — VERIFIED present in 1.8.9);
+// addAllBooks ported for the OpenBlocks tab (1.8.9 getEnchantedItemStack is an
+// instance method, not static). Imports adjusted (1.8.9: no util.math package);
+// logic verbatim.
 public class EnchantmentUtils {
 
 	/**
@@ -87,5 +93,10 @@ public class EnchantmentUtils {
 			}
 		}
 		return power;
+	}
+
+	public static void addAllBooks(Enchantment enchantment, List<ItemStack> items) {
+		for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++)
+			items.add(Items.enchanted_book.getEnchantedItemStack(new EnchantmentData(enchantment, i)));
 	}
 }

@@ -1579,3 +1579,23 @@ XP kills normally; non-lethal hits untouched; custom formula in config works
 after restart.
 
 User 2026-09-13: "works fine" — test pass, no fix loops needed.
+
+---
+
+## 2026-09-13 — Feature: Last Stand (fix loop 1 — book listing, ROOT CAUSE FOUND)
+
+User: creative shows only Last Stand II. Root cause, PROVED via `javap` on the
+1722 `forgeBin` jar: vanilla 1.8.9 `CreativeTabs.addEnchantmentBooksToList`
+(which feeds the Combat tab) adds exactly ONE book per enchantment — at MAX
+level (`new EnchantmentData(ench, ench.getMaxLevel())`). Same for every 1.8.9
+enchantment (Protection shows IV only, etc.) — NOT a port bug. 1.12.2 instead
+lists every level on its own tab (`addAllBooks` in `displayAllRelevantItems`).
+Fix (1.12.2 parity, Combat behavior untouched): our tab overrides
+`displayAllReleventItems` — note the vanilla 1.8.9 typo, fixed in 1.9+ (the
+compiler rejected the correct spelling first) — and appends all Last Stand
+books via the now-ported `EnchantmentUtils.addAllBooks` (verbatim lib logic;
+1.8.9 `getEnchantedItemStack` is an instance method). Both books now list on
+the OpenBlocks tab; Combat keeps the vanilla max-only book like every other
+enchantment. `:reobfJar` BUILD SUCCESSFUL → 528,596 bytes, deployed (unrelated
+mods untouched). Awaiting retest: Last Stand I + II books on the OpenBlocks
+tab; Combat listing unchanged.
