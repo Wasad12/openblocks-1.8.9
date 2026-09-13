@@ -1284,3 +1284,74 @@ neighbour output, tabbed GUI with live nozzle previews, shapeless recipe — wit
 user-verified parity on behavior and visuals (fix loops 1-4 included). Final
 build 504,320 bytes (includes the post-completion anvil texture fix, same JAR).
 Tree clean. Awaiting next feature instruction.
+
+---
+
+## 2026-09-13 — Feature: Fan (Phase A — investigate, 1.12.2 source only)
+
+Source (all VERIFIED by reading): `BlockFan` (0.2-0.8 column AABB, non-opaque,
+top-of-solid placement, `ExtendedBlockState` + `EvalModelState` head angle),
+`TileEntityFan` (188 lines: `SyncableFloat` angle + `SyncableByte` power, cone
+suction physics + portal-free push, redstone power, sneak click ±10°,
+`bladeRotation`/`bladeSpeed`, `FastTESR`), `TileEntityFanRenderer` (frame via
+eval `base_rotate`, blades via eval `blade_spin`, region render cache, full
+lighting path), recipe `fan_0.json` (iron bars + ingotIron + stone slab,
+vertical), `fan_frame.json` (10 elements) + `fan_blades.json` (1 quad),
+armatures `fan_frame.json`/`fan_blades.json` (base_rotate = Y-rotation,
+blade_spin = Z-rotation + `offset_y` 0.171875), `fan_frame.png` +
+`fan_blades.png`, `Config` fan keys (fanForce 0.05, fanRange 10,
+redstoneActivatedFan true), lang keys (already in our `en_US.lang`).
+OpenModsLib deps: `OpenBlock` (placement helper only), `SyncedTileEntity`/
+`SyncMap`/`SyncableFloat`/`SyncableByte`/`ISyncListener` (angle listener for the
+eval static model), `EvalModelState` + the whole `openmods:eval` engine
+(`EvaluatorFactory` 1700+ lines — the fan is its ONLY user), `BlockUtils.
+aabbOffset`, `BookDocumentation` (dropped).
+
+---
+
+## 2026-09-13 — Feature: Fan (Phase B — plan)
+
+Full plan in ARCHITECTURE.md ("Fan" section). Decisive points: eval engine NOT
+ported (single user, no 1.8.9 counterpart); TESR renders both parts with direct
+GL transforms (yaw `-angle` about Y, blades +0.171875 Y and Z-spin through the
+ring-center pivot — pivot/scale facts derived from the armature + inventory
+composition, handedness INFERRED for user eyes to verify); static suppressed
+in-world via `FanBlockModel` + `FanRenderState` (1.8.9 smart models get no
+world/pos, so the TE-presence flag travels as an unlisted property); `fan.json`
+static = frame elements + blades shifted +2.75px (exact 1.12.2 inventory
+composition); blades texture gets the approved color-bleed (68 transparent
+pixels under a full-quad sample — the GDI+ pixel reader LIED about this file,
+palette-quantization artifacts; Java ImageIO ground truth used instead, see
+Phase C); explicit `sync()` on place closes a 1.12.2 staleness race.
+1.8.9 facts VERIFIED via `javap`: `Vec3` full API, `getRegionRenderCache`,
+6-arg `renderModel`, `IModel.bake`, `Material.circuits`, 3-arg `isSideSolid`,
+`DefaultVertexFormats.BLOCK`, lazy-bake path (hopper-proven).
+
+---
+
+## 2026-09-13 — Feature: Fan (Phase C — implemented, built, deployed)
+
+New: `common/block/BlockFan` + `FanRenderState`, `common/tileentity/
+TileEntityFan`, `client/model/FanBlockModel` (smart suppression + empty model),
+`client/renderer/tileentity/TileEntityFanRenderer` (GL yaw/spin + full lighting
+path), `openmods/sync/SyncableFloat` + `SyncableByte` (verbatim) + registration,
+`Config` fan keys, block/TE registration + vertical recipe, `ClientProxy` TESR
+binding + BakeHandler + item model + stitch entries, `blockstates/fan.json`,
+`models/block/fan{frame,_blades,}.json` (frame/blades verbatim, `fan.json`
+script-merged with the +2.75px blades shift, VERIFIED 11 elements) +
+`models/item/fan.json` (block-item display), `fan_frame.png` (copied) +
+`fan_blades.png` (color-bled).
+Texture note: the first bleed pass (PowerShell/GDI+) reported 15 white survivors
+with no white neighbours — IMPOSSIBLE output that exposed the tool, not the
+file: GDI+ re-quantized the palette PNG on load/save (the "moved" pattern
+PROVED corruption). Redone with Java ImageIO (32-bit, lossless): 68/68 flooded,
+zero white, opaque pixels bit-identical, 1.12.2 original only ever read.
+Zero compile iterations — every INFERRED 1.8.9 name
+(`getBlockRendererDispatcher`, `isFullCube`, `Blocks.stone_slab`,
+`ModelRotation`-free manual bake, GL matrix + `setTranslation` composition)
+compiled clean first try. `:reobfJar` BUILD SUCCESSFUL → 525,867 bytes (all fan
+classes + models + textures VERIFIED inside), deployed (unrelated mods
+untouched). Awaiting user test: recipe crafts; placed fan renders (frame +
+spinning blades); head yaw follows placement + sneak clicks; entities blow down
+the facing cone (redstone-gated, creative players immune); item icon matches
+1.12.2; no unrotated ghost under the head.

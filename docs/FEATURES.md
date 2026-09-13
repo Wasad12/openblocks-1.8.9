@@ -5,7 +5,9 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-_none — awaiting next feature instruction._
+- Fan (`BlockFan` + `TileEntityFan` + `TileEntityFanRenderer` + `FanBlockModel` +
+  `SyncableFloat`/`SyncableByte` + recipe). Phase C implemented 2026-09-13, built
+  and deployed, UNTESTED.
 
 ## COMPLETED
 

@@ -422,3 +422,66 @@ physics + portal particles, neighbour output every 10 ticks, sneak-toggle),
   carries the real TE), so state-dependent smart models show in-tab and update as
   server state syncs back — the tab click feedback. Plain blocks return the state
   unchanged, so other previews are unaffected.
+
+### Fan (2026-09-13, Phase B plan — behavior preserved, eval-model rendering replaced)
+
+Source: `BlockFan` (0.2-0.8 column, non-opaque, top-of-solid placement,
+`ExtendedBlockState` + `EvalModelState` head angle), `TileEntityFan` (188 lines:
+`SyncableFloat` angle + `SyncableByte` power, cone suction physics, redstone
+power, sneak click ±10°, `FastTESR`), `TileEntityFanRenderer` (static frame via
+eval `base_rotate`, blades via eval `blade_spin`), recipe (iron bars + iron +
+stone slab vertical), frame + blades models + 2 textures, lang keys (already in
+our `en_US.lang`).
+
+- New ports under the same packages: `SyncableFloat` + `SyncableByte` (verbatim —
+  `SyncableObjectBase` + `ISyncableValueProvider` exist; registered in preInit
+  like the other sync types; guava `SignedBytes` ships with MC).
+- The `openmods:eval` model system is NOT ported: it is an expression engine
+  (`EvaluatorFactory` 1700+ lines) plus Forge-animation armatures, with no 1.8.9
+  counterpart (`TRSRTransformation` lives in `client.model` here and there is no
+  runtime variant-transform stage). The fan is the only `openmods:eval` user, so
+  per-feature replacement beats framework porting (§9, §19).
+- Rendering replacement (visually identical construction): `TileEntityFanRenderer`
+  (FastTESR, `WorldRenderer` signature) renders BOTH parts every frame — the frame
+  model GL-rotated about Y through the block center by `-angle` (the eval applies
+  `base_rotate(1 - wrap_deg(angle)/360)`, i.e. a Y-rotation by `-angle`; INFERRED:
+  Forge/GL share rotation handedness — user screenshots verify, one-sign fix if
+  mirrored), then the blades model translated +0.171875 Y (the inventory composition
+  and the `blade_spin` `offset_y`, both 1.12.2 facts) and spun about Z through the
+  ring-center pivot (0.5, 0.671875, 7/16 local) by `bladeRotation` (same clip shape
+  as `base_rotate`, same handedness assumption). Both models are the VERBATIM
+  1.12.2 JSONs, baked lazily via `ModelLoaderRegistry` (hopper pattern) and drawn
+  with the full `BlockModelRenderer.renderModel` lighting path (exactly what the
+  1.12.2 TESR does — no manual quad lighting). Physics is verbatim, so the visual
+  head direction provably matches the airflow cone (model-north front maps to the
+  cone axis; derived, not guessed).
+- Static suppression: the TESR renders everything, so the in-world static model
+  must render nothing (else an unrotated ghost). New `FanBlockModel`
+  (`ISmartBlockModel`, TankFrameModel pattern) returns an empty model when the new
+  `FanRenderState` unlisted boolean (computed in `getExtendedState` from the live
+  TE, HopperOutputState pattern — 1.8.9 smart models get no world/pos) says a TE
+  is present, else the full static model. Static model `fan.json` = frame elements
+  verbatim + blades element shifted +2.75px (exact 1.12.2 inventory composition);
+  item model = parent + verbatim block-item display (shower pattern).
+- Fan textures: `fan_frame.png` is fully opaque (VERIFIED, no fringe risk);
+  `fan_blades.png` has 68 transparent pixels (36 white) under a FULL-quad sample —
+  same white-fringe mechanism as hopper/anvil, so our copy gets the same approved
+  color-bleed fix (alpha preserved, 1.12.2 original untouched). Lazily-baked
+  frame/blades textures are stitched explicitly (STANDING LESSON from hopper).
+- Dropped: `StaticProperty` (eval plumbing only), orientation property (head angle
+  lives in the TE — the 1.12.2 blockstate maps a single orientation variant
+  anyway), `EvalModelState`, `BookDocumentation`, `IActivateAwareTile`/
+  `IPlaceAwareTile`/`IAddAwareTile` (block calls the TE methods inline, hopper
+  pattern), `BlockUtils.aabbOffset` (one-line inline). `AABB.grow` → `expand`
+  (hopper precedent); `Vec3d` → `Vec3` (all methods VERIFIED present via `javap`).
+- One deliberate addition: `onBlockPlacedBy` syncs the angle server-side. In
+  1.12.2 the placed angle reaches clients via the `onAdded`→`updateRedstone`→
+  `sync()` chain, which fires BEFORE the angle is set (stale head direction until
+  the next redstone change); explicit sync closes that race deterministically.
+- 1.8.9 API facts (all VERIFIED via `javap` on the stable_22 `forgeBin` jar unless
+  noted): `Vec3(Vec3i)` + `addVector`/`lengthVector`/`dotProduct`/`normalize`;
+  `MinecraftForgeClient.getRegionRenderCache`; 6-arg `renderModel`;
+  `IModel.bake` → `IFlexibleBakedModel`; `Material.circuits`; 3-arg `isSideSolid`;
+  `DefaultVertexFormats.BLOCK`; `ModelLoaderRegistry.getModel` + manual bake
+  (hopper-proven). INFERRED (compiler verifies): `getBlockRendererDispatcher`,
+  `isFullCube`, `Blocks.stone_slab`.

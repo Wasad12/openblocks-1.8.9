@@ -28,15 +28,18 @@ import openblocks.OpenBlocks;
 import openblocks.client.bindings.KeyInputHandler;
 import openblocks.client.fx.FXLiquidSpray;
 import openblocks.client.model.GliderItemModel;
+import openblocks.client.model.FanBlockModel;
 import openblocks.client.model.TankFrameModel;
 import openblocks.client.model.TankItemModel;
 import openblocks.client.model.VacuumHopperModel;
 import openblocks.client.renderer.entity.EntityHangGliderRenderer;
 import openblocks.client.renderer.tileentity.TileEntityAutoEnchantmentTableRenderer;
+import openblocks.client.renderer.tileentity.TileEntityFanRenderer;
 import openblocks.client.renderer.tileentity.TileEntityTankRenderer;
 import openblocks.common.entity.EntityHangGlider;
 import openblocks.common.entity.EntityXPOrbNoFly;
 import openblocks.common.tileentity.TileEntityAutoEnchantmentTable;
+import openblocks.common.tileentity.TileEntityFan;
 import openblocks.common.tileentity.TileEntityTank;
 
 public class ClientProxy implements IOpenBlocksProxy {
@@ -85,6 +88,12 @@ public class ClientProxy implements IOpenBlocksProxy {
 		if (OpenBlocks.Blocks.vacuumHopper != null) {
 			// per-side output nozzles over the static body (TankFrameModel pattern)
 			MinecraftForge.EVENT_BUS.register(new VacuumHopperModel.BakeHandler());
+		}
+
+		if (OpenBlocks.Blocks.fan != null) {
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFan.class, new TileEntityFanRenderer());
+			// static yaw suppression over the full model (the TESR draws the head)
+			MinecraftForge.EVENT_BUS.register(new FanBlockModel.BakeHandler());
 		}
 	}
 
@@ -178,6 +187,13 @@ public class ClientProxy implements IOpenBlocksProxy {
 				ModelLoader.setCustomModelResourceLocation(hopperItem, 0,
 						new ModelResourceLocation("openblocks:vacuum_hopper", "inventory"));
 		}
+
+		if (OpenBlocks.Blocks.fan != null) {
+			final Item fanItem = Item.getItemFromBlock(OpenBlocks.Blocks.fan);
+			if (fanItem != null)
+				ModelLoader.setCustomModelResourceLocation(fanItem, 0,
+						new ModelResourceLocation("openblocks:fan", "inventory"));
+		}
 	}
 
 	@Override
@@ -228,6 +244,11 @@ public class ClientProxy implements IOpenBlocksProxy {
 				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/vacuum_hopper_items"));
 				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/vacuum_hopper_fluids"));
 				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/vacuum_hopper_both"));
+			}
+
+			if (OpenBlocks.Blocks.fan != null) {
+				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/fan_frame"));
+				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/fan_blades"));
 			}
 		}
 	}

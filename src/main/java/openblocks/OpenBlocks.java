@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import openblocks.common.block.BlockAutoAnvil;
 import openblocks.common.block.BlockAutoEnchantmentTable;
+import openblocks.common.block.BlockFan;
 import openblocks.common.block.BlockTank;
 import openblocks.common.block.BlockVacuumHopper;
 import openblocks.common.block.BlockXPDrain;
@@ -29,6 +30,7 @@ import openblocks.common.item.ItemHangGlider;
 import openblocks.common.item.ItemOBGeneric;
 import openblocks.common.item.ItemTankBlock;
 import openblocks.common.tileentity.TileEntityAutoAnvil;
+import openblocks.common.tileentity.TileEntityFan;
 import openblocks.common.tileentity.TileEntityVacuumHopper;
 import openblocks.common.tileentity.TileEntityAutoEnchantmentTable;
 import openblocks.common.tileentity.TileEntityTank;
@@ -75,6 +77,7 @@ public class OpenBlocks {
 		public static BlockAutoEnchantmentTable autoEnchantmentTable;
 		public static BlockAutoAnvil autoAnvil;
 		public static BlockVacuumHopper vacuumHopper;
+		public static BlockFan fan;
 	}
 
 	public static class Fluids {
@@ -127,8 +130,14 @@ public class OpenBlocks {
 		GameRegistry.registerBlock(Blocks.vacuumHopper, net.minecraft.item.ItemBlock.class, "vacuum_hopper");
 		GameRegistry.registerTileEntity(TileEntityVacuumHopper.class, "openblocks_vacuum_hopper");
 
+		Blocks.fan = new BlockFan();
+		GameRegistry.registerBlock(Blocks.fan, net.minecraft.item.ItemBlock.class, "fan");
+		GameRegistry.registerTileEntity(TileEntityFan.class, "openblocks_fan");
+
 		// syncable field types (local table — 1.8.9 has no data registries)
 		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableBoolean.class);
+		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableFloat.class);
+		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableByte.class);
 		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableInt.class);
 		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableTank.class);
 		openmods.sync.SyncableObjectTypeRegistry.register(openmods.sync.SyncableSides.class);
@@ -193,6 +202,12 @@ public class OpenBlocks {
 		// vacuum hopper (mirrors 1.12.2 vacuum_hopper_0.json: shapeless hopper + obsidian + ender eye)
 		GameRegistry.addShapelessRecipe(new ItemStack(Blocks.vacuumHopper),
 				net.minecraft.init.Blocks.hopper, net.minecraft.init.Blocks.obsidian, net.minecraft.init.Items.ender_eye);
+
+		// fan (mirrors 1.12.2 fan_0.json: iron bars + iron + stone slab, vertical)
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.fan),
+				"f", "i", "s",
+				'f', net.minecraft.init.Blocks.iron_bars, 'i', "ingotIron",
+				's', new ItemStack(net.minecraft.init.Blocks.stone_slab, 1, 0)));
 
 		proxy.init();
 		proxy.registerRenderInformation();

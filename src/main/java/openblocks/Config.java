@@ -15,6 +15,10 @@ public class Config {
 
 	public static int xpToLiquidRatio = 20;
 
+	public static double fanForce = 0.05;
+	public static double fanRange = 10;
+	public static boolean redstoneActivatedFan = true;
+
 	public static void init(File configFile) {
 		Configuration config = new Configuration(configFile);
 		config.load();
@@ -35,6 +39,13 @@ public class Config {
 
 		xpToLiquidRatio = config.get("features", "xpToLiquidRatio", 20,
 				"Storage in mB needed to store single XP point").getInt(20);
+
+		fanForce = config.get("fan", "fanForce", 0.05,
+				"Maximum force applied every tick to entities nearby (linear decay)").getDouble(0.05);
+		fanRange = config.get("fan", "fanRange", 10,
+				"Range of fan in blocks").getDouble(10);
+		redstoneActivatedFan = config.get("fan", "isRedstoneActivated", true,
+				"Is fan force controlled by redstone current").getBoolean(true);
 
 		if (config.hasChanged()) config.save();
 	}
