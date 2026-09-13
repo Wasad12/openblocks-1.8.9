@@ -1,0 +1,21 @@
+{
+    "textures": {
+        "all": "openblocks:blocks/fan_particle",
+        "particle": "openblocks:blocks/fan_particle"
+    },
+    "elements": [
+        {
+            "name": "particle-cube",
+            "from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#all" },
+                "east": { "uv": [ 0, 0, 16, 16 ], "texture": "#all" },
+                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#all" },
+                "west": { "uv": [ 0, 0, 16, 16 ], "texture": "#all" },
+                "up": { "uv": [ 0, 0, 16, 16 ], "texture": "#all" },
+                "down": { "uv": [ 0, 0, 16, 16 ], "texture": "#all" }
+            }
+        }
+    ]
+}

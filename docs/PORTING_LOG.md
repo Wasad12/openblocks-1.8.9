@@ -1386,3 +1386,25 @@ TESR + TE + block + item JSON + fan.png VERIFIED inside, old fan files
 confirmed absent), deployed (unrelated mods untouched). Awaiting user retest:
 head + blades assembled, yaw follows placement + clicks, airflow matches the
 head direction, item renders in hand/inventory.
+
+---
+
+## 2026-09-13 — Feature: Fan (fix loop 2 — break particles, ROOT CAUSE FOUND)
+
+User: fan works, only breaking particles are black-purple. Root cause: TESR-only
+blocks (render type 2) ship no baked model, so the particle lookup
+(`BlockModelShapes.getTexture`) falls back to the missing sprite — 1.8.X never
+fixed this (it ships no `blockstates/fan.json` either). Fix with zero code,
+using a vanilla-PROVED fact: vanilla 1.8.9 ships NO blockstate/block model for
+chests either (only `models/item/chest.json` — VERIFIED absent from the client
+jar), yet chests show no cubes in-world, which PROVES render type 2 skips the
+static pass (a missing model would render a purple cube at every chest — and at
+every fan, which the user would have reported instead of a clean fan). So a
+blockstate + particle-only model is safe: never rendered, only serves the
+particle lookup. New: `blockstates/fan.json` (normal → `openblocks:fan`),
+`models/block/fan.json` (plain cube, `fan_particle` texture + particle),
+`textures/blocks/fan_particle.png` (byte-copy of `fan.png` — fan-colored
+debris; stitched through the normal bake, no explicit stitch needed). Covers
+both destroy bursts and hit cracks (same lookup). `:reobfJar` BUILD SUCCESSFUL
+→ 522,673 bytes (all three VERIFIED inside), deployed (unrelated mods
+untouched). Awaiting retest: break + punch particles fan-textured.

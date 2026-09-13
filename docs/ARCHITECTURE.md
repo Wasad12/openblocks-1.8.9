@@ -507,6 +507,9 @@ our `en_US.lang`).
   risks a dispatcher cast crash). DELETED with the old path: `FanBlockModel`,
   `FanRenderState`, `fan.json`/`fan_frame.json`/`fan_blades.json`,
   `blockstates/fan.json`, the color-bled `fan_blades.png` copy (entity texture
-  needs no atlas stitch, no bleed). KNOWN COSMETIC: breaking particles use the
-  missing texture (no static model to take a particle sprite from — same in
-  1.8.X).
+  needs no atlas stitch, no bleed). Break/hit particles (fix loop 2, 2026-09-13):
+  render type 2 ships no baked model, so the particle lookup fell back to the
+  missing sprite (same in 1.8.X). Fixed with zero code: `blockstates/fan.json` +
+  a particle-only `models/block/fan.json` (`fan_particle.png`, byte-copy of
+  `fan.png`) — safe because render type 2 provably skips the static pass
+  (vanilla ships no chest blockstate either, yet no cubes render).
