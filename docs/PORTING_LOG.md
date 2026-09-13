@@ -1432,3 +1432,28 @@ recovered from git (`781d20e`); the block model's `particle` key now points at
 blockstate serves both). `:reobfJar` BUILD SUCCESSFUL → 525,173 bytes (all fan
 files VERIFIED inside), deployed (unrelated mods untouched). Awaiting retest:
 normal-sized dropped fan; placed head, particles, hand/inventory unchanged.
+
+---
+
+## 2026-09-13 — Feature: Fan (fix loop 4 — 1.12.2-style repaint of the Techne texture)
+
+User: use the 1.12.2 texture instead. Files are NOT interchangeable (said plainly,
+user chose repaint from options): 1.8 uses one 64x64 Techne-unwrapped texture,
+1.12.2 uses two 16x16 face-mapped textures — a swap would paint garbage. Palette
+forensics first: both arts are warm off-white after all (1.8 beige DBD5BD vs
+1.12.2 E2E0D4 — close), so no gray-ification; the real deltas are the white
+pinwheel blades (vs beige disc + shaded pinwheel), the base-top stripe
+(red FF2B2B + khaki D8CA91 + dark 515151 squares), and a lighter touch overall.
+Techne UV rects derived from the ModelBox unwrap and VERIFIED pixel-by-pixel
+against dumps (front blade face x[10..30] = plain disc, back x[32..52] =
+pinwheel; base top x[24..36]). Repaint (Java ImageIO, lossless, layout and
+dimensions untouched — zero render-code risk): structure rects HSB-shifted
+(Sx0.55, B+0.02, opaque only); stripe painted on the base top (v+ edge assumed
+front — screenshots decide, flip if mirrored); 1.12.2 pinwheel resampled 16>20
+nearest onto BOTH blade faces with alpha. Preview render eyeballed before
+shipping (pinwheels white both sides, stripe visible, no artifacts).
+`fan_particle.png` re-copied from the repainted art (debris matches). Palette
+re-verified INSIDE the built JAR (E4E3DC dominant, red 2x2 present). No code
+touched. `:reobfJar` BUILD SUCCESSFUL → 523,055 bytes, deployed (unrelated mods
+untouched). Awaiting user retest: 1.12.2 look (gray-white, pinwheel, stripe),
+stripe orientation.
