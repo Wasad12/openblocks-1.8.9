@@ -11,20 +11,21 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-12 (`93e6a20`, Vacuum Hopper complete — all work through `9316e9d`).
-- **Current feature:** Fan — fix loop 7 (held size) built, deployed, UNTESTED.
-- **Feature status:** Fan IN PROGRESS. May revisit completed features if issues surface later.
-- **Last completed feature:** Vacuum Hopper (user-confirmed COMPLETED 2026-09-12).
-  Prior: Auto Anvil, Auto Enchantment Table, XP Drain + XP Shower, Tank, Hang Glider
-  (all user-confirmed).
+- **Current feature:** none — Fan COMPLETED (user-confirmed 2026-09-13).
+  Awaiting next feature instruction.
+- **Feature status:** no active feature. May revisit completed features if issues surface later.
+- **Last completed feature:** Fan (user-confirmed COMPLETED 2026-09-13).
+  Prior: Vacuum Hopper, Auto Anvil, Auto Enchantment Table, XP Drain + XP Shower,
+  Tank, Hang Glider (all user-confirmed).
 - **Current problem:** none — no open problems, no TEMPORARY code.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
 - **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (523,047 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-13 (Fan fix loop 7: held scale 4x)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-13 (unrelated mods untouched)
-- **Last user test result (2026-09-12):** Vacuum Hopper COMPLETED ("everything works now"
-  through fix loop 3 — suction, flow, textured nozzles in-world + in-tab; "it fixed
-  thanks" for fix-loop-4 white edges). Anvil texture color-bleed deployed, awaiting
-  retest. Prior: Auto Anvil COMPLETED + Auto Enchantment Table COMPLETED + XP
-  Drain/Shower COMPLETED + Tank COMPLETED + glider fixes verified.
+- **Last user test result (2026-09-13):** Fan COMPLETED ("now is good enough"
+  — placed head + blades, repaint, drops, held size; fix loops 1-7). Prior:
+  Vacuum Hopper COMPLETED + Auto Anvil COMPLETED + Auto Enchantment Table
+  COMPLETED + XP Drain/Shower COMPLETED + Tank COMPLETED + glider fixes
+  verified. Anvil texture color-bleed deployed, awaiting retest.
 - **Known issues:** see `KNOWN_ISSUES.md`
 - **Important discoveries:**
   - `OpenBlocks-1.12.X/OpenModsLib/` submodule directory is EMPTY — the lib source of truth is the
@@ -36,8 +37,7 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Confirm with user whether the Fan is COMPLETE (§7) or more verifying remains
-     (airflow-vs-head check, click adjust, recipe, particles, stripe orientation).
+  1. Await user's next feature instruction — no active feature, tree clean.
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `93e6a20` 2026-09-12
      (all local work through `9316e9d` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.

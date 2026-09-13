@@ -5,10 +5,7 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-- Fan (`BlockFan` + `TileEntityFan` + `TileEntityFanRenderer` + `ModelFan` +
-  `SyncableFloat`/`SyncableByte` + recipe). Phase C implemented 2026-09-13, built
-  and deployed; fix loop 1 (render path replaced with the OpenBlocks 1.8.X
-  Techne/TESR approach per user instruction) rebuilt and redeployed, UNTESTED.
+_none — awaiting next feature instruction._
 
 ## COMPLETED
 
@@ -37,6 +34,11 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
   recipe). User-confirmed COMPLETED 2026-09-12 ("everything works now" through
   fix loop 3, "it fixed thanks" for the fix-loop-4 white edges; fix loops 1-4
   included). May revisit if issues surface later.
+- Fan (`BlockFan` + `TileEntityFan` + `TileEntityFanRenderer` + `ModelFan` +
+  `SyncableFloat`/`SyncableByte` + recipe). User-confirmed COMPLETED 2026-09-13
+  ("now is good enough" — placed head + blades, 1.12.2-style repaint, normal
+  drops, held size; fix loops 1-7 included). May revisit if issues surface
+  later, same as the other completed features.
 
 ## NOT STARTED
 

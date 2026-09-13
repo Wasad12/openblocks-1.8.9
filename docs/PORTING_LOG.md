@@ -1513,3 +1513,18 @@ SUCCESSFUL, 523,047 bytes), redeployed (unrelated mods untouched). Awaiting
 TPP-held screenshot: compare SIZE now; position next only if size lands.
 
 User 2026-09-13: "now is good enough" — held size accepted, no further tuning.
+
+---
+
+## 2026-09-13 — Feature: Fan COMPLETED (user-confirmed)
+
+User: "complete but if i found issue in the future we can come back to it same
+with the others". Per §7 this is explicit completion confirmation: feature
+moves to COMPLETED, with the standing revisit agreement extended to the Fan.
+Final state: faithful 1.8.9 port — column block with sneak-click angle adjust,
+redstone-gated cone suction physics, Techne/TESR head (yawed frame + spinning
+blades, 1.12.2-style repaint), standard-path item model, shapeless-vertical
+recipe — with user-verified parity on placed look, repaint, drops, particles
+path and held size (fix loops 1-7 included). Final build 523,047 bytes deployed
+in `1.8.9(6)/minecraft/mods`. Tree clean, no TEMPORARY code. No active feature;
+awaiting next feature instruction.
