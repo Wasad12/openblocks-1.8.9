@@ -40,7 +40,7 @@
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `93e6a20` 2026-09-12
      (all local work through `9316e9d` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
-- **Last known-good Git commit:** `d8e4e6d` (Fan fix loop 5; matches
+- **Last known-good Git commit:** `82f35d9` (Fan fix loop 6; matches
   deployed 523,049-byte JAR).
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
