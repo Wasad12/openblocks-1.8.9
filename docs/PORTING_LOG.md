@@ -1270,3 +1270,17 @@ every face, top-face long edges, a few directly-sampled transparent texels).
 Same user-approved fix: nearest-opaque colour bleed, alpha preserved, zero white
 left (verified after save); 1.12.2 originals untouched. Rebuilt (BUILD
 SUCCESSFUL, 504,320 bytes), redeployed. Awaiting retest: anvil edges clean.
+
+---
+
+## 2026-09-12 — Feature: Vacuum Hopper COMPLETED (user-confirmed)
+
+User: "everything works now except one problem" (side tabs, suction, flow,
+textured nozzles — fix loops 1-3 verified in the same session), then "it fixed
+thanks" for the fix-loop-4 white edges. Per §7 this closes the feature:
+COMPLETED. Final state: faithful 1.8.9 port — small-cube block with sneak-toggle,
+10-slot inventory, 5-level XP tank, suction physics + portal particles, 10-tick
+neighbour output, tabbed GUI with live nozzle previews, shapeless recipe — with
+user-verified parity on behavior and visuals (fix loops 1-4 included). Final
+build 504,320 bytes (includes the post-completion anvil texture fix, same JAR).
+Tree clean. Awaiting next feature instruction.

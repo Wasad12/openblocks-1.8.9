@@ -5,9 +5,7 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-- Vacuum Hopper (`BlockVacuumHopper` + `TileEntityVacuumHopper` +
-  `ContainerVacuumHopper` + `GuiVacuumHopper` + nozzle smart model + shapeless
-  recipe). Phase B planned 2026-09-12, implementing.
+_none — awaiting next feature instruction._
 
 ## COMPLETED
 
@@ -29,6 +27,13 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 - Auto Anvil (`BlockAutoAnvil` + `TileEntityAutoAnvil` + `ContainerAutoAnvil` +
   `GuiAutoAnvil` + `VanillaAnvilLogic` + `GuiComponentSprite` + recipe).
   User-confirmed COMPLETED 2026-09-12 ("everything works" — no fix loops needed).
+  Post-completion texture color-bleed (white fringe fix) user-requested 2026-09-12,
+  deployed, awaiting retest.
+- Vacuum Hopper (`BlockVacuumHopper` + `TileEntityVacuumHopper` +
+  `ContainerVacuumHopper` + `GuiVacuumHopper` + nozzle smart model + shapeless
+  recipe). User-confirmed COMPLETED 2026-09-12 ("everything works now" through
+  fix loop 3, "it fixed thanks" for the fix-loop-4 white edges; fix loops 1-4
+  included). May revisit if issues surface later.
 
 ## NOT STARTED
 
