@@ -10,7 +10,7 @@
 - **GitHub:** `https://github.com/Wasad12/openblocks-1.8.9` (public) — receives ONLY the
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
-  Last push 2026-09-12 (`93e6a20`, Vacuum Hopper complete — all work through `9316e9d`).
+  Last push 2026-09-13 (`3851fee`, Fan complete — all work through `84bfe04`).
 - **Current feature:** none — Fan COMPLETED (user-confirmed 2026-09-13).
   Awaiting next feature instruction.
 - **Feature status:** no active feature. May revisit completed features if issues surface later.
@@ -38,8 +38,8 @@
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
   1. Await user's next feature instruction — no active feature, tree clean.
-  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `93e6a20` 2026-09-12
-     (all local work through `9316e9d` now visible). Future pushes need explicit
+  2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `3851fee`
+     2026-09-13 (all local work through `84bfe04` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
 - **Last known-good Git commit:** `c040d28` (Fan COMPLETED docs; code at
   `760befd` matches deployed 523,047-byte JAR).
