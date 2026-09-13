@@ -1355,3 +1355,34 @@ untouched). Awaiting user test: recipe crafts; placed fan renders (frame +
 spinning blades); head yaw follows placement + sneak clicks; entities blow down
 the facing cone (redstone-gated, creative players immune); item icon matches
 1.12.2; no unrotated ghost under the head.
+
+---
+
+## 2026-09-13 — Feature: Fan (fix loop 1 — render path replaced with 1.8.X approach)
+
+User screenshots: blades render detached from the frame, head facing fixed no
+matter the placement. Root cause of the detached blades was NEVER isolated
+(statically the shared GL matrix cannot displace the blades a full block —
+every composition checked out, so the bug sits in an unverified runtime
+assumption, not the math). Per EXPLICIT user instruction, no more probing:
+rendering is taken from OpenBlocks 1.8.X (`OpenMods/OpenBlocks@1.8.X`), which
+the user certifies renders the fan correctly — a user-authorized, fan-only
+exception to the no-1.8-branches rule (recorded in ARCHITECTURE.md; the rule
+stands for everything else). What the 1.8.X approach is: Techne `ModelFan` +
+vanilla TESR + `textures/models/fan.png`, block render type 2 (TESR only, no
+blockstate), item `builtin/entity` + `registerTESRItemStack` (their
+`tempHackRegisterTesrItemRenderers`, narrowed to the fan). The old path is fully
+deleted (`FanBlockModel`, `FanRenderState`, all fan block JSONs + blockstate,
+both block textures). Kept from 1.12.2: physics, 45°/tick spin, sneak-click
+adjust, place-time angle + sync + power-init keepers, sync types, config,
+recipe, bounds, placement. One real adaptation of the 1.8.X code: blade angle
+→ radians (`rotateAngleZ` takes radians; 1.8.X passed degrees through, ~57°/tick
+by accident); `hasFastRenderer` dropped (vanilla TESR must take the normal
+dispatcher path). All FANDGB TEMPORARY lines removed unexecuted (the replacement
+made them moot). One compile pass, zero iterations (`registerTESRItemStack`,
+`renderTileEntityAt`, `bindTexture` all VERIFIED present in 1722 via `javap`
+before writing). `:reobfJar` BUILD SUCCESSFUL → 519,022 bytes (ModelFan +
+TESR + TE + block + item JSON + fan.png VERIFIED inside, old fan files
+confirmed absent), deployed (unrelated mods untouched). Awaiting user retest:
+head + blades assembled, yaw follows placement + clicks, airflow matches the
+head direction, item renders in hand/inventory.

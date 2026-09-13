@@ -115,6 +115,10 @@ public class TileEntityFan extends SyncedTileEntity implements INeighbourAwareTi
 	public void onBlockPlacedBy(IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		final float placeAngle = placer.rotationYawHead;
 		angle.set(placeAngle);
+		// 1.8.9 Chunk.setBlockState fires onBlockAdded BEFORE creating the TE
+		// (bytecode order PROVED via javap), so onAdded misses at placement and
+		// power would never initialize — init it here instead (server-guarded).
+		updateRedstone();
 		if (!worldObj.isRemote) sync();
 	}
 
@@ -151,10 +155,5 @@ public class TileEntityFan extends SyncedTileEntity implements INeighbourAwareTi
 		}
 
 		return false;
-	}
-
-	@Override
-	public boolean hasFastRenderer() {
-		return true;
 	}
 }

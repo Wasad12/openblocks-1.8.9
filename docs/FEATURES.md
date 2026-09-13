@@ -5,9 +5,10 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-- Fan (`BlockFan` + `TileEntityFan` + `TileEntityFanRenderer` + `FanBlockModel` +
+- Fan (`BlockFan` + `TileEntityFan` + `TileEntityFanRenderer` + `ModelFan` +
   `SyncableFloat`/`SyncableByte` + recipe). Phase C implemented 2026-09-13, built
-  and deployed, UNTESTED.
+  and deployed; fix loop 1 (render path replaced with the OpenBlocks 1.8.X
+  Techne/TESR approach per user instruction) rebuilt and redeployed, UNTESTED.
 
 ## COMPLETED
 

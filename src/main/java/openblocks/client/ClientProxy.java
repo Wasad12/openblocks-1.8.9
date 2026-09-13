@@ -28,7 +28,6 @@ import openblocks.OpenBlocks;
 import openblocks.client.bindings.KeyInputHandler;
 import openblocks.client.fx.FXLiquidSpray;
 import openblocks.client.model.GliderItemModel;
-import openblocks.client.model.FanBlockModel;
 import openblocks.client.model.TankFrameModel;
 import openblocks.client.model.TankItemModel;
 import openblocks.client.model.VacuumHopperModel;
@@ -92,8 +91,6 @@ public class ClientProxy implements IOpenBlocksProxy {
 
 		if (OpenBlocks.Blocks.fan != null) {
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFan.class, new TileEntityFanRenderer());
-			// static yaw suppression over the full model (the TESR draws the head)
-			MinecraftForge.EVENT_BUS.register(new FanBlockModel.BakeHandler());
 		}
 	}
 
@@ -110,6 +107,15 @@ public class ClientProxy implements IOpenBlocksProxy {
 	public void registerRenderInformation() {
 		if (OpenBlocks.Items.hangGlider != null) {
 			MinecraftForge.EVENT_BUS.register(new GliderPlayerRenderHandler());
+		}
+
+		if (OpenBlocks.Blocks.fan != null) {
+			// 1.8.X tempHackRegisterTesrItemRenderers, narrowed to the fan: the
+			// fan item model is builtin/entity (invisible statics), and this makes
+			// the held/inventory item render through the TESR instead.
+			final Item fanItem = Item.getItemFromBlock(OpenBlocks.Blocks.fan);
+			if (fanItem != null)
+				net.minecraftforge.client.ForgeHooksClient.registerTESRItemStack(fanItem, 0, TileEntityFan.class);
 		}
 	}
 
@@ -244,11 +250,6 @@ public class ClientProxy implements IOpenBlocksProxy {
 				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/vacuum_hopper_items"));
 				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/vacuum_hopper_fluids"));
 				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/vacuum_hopper_both"));
-			}
-
-			if (OpenBlocks.Blocks.fan != null) {
-				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/fan_frame"));
-				evt.map.registerSprite(new ResourceLocation("openblocks", "blocks/fan_blades"));
 			}
 		}
 	}

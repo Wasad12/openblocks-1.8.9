@@ -482,6 +482,31 @@ our `en_US.lang`).
   noted): `Vec3(Vec3i)` + `addVector`/`lengthVector`/`dotProduct`/`normalize`;
   `MinecraftForgeClient.getRegionRenderCache`; 6-arg `renderModel`;
   `IModel.bake` → `IFlexibleBakedModel`; `Material.circuits`; 3-arg `isSideSolid`;
-  `DefaultVertexFormats.BLOCK`; `ModelLoaderRegistry.getModel` + manual bake
+  `DefaultVertexFormats.BLOCK`;   `ModelLoaderRegistry.getModel` + manual bake
   (hopper-proven). INFERRED (compiler verifies): `getBlockRendererDispatcher`,
   `isFullCube`, `Blocks.stone_slab`.
+- Render-path REPLACEMENT (fix loop 1, 2026-09-13): the baked-model + GL-yaw
+  approach above rendered detached blades + fixed facing in-game (user screenshots;
+  root cause never isolated). Per EXPLICIT user instruction, rendering is taken
+  from OpenBlocks 1.8.X (`OpenMods/OpenBlocks@1.8.X`) — a user-authorized,
+  fan-only exception to the no-1.8-branches rule (the rule itself stays in force
+  for everything else). Taken VERBATIM: `ModelFan` (Techne head: 8 struts + stand
+  + base + 10x10 blade quad on `textures/models/fan.png`), `TileEntityFanRenderer`
+  (vanilla `TileEntitySpecialRenderer`: translate center-top, X-flip 180°, yaw
+  +angle about Y — the certified sign), `BlockFan.getRenderType() == 2` (TESR
+  only, no blockstate file), item `{"parent": "builtin/entity"}` +
+  `ForgeHooksClient.registerTESRItemStack` for held/inventory rendering (their
+  `tempHackRegisterTesrItemRenderers`, narrowed to the fan), `bindTexture`
+  path. KEPT from 1.12.2 (unchanged authority): physics, 45°/tick spin,
+  sneak-click adjust, place-time angle + explicit sync + updateRedstone-at-place
+  keepers, `SyncableFloat`/`SyncableByte`, config values, recipe, bounds,
+  placement rule. DELIBERATE adaptations of the 1.8.X code: blade angle converted
+  to radians (`rotateAngleZ` takes radians — 1.8.X passed degrees straight through,
+  which read as ~57°/tick and only looked right by accident); `hasFastRenderer`
+  override DROPPED (a vanilla TESR must take the normal path — leaving it true
+  risks a dispatcher cast crash). DELETED with the old path: `FanBlockModel`,
+  `FanRenderState`, `fan.json`/`fan_frame.json`/`fan_blades.json`,
+  `blockstates/fan.json`, the color-bled `fan_blades.png` copy (entity texture
+  needs no atlas stitch, no bleed). KNOWN COSMETIC: breaking particles use the
+  missing texture (no static model to take a particle sprite from — same in
+  1.8.X).

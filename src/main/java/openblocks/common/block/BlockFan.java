@@ -2,8 +2,6 @@ package openblocks.common.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,22 +9,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
 import openblocks.OpenBlocks;
 import openblocks.common.tileentity.TileEntityFan;
 
 // 1.8.9 port of 1.12.2 BlockFan: same 0.2-0.8 column, non-opaque, top-of-solid
-// placement, TE-driven head angle. 1.8.9 adaptations: plain Block (no OpenBlock —
-// hardness 1.0F like every OpenBlock), getRenderType MODEL (tank lesson), static
-// bounds (no per-state geometry — the head yaw lives in the TESR, not the state),
-// ExtendedBlockState carrying only FanRenderState (the orientation property and
-// EvalModelState are eval-system plumbing, which has no 1.8.9 counterpart — see
-// ARCHITECTURE.md), IPlaceAwareTile/IAddAwareTile/IActivateAwareTile inlined
-// (hopper pattern).
+// placement, TE-driven head angle. Rendering follows OpenBlocks 1.8.X
+// (user-authorized exception to the no-1.8-branches rule, fan only, 2026-09-13):
+// getRenderType 2 = TESR only, no static model, no blockstate, no eval plumbing
+// (orientation property and EvalModelState dropped — see ARCHITECTURE.md).
+// Otherwise 1.12.2 behavior: plain Block (no OpenBlock — hardness 1.0F like every
+// OpenBlock), IPlaceAwareTile/IAddAwareTile/IActivateAwareTile inlined (hopper
+// pattern), shower-pattern world-space collision box.
 public class BlockFan extends Block {
 
 	public BlockFan() {
@@ -38,20 +32,8 @@ public class BlockFan extends Block {
 	}
 
 	@Override
-	protected BlockState createBlockState() {
-		return new ExtendedBlockState(this,
-				new IProperty[0],
-				new IUnlistedProperty[] { FanRenderState.PROPERTY });
-	}
-
-	@Override
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
-		if (state instanceof IExtendedBlockState) {
-			final IExtendedBlockState oldState = (IExtendedBlockState)state;
-			return oldState.withProperty(FanRenderState.PROPERTY, FanRenderState.computeState(world, pos));
-		}
-
-		return state;
+	public int getRenderType() {
+		return 2; // TESR only
 	}
 
 	@Override
@@ -59,11 +41,6 @@ public class BlockFan extends Block {
 		// 1.8.9 expects a WORLD-space box here (addCollisionBoxesToList adds it
 		// directly with no offset — shower lesson).
 		return new AxisAlignedBB(0.2, 0.0, 0.2, 0.8, 1.0, 0.8).offset(pos.getX(), pos.getY(), pos.getZ());
-	}
-
-	@Override
-	public int getRenderType() {
-		return 3;
 	}
 
 	@Override
