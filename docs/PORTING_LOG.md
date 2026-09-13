@@ -1408,3 +1408,27 @@ debris; stitched through the normal bake, no explicit stitch needed). Covers
 both destroy bursts and hit cracks (same lookup). `:reobfJar` BUILD SUCCESSFUL
 → 522,673 bytes (all three VERIFIED inside), deployed (unrelated mods
 untouched). Awaiting retest: break + punch particles fan-textured.
+
+---
+
+## 2026-09-13 — Feature: Fan (fix loop 3 — micro-sized dropped item, ROOT CAUSE FOUND)
+
+User screenshots: the dropped fan renders as a tiny (quarter-scale) but otherwise
+perfect mini-fan next to a normal-sized dropped hoe. Root cause, PROVED against
+the Forge 1.8.9 branch sources: `registerTESRItemStack` renders the item through
+`renderTileEntityAt(null, 0, 0, 0, 0, -1)` (hence 1.8.X's null-guard) with
+whatever GL matrix the item path set up — for drops, `RenderEntityItem` applies
+the 0.5 entity scale plus the default GROUND transform before the TESR ever runs,
+so the 1:1 Techne model lands at micro scale. The normal hoe is unaffected (flat
+sprite path, no entity scale). Same wart exists in 1.8.X itself (identical code
+path) — it was just never noticed there. Fix, keeping the certified PLACED
+render untouched: items go back to the STANDARD item path (the deprecated TEISR
+registration is removed) — `models/item/fan.json` is a real model again (parent
+= the restored 11-element `models/block/fan.json` + verbatim block-item display,
+shower pattern), so drops/inventory/hand render at standard item scales like
+every other block item. `fan_frame.png` + the Java-bled `fan_blades.png`
+recovered from git (`781d20e`); the block model's `particle` key now points at
+`fan_particle.png`, so fix loop 2's break/hit particles are unchanged (same
+blockstate serves both). `:reobfJar` BUILD SUCCESSFUL → 525,173 bytes (all fan
+files VERIFIED inside), deployed (unrelated mods untouched). Awaiting retest:
+normal-sized dropped fan; placed head, particles, hand/inventory unchanged.

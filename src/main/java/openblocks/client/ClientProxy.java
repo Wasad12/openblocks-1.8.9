@@ -108,15 +108,6 @@ public class ClientProxy implements IOpenBlocksProxy {
 		if (OpenBlocks.Items.hangGlider != null) {
 			MinecraftForge.EVENT_BUS.register(new GliderPlayerRenderHandler());
 		}
-
-		if (OpenBlocks.Blocks.fan != null) {
-			// 1.8.X tempHackRegisterTesrItemRenderers, narrowed to the fan: the
-			// fan item model is builtin/entity (invisible statics), and this makes
-			// the held/inventory item render through the TESR instead.
-			final Item fanItem = Item.getItemFromBlock(OpenBlocks.Blocks.fan);
-			if (fanItem != null)
-				net.minecraftforge.client.ForgeHooksClient.registerTESRItemStack(fanItem, 0, TileEntityFan.class);
-		}
 	}
 
 	// NOTE: must run in preInit (1.12.2 registers item models during preInit as well).

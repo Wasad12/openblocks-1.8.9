@@ -512,4 +512,13 @@ our `en_US.lang`).
   missing sprite (same in 1.8.X). Fixed with zero code: `blockstates/fan.json` +
   a particle-only `models/block/fan.json` (`fan_particle.png`, byte-copy of
   `fan.png`) — safe because render type 2 provably skips the static pass
-  (vanilla ships no chest blockstate either, yet no cubes render).
+  (vanilla ships no chest blockstate either, yet no cubes render). Item sizing
+  (fix loop 3, 2026-09-13): the 1.8.X `registerTESRItemStack` path renders the
+  item through `renderTileEntityAt(null, ...)` under the item path's GL matrix
+  (PROVED via the Forge 1.8.9 branch: 0.5 drop scale + default GROUND transform),
+  so drops came out micro-sized — a wart 1.8.X shares, not a port bug. Items use
+  the standard path again instead (TEISR registration removed): `models/item/
+  fan.json` = parent block model + verbatim block-item display (drops/inventory/
+  hand at normal scales, shower pattern); the block model doubles as the
+  blockstate particle source (particle key → `fan_particle.png`). Placed render
+  stays 1.8.X-verbatim.
