@@ -34,8 +34,12 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Push to GitHub on explicit user request (`git subtree push --prefix
-     OpenBlocks-1.8.9 origin master`) — covers the glider doll fix + docs.
+  1. Push to GitHub — BLOCKED 2026-09-18: `git subtree push` fails on auth
+     (HTTPS `origin` + `manager` helper, no TTY for the credential dialog in this
+     environment: "could not read Username"). User runs it themselves from the
+     workspace root, or re-authenticates and asks for a retry:
+     `git subtree push --prefix OpenBlocks-1.8.9 origin master`
+     (covers the glider doll fix + docs, everything through `62a36eb`).
   2. Then await next feature instruction — no active feature, tree clean.
   3. GitHub (`Wasad12/openblocks-1.8.9`) last RECEIVED subtree push `9e4e580`
      2026-09-13 (all local work through `c267850` now visible).
