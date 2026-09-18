@@ -17,11 +17,11 @@
 - **Last completed feature:** Elevator (user-confirmed COMPLETED 2026-09-13).
   Prior: Last Stand, Fan, Vacuum Hopper, Auto Anvil, Auto Enchantment Table,
   XP Drain + XP Shower, Tank, Hang Glider (all user-confirmed).
-- **Current problem:** glider inventory-doll jitter NOT fixed by the partial-1.0 change
-  (user retest 2026-09-18 on the creative doll, same swing). TEMPORARY `DOLLTRACE`
-  logging armed in `GliderPlayerRenderHandler` (MUST be removed before any release).
+- **Current problem:** glider doll jitter ROOT CAUSE FOUND via DOLLTRACE (production
+  stack frames use SRG names — detection never fired). Clean fix deployed
+  2026-09-18, TEMPORARY trace fully removed (audit clean). Awaiting user retest.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (558,333 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-18 (DOLLTRACE probe build, zero compile iterations)
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (557,843 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-18 (SRG doll detection, trace removed, zero compile iterations)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-18 (unrelated mods untouched)
 - **Last user test result (2026-09-13):** Elevator COMPLETED ("work exactly like 1.12.2" — no fix loops needed). Prior: Last Stand COMPLETED + Fan COMPLETED + Vacuum Hopper COMPLETED + Auto Anvil COMPLETED + Auto Enchantment Table COMPLETED + XP Drain/Shower COMPLETED + Tank COMPLETED + glider fixes verified. Anvil texture color-bleed deployed, awaiting retest.
 - **Known issues:** see `KNOWN_ISSUES.md`
@@ -35,12 +35,10 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. User test with the DOLLTRACE build (full quit-to-launcher restart REQUIRED —
-     the last test session launched 01:12:22, mid-deploy, so its jar version is
-     unproven): deploy glider, open inventory, keep mouse STILL 5s, close, quit.
-  2. Read `[DOLLTRACE]` lines in `1.8.9(6)/minecraft/logs/fml-client-latest.log`
-     (per-render yaw inputs + doll detection + screen class) and diagnose.
-  3. REMOVE the trace before any release build.
+  1. User retest (normal full restart, since the jar changed): deploy glider,
+     open inventory — doll should lie tilted and STABLE now (world TPP unchanged).
+  2. REMOVE nothing — tree already has no TEMPORARY code. On user confirmation,
+     mark KNOWN_ISSUES #7 closed.
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `9e4e580`
      2026-09-13 (all local work through `c267850` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.

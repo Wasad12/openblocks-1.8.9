@@ -1784,3 +1784,29 @@ at all → old binary ran) from wrong-theory (lines present → yaw inputs show
 what actually jumps) in ONE test. Protocol: full quit-to-launcher restart,
 deploy glider, open inventory, keep mouse STILL 5s, close, quit; then read
 `[DOLLTRACE]` lines in `1.8.9(6)/minecraft/logs/fml-client-latest.log`.
+
+---
+
+## 2026-09-18 — Feature: Hang Glider (doll ROOT CAUSE FOUND via DOLLTRACE + fixed)
+
+The traced retest (fresh 01:26:19 session, trace build PROVED running by the
+lines themselves) is decisive. Every `[DOLLTRACE]` line while the creative
+doll rendered: `x=y=z=0.0` exact, `prevYaw`/`yaw` rock-stable for ~26s
+(146.85/-18.66 after the opening mouse-settle), screen `GuiContainerCreative`
+— yet `doll=false` on EVERY line. The doll visibly rendered each of those
+frames, so the detection never fired: with `doll=false` we used the cycling
+frame partial, our yaw swept the full 165-degree wrapped delta every frame
+while vanilla held 1.0 — exactly the crazy vibration reported.
+
+Why the stack check failed: production stack frames carry SRG names, not MCP
+names. `drawEntityOnScreen` is `func_147046_a` at runtime (VERIFIED in
+stable_22 methods.csv: `func_147046_a,drawEntityOnScreen`). The check for the
+MCP name could never match outside dev. Fix: match BOTH names (MCP kept so
+dev still works; SRG names are version-unique so no collision risk).
+DOLLTRACE fully removed in the same build (src audit: zero hits for
+TEMPORARY/DOLLTRACE/System.out/etc.). The partial-1.0 theory itself is now
+CONFIRMED by the trace data (inputs constant — only our partial varied).
+
+Build: `:reobfJar` BUILD SUCCESSFUL first try → 557,843 bytes, deployed
+2026-09-18 (unrelated mods untouched). Awaiting user retest: inventory doll
+tilted and STABLE; world TPP unchanged.

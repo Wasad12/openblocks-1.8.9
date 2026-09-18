@@ -144,9 +144,9 @@ The 1.12.2 source stays the primary authority (§2); everything here is adaptati
   vanilla's (1.0). Fix: `isInventoryDollRender` (exact 0,0,0 + `drawEntityOnScreen`
   on the   stack) selects partial 1.0 for doll renders, frame partial otherwise;
   conjugation otherwise unchanged. Doll keeps the faithful tilted pose, now stable.
-  UPDATE 2026-09-18: user retest says NOT fixed (creative doll still swings);
-  stale session unproven (test launched mid-deploy) — DOLLTRACE probe armed,
-  see PORTING_LOG; the partial-1.0 claim above is UNVERIFIED until traced.
+  CORRECTION 2026-09-18 (DOLLTRACE-proved): the stack check must match the SRG
+  name `func_147046_a`, not just MCP `drawEntityOnScreen` — production frames
+  are SRG-named, so MCP-only matching never fired. Both matched now.
 
 ### Tank (2026-09-12, Phase B plan — behavior preserved, lib/sync/render adapted to 1.8.9)
 
