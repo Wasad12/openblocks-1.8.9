@@ -1716,3 +1716,41 @@ feature; awaiting next feature instruction.
   exception (ARCHITECTURE.md). Theories marked INFERRED are disproven until
   VERIFIED; trust only log/bytecode/probe evidence. Commits go out as Wasad12
   (no author overrides).
+
+---
+
+## 2026-09-18 — Feature: Hang Glider (post-completion fix — inventory doll jitter, ROOT CAUSE FOUND)
+
+User screenshots (9 frames, inventory open while deployed): the paper doll lies
+tilted (the 75-degree glide pose, correct) but swings left/right every frame,
+poking outside the doll box. World TPP was user-confirmed correct — so the
+conjugation itself is right and the doll path is the divergent case.
+
+Root cause, PROVED via `javap` on the stable_22 `forgeBin` jar:
+1. `RenderLivingEvent$Pre` carries NO partial-ticks field (entity + renderer +
+   x/y/z only — VERIFIED in the class shape), so the handler cannot read the
+   partial vanilla will use; it uses `ClientTickHandler.renderTickTime` (the
+   frame partial), which matches the world path (user-confirmed TPP).
+2. `GuiInventory.drawEntityOnScreen` bytecode PROVES the doll renders via
+   `RenderManager.renderEntityWithPosYaw(entity, 0,0,0, 0.0F, 1.0F)` — partial
+   is hard-coded 1.0. It also overwrites `renderYawOffset` with the mouse yaw
+   while leaving `prevRenderYawOffset` at the world value.
+3. So for the doll, vanilla interpolates with 1.0 (exactly the mouse yaw) while
+   we interpolated with the frame partial (a lerp between stale world-prev and
+   mouse yaw). The residual yaw mismatch rotates the R75 axis, and since the
+   frame partial cycles 0-1 every tick, the tilted doll swings left/right —
+   exactly the reported symptom, every frame.
+
+Fix (world path untouched): new `isInventoryDollRender` check — exact 0,0,0
+position (the doll call passes exactly that; world renders of the local player
+carry the camera offset, first-person renders nothing) confirmed via the call
+stack (`drawEntityOnScreen` present, so a world-at-origin coincidence cannot
+false-positive). Doll renders use partial 1.0 for the yaw, matching vanilla
+exactly; everything else (limb zero, conjugation, pop) unchanged. Doll keeps
+the faithful tilted 1.12.2 pose, now stable; mouse-follow yaw still works
+(both sides now compute the same mouse yaw).
+
+Build: `:reobfJar` BUILD SUCCESSFUL first try → 557,791 bytes (+336, one new
+method — `isInventoryDollRender` VERIFIED in the built JAR via `javap`),
+deployed 2026-09-18 (unrelated mods untouched). Awaiting user retest: open
+inventory while deployed — doll tilted and STABLE; world TPP unchanged.

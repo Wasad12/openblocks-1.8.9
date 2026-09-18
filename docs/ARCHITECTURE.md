@@ -136,6 +136,14 @@ The 1.12.2 source stays the primary authority (§2); everything here is adaptati
   (1.8.9 has no off-hand; single-hand logic throughout.)
 - Unstackable glider (2026-09-12, DELIBERATE user-requested deviation): 1.12.2 stacks the
   glider to 64; ours is `setMaxStackSize(1)`. Wings still stack (crafting ingredient).
+- Inventory doll jitter (2026-09-18): the doll rendered tilted (correct 1.12.2 pose)
+  but swinging left/right every frame. Root cause PROVED via `javap`: the doll path
+  (`GuiInventory.drawEntityOnScreen` → `renderEntityWithPosYaw(..., 0,0,0, 0, 1.0)`)
+  uses partial 1.0 while the world path uses the frame partial, and the Pre event
+  carries no partial field — so the handler's yaw (frame partial) disagreed with
+  vanilla's (1.0). Fix: `isInventoryDollRender` (exact 0,0,0 + `drawEntityOnScreen`
+  on the stack) selects partial 1.0 for doll renders, frame partial otherwise;
+  conjugation otherwise unchanged. Doll keeps the faithful tilted pose, now stable.
 
 ### Tank (2026-09-12, Phase B plan — behavior preserved, lib/sync/render adapted to 1.8.9)
 

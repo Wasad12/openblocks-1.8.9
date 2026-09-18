@@ -22,7 +22,13 @@ public class GliderPlayerRenderHandler {
 				// translate(entity) * corpse-rotations. Conjugate the 1.12.2 rotation into this
 				// earlier point so the final composite matches 1.12.2 bit-for-bit:
 				// T * Rc * R75 * Rc^-1 * T^-1, followed by vanilla T * Rc * ..., gives T * Rc * R75 * ...
-				final float partialTicks = ClientTickHandler.renderTickTime;
+				// Inventory doll (GuiInventory.drawEntityOnScreen) calls renderEntityWithPosYaw
+				// with partialTicks = 1.0 (VERIFIED via javap on the 1722 forgeBin jar), while
+				// the world path uses the frame render partial. The event carries no partial,
+				// so detect the doll and match its partial - otherwise our yaw (frame partial)
+				// disagrees with vanilla's (1.0) and the residual yaw swings the tilted body
+				// left/right every frame as the frame partial cycles.
+				float partialTicks = isInventoryDollRender(evt) ? 1.0F : ClientTickHandler.renderTickTime;
 				final float yaw = interpolateRotation(player.prevRenderYawOffset, player.renderYawOffset, partialTicks);
 				GL11.glPushMatrix();
 				GL11.glTranslated(evt.x, evt.y, evt.z);
@@ -53,5 +59,17 @@ public class GliderPlayerRenderHandler {
 		}
 
 		return prevRotation + modifier * rotation;
+	}
+
+	private static boolean isInventoryDollRender(RenderLivingEvent.Pre evt) {
+		// Doll path passes exactly 0,0,0 (renderEntityWithPosYaw(entity, 0,0,0, 0, 1.0));
+		// world renders of the local player carry the camera offset and are never
+		// exactly zero (first-person doesn't render at all). Confirm via the call
+		// stack so a world-at-origin coincidence can't false-positive.
+		if (evt.x != 0.0 || evt.y != 0.0 || evt.z != 0.0) return false;
+		for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
+			if (e.getMethodName().equals("drawEntityOnScreen")) return true;
+		}
+		return false;
 	}
 }
