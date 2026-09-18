@@ -10,8 +10,10 @@ _none — awaiting next feature instruction._
 ## COMPLETED
 
 - Hang Glider (`ItemHangGlider` + `EntityHangGlider` + renderer + vario/thermal + recipes +
-  perspective-aware item model + unstackable glider). User-confirmed COMPLETED 2026-09-12.
-  Post-completion survival hand-hiding fix (player-scoped, no identity scan) user-confirmed FIXED 2026-09-12.
+   perspective-aware item model + unstackable glider). User-confirmed COMPLETED 2026-09-12.
+   Post-completion survival hand-hiding fix (player-scoped, no identity scan) user-confirmed FIXED 2026-09-12.
+   Post-completion inventory-doll jitter fix (partial-1.0 + SRG `func_147046_a`
+   detection) user-confirmed FIXED 2026-09-18 ("it worked").
 - Tank (`BlockTank` + `TileEntityTank` + `ItemTankBlock` + connected-frame smart model +
   TESR fluid + item fluid box + xpJuice fluid + recipe + silent fills + harvest-stash NBT
   drops). User-confirmed COMPLETED 2026-09-12 ("working and looking fine").

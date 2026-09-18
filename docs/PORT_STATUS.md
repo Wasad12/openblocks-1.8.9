@@ -11,15 +11,14 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-13 (`9e4e580`, Elevator + docs refresh — all work through `c267850`).
-- **Current feature:** Hang Glider post-completion fix (inventory doll jitter while deployed).
-  Elevator stays COMPLETED (user-confirmed 2026-09-13).
+- **Current feature:** none — glider doll jitter fix VERIFIED by user 2026-09-18
+  ("it worked"). Elevator stays COMPLETED (user-confirmed 2026-09-13).
 - **Feature status:** no active feature. May revisit completed features if issues surface later.
 - **Last completed feature:** Elevator (user-confirmed COMPLETED 2026-09-13).
   Prior: Last Stand, Fan, Vacuum Hopper, Auto Anvil, Auto Enchantment Table,
   XP Drain + XP Shower, Tank, Hang Glider (all user-confirmed).
-- **Current problem:** glider doll jitter ROOT CAUSE FOUND via DOLLTRACE (production
-  stack frames use SRG names — detection never fired). Clean fix deployed
-  2026-09-18, TEMPORARY trace fully removed (audit clean). Awaiting user retest.
+- **Current problem:** none — no open problems, no TEMPORARY code (trace removed,
+  audit clean). KNOWN_ISSUES #7 closed as user-verified FIXED 2026-09-18.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
 - **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (557,843 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-18 (SRG doll detection, trace removed, zero compile iterations)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-18 (unrelated mods untouched)
@@ -35,10 +34,11 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. User retest (normal full restart, since the jar changed): deploy glider,
-     open inventory — doll should lie tilted and STABLE now (world TPP unchanged).
-  2. REMOVE nothing — tree already has no TEMPORARY code. On user confirmation,
-     mark KNOWN_ISSUES #7 closed.
+  1. Push to GitHub on explicit user request (`git subtree push --prefix
+     OpenBlocks-1.8.9 origin master`) — covers the glider doll fix + docs.
+  2. Then await next feature instruction — no active feature, tree clean.
+  3. GitHub (`Wasad12/openblocks-1.8.9`) last RECEIVED subtree push `9e4e580`
+     2026-09-13 (all local work through `c267850` now visible).
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `9e4e580`
      2026-09-13 (all local work through `c267850` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.

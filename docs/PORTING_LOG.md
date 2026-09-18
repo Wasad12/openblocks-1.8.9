@@ -1810,3 +1810,14 @@ CONFIRMED by the trace data (inputs constant — only our partial varied).
 Build: `:reobfJar` BUILD SUCCESSFUL first try → 557,843 bytes, deployed
 2026-09-18 (unrelated mods untouched). Awaiting user retest: inventory doll
 tilted and STABLE; world TPP unchanged.
+
+---
+
+## 2026-09-18 — Feature: Hang Glider (doll fix VERIFIED + pushed)
+
+User: "it worked" on the SRG-detection build (557,843 bytes) — the inventory
+doll lies tilted and stable while deployed. KNOWN_ISSUES #7 CLOSED. No
+TEMPORARY code in tree (DOLLTRACE removed, audit clean). Pushing the
+`OpenBlocks-1.8.9/` subtree to `Wasad12/openblocks-1.8.9` on explicit user
+request — covers the doll fix (partial-1.0 + `func_147046_a` detection) and
+all doc updates. No active feature; awaiting next feature instruction.
