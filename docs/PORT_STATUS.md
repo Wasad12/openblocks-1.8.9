@@ -17,10 +17,11 @@
 - **Last completed feature:** Elevator (user-confirmed COMPLETED 2026-09-13).
   Prior: Last Stand, Fan, Vacuum Hopper, Auto Anvil, Auto Enchantment Table,
   XP Drain + XP Shower, Tank, Hang Glider (all user-confirmed).
-- **Current problem:** none open — glider inventory-doll jitter fix DEPLOYED 2026-09-18,
-  awaiting user retest. No TEMPORARY code.
+- **Current problem:** glider inventory-doll jitter NOT fixed by the partial-1.0 change
+  (user retest 2026-09-18 on the creative doll, same swing). TEMPORARY `DOLLTRACE`
+  logging armed in `GliderPlayerRenderHandler` (MUST be removed before any release).
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (557,791 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-18 (glider doll fix, zero compile iterations)
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (558,333 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-18 (DOLLTRACE probe build, zero compile iterations)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-18 (unrelated mods untouched)
 - **Last user test result (2026-09-13):** Elevator COMPLETED ("work exactly like 1.12.2" — no fix loops needed). Prior: Last Stand COMPLETED + Fan COMPLETED + Vacuum Hopper COMPLETED + Auto Anvil COMPLETED + Auto Enchantment Table COMPLETED + XP Drain/Shower COMPLETED + Tank COMPLETED + glider fixes verified. Anvil texture color-bleed deployed, awaiting retest.
 - **Known issues:** see `KNOWN_ISSUES.md`
@@ -34,14 +35,17 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Await user retest of the glider inventory doll (open inventory while deployed —
-     doll should lie tilted and STABLE, world TPP unchanged).
-  2. Then await next feature instruction — no other active feature, tree clean.
+  1. User test with the DOLLTRACE build (full quit-to-launcher restart REQUIRED —
+     the last test session launched 01:12:22, mid-deploy, so its jar version is
+     unproven): deploy glider, open inventory, keep mouse STILL 5s, close, quit.
+  2. Read `[DOLLTRACE]` lines in `1.8.9(6)/minecraft/logs/fml-client-latest.log`
+     (per-render yaw inputs + doll detection + screen class) and diagnose.
+  3. REMOVE the trace before any release build.
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `9e4e580`
      2026-09-13 (all local work through `c267850` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
-- **Last known-good Git commit:** `9310779` (glider doll jitter fix; deployed 557,791-byte JAR
-  matches this source).
+- **Last known-good Git commit:** `78171a1` (docs record; code at `9310779` carries the
+  partial-1.0 doll fix, now supplemented by the TEMPORARY trace — NOT release code).
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
   `git status` permanently list 1369 phantom-modified reference files (content PROVEN identical via

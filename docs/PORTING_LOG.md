@@ -1754,3 +1754,33 @@ Build: `:reobfJar` BUILD SUCCESSFUL first try → 557,791 bytes (+336, one new
 method — `isInventoryDollRender` VERIFIED in the built JAR via `javap`),
 deployed 2026-09-18 (unrelated mods untouched). Awaiting user retest: open
 inventory while deployed — doll tilted and STABLE; world TPP unchanged.
+
+---
+
+## 2026-09-18 — Feature: Hang Glider (doll fix FAILED retest, DOLLTRACE armed)
+
+User retest (5 screenshots, creative inventory survival-tab doll): the figure
+still swings between frames — fix did NOT work. Two honest hypotheses:
+
+1. STALE SESSION: the test game launched 01:12:22 (PROVED via
+   `fml-client-latest.log` startup lines) with FML scanning the mod jar at
+   01:12:23 — inside my build/deploy window (build 01:11:17, copy time
+   unlogged). Cannot prove which binary ran. Minecraft loads mod jars once at
+   startup; an in-place jar swap mid-session changes nothing until relaunch.
+2. WRONG THEORY: the new code ran and the partial correction is insufficient
+   (some other per-frame input varies).
+
+Also VERIFIED via `javap` this session: creative inventory DOES render the
+doll — `GuiContainerCreative` calls `GuiInventory.drawEntityOnScreen` (same
+static method, same 0,0,0 + partial-1.0 path), so the creative figure is the
+same doll case, not a new path.
+
+Next step (DEPLOYED 01:22, 558,333 bytes): TEMPORARY `DOLLTRACE` logging in
+`GliderPlayerRenderHandler.onPlayerRenderPre` (clearly marked, MUST be removed
+before any release): while deployed, every local-player render logs evt x/y/z,
+prevRenderYawOffset, renderYawOffset, frame partial, doll-detection result and
+current screen class. That discriminates stale-session (no `[DOLLTRACE]` lines
+at all → old binary ran) from wrong-theory (lines present → yaw inputs show
+what actually jumps) in ONE test. Protocol: full quit-to-launcher restart,
+deploy glider, open inventory, keep mouse STILL 5s, close, quit; then read
+`[DOLLTRACE]` lines in `1.8.9(6)/minecraft/logs/fml-client-latest.log`.

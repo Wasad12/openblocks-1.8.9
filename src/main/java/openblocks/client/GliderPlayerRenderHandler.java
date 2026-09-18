@@ -1,5 +1,6 @@
 package openblocks.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -13,6 +14,17 @@ public class GliderPlayerRenderHandler {
 		if (evt.entity instanceof AbstractClientPlayer) {
 			final AbstractClientPlayer player = (AbstractClientPlayer)evt.entity;
 			if (EntityHangGlider.isGliderDeployed(player)) {
+				// TEMPORARY DOLLTRACE (fix-loop diagnosis, MUST be removed before any
+				// release): proves which binary runs + whether doll/world yaw inputs are
+				// stable per render. Fires only while deployed; local player only.
+				if (player == Minecraft.getMinecraft().thePlayer) {
+					final Object screen = Minecraft.getMinecraft().currentScreen;
+					System.out.println("[DOLLTRACE] pre x=" + evt.x + " y=" + evt.y + " z=" + evt.z
+							+ " prevYaw=" + player.prevRenderYawOffset + " yaw=" + player.renderYawOffset
+							+ " tickPartial=" + ClientTickHandler.renderTickTime
+							+ " doll=" + isInventoryDollRender(evt)
+							+ " screen=" + (screen == null ? "null" : screen.getClass().getName()));
+				}
 				player.limbSwing = 0f;
 				player.prevLimbSwingAmount = 0f;
 				player.limbSwingAmount = 0f;
