@@ -1898,3 +1898,14 @@ and the build works normally. Zero compile iterations.
 no `mezz/jei` bundled), deployed (unrelated mods untouched). Awaiting user
 test: tab open -> JEI panel makes room; tab closed -> panel returns.
 (Slimalyzer Phase C test still open.)
+
+---
+
+## 2026-09-19 — Creative tab icon (user request)
+
+User: the mod's creative tab still showed the vanilla sponge placeholder —
+changed `tabOpenBlocks.getTabIconItem()` to return the hang glider
+(`Items.hangGlider`, set in preInit long before any tab render — no init-order
+risk). One-line change, BUILD SUCCESSFUL first try -> 572,507 bytes, deployed
+(unrelated mods untouched). No doc section needed beyond this entry; user
+eyeballs the tab icon.

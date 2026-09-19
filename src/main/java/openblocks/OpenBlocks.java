@@ -69,8 +69,8 @@ public class OpenBlocks {
 	public static CreativeTabs tabOpenBlocks = new CreativeTabs("tabOpenBlocks") {
 		@Override
 		public Item getTabIconItem() {
-			// NOTE: fully qualified — our own OpenBlocks.Blocks inner class shadows the import.
-			return Item.getItemFromBlock(net.minecraft.init.Blocks.sponge);
+			// Hang glider as the tab icon (user request 2026-09-19).
+			return Items.hangGlider;
 		}
 
 		@Override
