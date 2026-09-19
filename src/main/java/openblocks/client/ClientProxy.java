@@ -199,6 +199,25 @@ public class ClientProxy implements IOpenBlocksProxy {
 						new ModelResourceLocation("openblocks:elevator", "inventory"));
 		}
 
+		if (OpenBlocks.Blocks.sponge != null) {
+			final Item spongeItem = Item.getItemFromBlock(OpenBlocks.Blocks.sponge);
+			if (spongeItem != null)
+				ModelLoader.setCustomModelResourceLocation(spongeItem, 0,
+						new ModelResourceLocation("openblocks:sponge", "inventory"));
+		}
+
+		if (OpenBlocks.Items.spongeOnAStick != null) {
+			final ModelResourceLocation stickLocation = new ModelResourceLocation("openblocks:sponge_on_a_stick", "inventory");
+			ModelBakery.registerItemVariants(OpenBlocks.Items.spongeOnAStick,
+					new ResourceLocation("openblocks:sponge_on_a_stick"));
+			ModelLoader.setCustomMeshDefinition(OpenBlocks.Items.spongeOnAStick, new ItemMeshDefinition() {
+				@Override
+				public ModelResourceLocation getModelLocation(ItemStack stack) {
+					return stickLocation;
+				}
+			});
+		}
+
 		if (OpenBlocks.Items.slimalyzer != null) {
 			// No property overrides in 1.8.9 (no IItemPropertyGetter): the mesh
 			// definition switches on the Active NBT tag instead (glider pattern).

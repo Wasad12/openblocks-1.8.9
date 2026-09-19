@@ -11,9 +11,8 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-13 (`9e4e580`, Elevator + docs refresh — all work through `c267850`).
-- **Current feature:** JEI tab overlap (side tabs push JEI's item panel aside,
-  TE/Forestry 1.8.9 precedent — implemented, built, deployed UNTESTED 2026-09-19).
-  Slimalyzer stays IN PROGRESS (Phase C deployed, still awaiting user test).
+- **Current feature:** Sponge + Sponge On A Stick (Phase C implemented, built,
+  deployed UNTESTED 2026-09-19).
 - **Feature status:** no active feature. May revisit completed features if issues surface later.
 - **Last completed feature:** Elevator (user-confirmed COMPLETED 2026-09-13).
   Prior: Last Stand, Fan, Vacuum Hopper, Auto Anvil, Auto Enchantment Table,
@@ -21,7 +20,7 @@
 - **Current problem:** none — no open problems, no TEMPORARY code (trace removed,
   audit clean). KNOWN_ISSUES #7 closed as user-verified FIXED 2026-09-18.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (572,507 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-19 (creative tab icon: hang glider)
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (581,395 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-19 (Sponge Phase C, one self-caused brace fix, zero API iterations)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-19 (unrelated mods untouched)
 - **Last user test result (2026-09-13):** Elevator COMPLETED ("work exactly like 1.12.2" — no fix loops needed). Prior: Last Stand COMPLETED + Fan COMPLETED + Vacuum Hopper COMPLETED + Auto Anvil COMPLETED + Auto Enchantment Table COMPLETED + XP Drain/Shower COMPLETED + Tank COMPLETED + glider fixes verified. Anvil texture color-bleed deployed, awaiting retest.
 - **Known issues:** see `KNOWN_ISSUES.md`
@@ -35,10 +34,12 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Await user test of the JEI tab shift: open Auto Anvil / Auto Enchantment
-     Table / Vacuum Hopper with JEI visible — JEI's item panel must make room
-     on the right while a side tab is open, and return when the tab closes.
-     (Slimalyzer test from before still open too.)
+  1. Await user test of Sponge + Stick: sponge recipe (any wool + slimeball);
+     placed sponge clears liquids in 7x7x7 on place/neighbour/tick and burns
+     to fire on lava contact (smoke puff); stick recipe (sponge + sticks);
+     right-click/use absorbs with damage, lava burns the stick + sets player
+     on fire; block + stick icons render; FPP/TPP held looks sane.
+     (Slimalyzer + JEI-tab tests from before still open too.)
   2. Push to GitHub only on explicit user request. NOTE (standing 2026-09-18):
      `git subtree push` fails on auth from this environment (HTTPS + `manager`
      helper, no TTY for the credential dialog) — user runs it themselves or
@@ -49,8 +50,8 @@
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `9e4e580`
      2026-09-13 (all local work through `c267850` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
-- **Last known-good Git commit:** `ff1b5b7` (creative tab icon; deployed
-  572,507-byte JAR matches this source).
+- **Last known-good Git commit:** (recording after commit — Sponge Phase C,
+  deployed 581,395-byte JAR).
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
   `git status` permanently list 1369 phantom-modified reference files (content PROVEN identical via

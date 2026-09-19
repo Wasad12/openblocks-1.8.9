@@ -31,6 +31,12 @@ public class Config {
 	public static float elevatorXpDrainRatio = 0;
 	public static boolean irregularBlocksArePassable = true;
 
+	// NOTE: 1.12.2 gives both ranges the same key name ("spongeRange"), which
+	// collides into one entry; ours keeps distinct names with the same values.
+	public static int spongeMaxDamage = 256;
+	public static int spongeRange = 3;
+	public static int spongeStickRange = 3;
+
 	public static void init(File configFile) {
 		Configuration config = new Configuration(configFile);
 		config.load();
@@ -81,6 +87,13 @@ public class Config {
 				"XP consumed by elevator (total amount = ratio * distance)").getDouble(0);
 		irregularBlocksArePassable = config.get("dropblock", "irregularBlocksArePassable", true,
 				"The elevator will try to pass through blocks that have custom collision boxes").getBoolean(true);
+
+		spongeMaxDamage = config.get("sponge", "spongeStickUseCount", 256,
+				"SpongeOnAStick use count").getInt(256);
+		spongeRange = config.get("sponge", "spongeRange", 3,
+				"Sponge block range (distance from center)").getInt(3);
+		spongeStickRange = config.get("sponge", "spongeStickRange", 3,
+				"Sponge block range (distance from center)").getInt(3);
 
 		if (config.hasChanged()) config.save();
 	}

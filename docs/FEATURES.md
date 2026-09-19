@@ -10,6 +10,8 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 - JEI tab overlap (side tabs report exclusion areas so JEI's item panel makes
   room when a tab opens — TE/Forestry 1.8.9 precedent). Implemented, built,
   deployed UNTESTED 2026-09-19.
+- Sponge (`BlockSponge`) + Sponge On A Stick (`ItemSpongeOnAStick` + shared
+  sponge config). Phase C implemented, built, deployed UNTESTED 2026-09-19.
 
 ## COMPLETED
 
@@ -85,7 +87,6 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 - Projector (`BlockProjector` + `TileEntityProjector`)
 - Scaffolding (`BlockScaffolding`)
 - Sky (`BlockSky` + `TileEntitySky`)
-- Sponge (`BlockSponge`)
 - Sprinkler (`BlockSprinkler` + `TileEntitySprinkler`)
 - Target (`BlockTarget` + `TileEntityTarget`)
 - Trophy (`BlockTrophy` + `TileEntityTrophy`)
@@ -99,7 +100,7 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
   Height Map, Imaginary item, Imagination Glasses, Info Book, Luggage,
   Generic (OBGeneric/Unstackable/Meta variants), Paint Brush, Paint Can item,
   Pedometer, Sky Block item, Sleeping Bag, Sonic Glasses,
-  Sponge On A Stick, Squeegee, Stencil, Tasty Clay,
+  Squeegee, Stencil, Tasty Clay,
   Trophy Block item, Wrench, XP Bucket, Miracle Magnet, Pointer
 
 ### Systems (cross-cutting, port only as required by features per §19)

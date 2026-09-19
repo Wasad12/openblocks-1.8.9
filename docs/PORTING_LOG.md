@@ -1901,6 +1901,30 @@ test: tab open -> JEI panel makes room; tab closed -> panel returns.
 
 ---
 
+## 2026-09-19 — Feature: Sponge + Sponge On A Stick (Phase C — implemented, built, deployed)
+
+New: `common/block/BlockSponge` (verbatim cleanup/burn logic, 1.8.9 renames
+per plan) + `common/item/ItemSpongeOnAStick` (verbatim soak/damage logic,
+1.8.9 hand/stack adaptations) + `sponge` config keys (distinct range names —
+see ARCHITECTURE.md) + block/item registration + 16 wool-meta shapeless
+recipes (loop, same 16 inputs as the JSONs) + shaped stick recipe +
+ClientProxy block-item + stick mesh models + `blockstates/sponge.json` +
+`models/block/sponge.json` (plain cube) + `models/item/sponge.json` (block
+parent + block-item display) + `models/item/sponge_on_a_stick.json`
+(`builtin/generated` + flat display) + `sponge.png` +
+`sponge_on_a_stick.png` (copied; lang already had all keys). One compile
+failure, self-caused (duplicated method brace in ClientProxy sponge edit —
+fixed, no API involvement); every INFERRED 1.8.9 name
+(`getBlock().getMaterial`, `soundTypeCloth`, lowercase lava/fire, both event
+renames, new use/click shapes, `worldObj`, `getEntityItem`/`setEntityItemStack`,
+`stackSize`) compiled clean with zero API iterations. `:reobfJar` BUILD
+SUCCESSFUL -> 581,395 bytes (all sponge classes + models + textures VERIFIED
+inside), deployed (unrelated mods untouched). Awaiting user test: wool+slime
+recipes; 7x7x7 clearing on place/neighbour/tick; lava burn (smoke + fire);
+stick soak/damage/lava-burn; icons + held looks.
+
+---
+
 ## 2026-09-19 — Creative tab icon (user request)
 
 User: the mod's creative tab still showed the vanilla sponge placeholder —

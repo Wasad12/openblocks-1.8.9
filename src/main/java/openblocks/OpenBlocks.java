@@ -90,10 +90,10 @@ public class OpenBlocks {
 		public static ItemHangGlider hangGlider;
 		public static ItemOBGeneric generic;
 		public static openblocks.common.item.ItemSlimalyzer slimalyzer;
+		public static openblocks.common.item.ItemSpongeOnAStick spongeOnAStick;
 	}
 
-	public static class Blocks {
-		public static BlockTank tank;
+	public static class Blocks {		public static BlockTank tank;
 		public static BlockXPDrain xpDrain;
 		public static BlockXPShower xpShower;
 		public static BlockAutoEnchantmentTable autoEnchantmentTable;
@@ -101,6 +101,7 @@ public class OpenBlocks {
 		public static BlockVacuumHopper vacuumHopper;
 		public static BlockFan fan;
 		public static BlockElevator elevator;
+		public static openblocks.common.block.BlockSponge sponge;
 	}
 
 	public static class Enchantments {
@@ -167,6 +168,12 @@ public class OpenBlocks {
 		Blocks.elevator = new BlockElevator();
 		GameRegistry.registerBlock(Blocks.elevator, net.minecraft.item.ItemBlock.class, "elevator");
 		MinecraftForge.EVENT_BUS.register(new ElevatorActionHandler());
+
+		Blocks.sponge = new openblocks.common.block.BlockSponge();
+		GameRegistry.registerBlock(Blocks.sponge, net.minecraft.item.ItemBlock.class, "sponge");
+
+		Items.spongeOnAStick = new openblocks.common.item.ItemSpongeOnAStick();
+		GameRegistry.registerItem(Items.spongeOnAStick, "sponge_on_a_stick");
 
 		// last stand enchantment (mirrors 1.12.2 Config registration: handler + enchantment)
 		if (Config.lastStandEnchantmentEnabled) {
@@ -261,6 +268,16 @@ public class OpenBlocks {
 				"igi", "isi", "iri",
 				'i', "ingotIron", 'g', "paneGlass",
 				's', "slimeball", 'r', "dustRedstone"));
+
+		// sponge (mirrors 1.12.2 sponge_0..15.json: any wool + slimeball, shapeless)
+		for (int woolMeta = 0; woolMeta < 16; woolMeta++)
+			GameRegistry.addShapelessRecipe(new ItemStack(Blocks.sponge),
+					new ItemStack(net.minecraft.init.Blocks.wool, 1, woolMeta), "slimeball");
+
+		// sponge on a stick (mirrors 1.12.2 sponge_on_a_stick_0.json: sponge over two sticks)
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.spongeOnAStick),
+				" s ", " w ", " w ",
+				's', Blocks.sponge, 'w', "stickWood"));
 
 		proxy.init();
 		proxy.registerRenderInformation();

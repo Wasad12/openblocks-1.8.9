@@ -706,3 +706,45 @@ scope per section 19) — this is a 1.8.9-targeted addition, not a 1.12.2 port.
   absent → `openblocks/compat/jei/**` is excluded and the build works normally
   minus the tab shift. The local jar is a copy of the instance's JEI, never
   committed.
+
+### Sponge + Sponge On A Stick (2026-09-19, Phase B plan — user chose both)
+
+Source: `BlockSponge` (90 lines: `OpenBlock`, neighbour/place/tick-triggered
+7x7x7 liquid cleanup, lava-burn block event: 20 `SMOKE_LARGE` particles client
++ `FIRE` placement server), `ItemSpongeOnAStick` (74 lines: use/right-click
+soak in stick range, 256 damage, lava burns the stick + sets player on fire),
+16 shapeless recipes (wool meta 0-15 + slimeball), shaped stick recipe
+(sponge + 2 sticks), `cube_all` blockstate + `sponge_on_a_stick.json` item
+model, `sponge.png` + `sponge_on_a_stick.png`, `sponge` config keys
+(`spongeMaxDamage` 256, `spongeRange` 3, `spongeStickRange` 3), lang keys
+(already in our `en_US.lang`).
+
+- Behavior ports VERBATIM (cleanup loops, burn event, damage math, soundless
+  operation — 1.12.2 plays no sound for either). No OpenModsLib beyond
+  `OpenBlock` (plain `Block` + hardness like every `OpenBlock`) and
+  `BookDocumentation` (dropped).
+- 1.8.9 renames, all VERIFIED via `javap` on the stable_22 `forgeBin` jar:
+  `neighborChanged` → `onNeighborBlockChange` (shower precedent);
+  `eventReceived` → `onBlockEventReceived` (same args + state);
+  `Material.SPONGE/LAVA` → `Material.sponge/lava` (lowercase, elevator
+  precedent); `SoundType.CLOTH` → `setStepSound(Block.soundTypeCloth)`;
+  `onItemUse` → `(stack, player, world, pos, facing, hitX/Y/Z)` returning
+  boolean (no `EnumHand`, no `EnumActionResult`); `onItemRightClick` →
+  `(stack, world, player)` returning the stack (no `ActionResult`).
+  `tickRate`/`updateTick`/`onBlockPlacedBy`/`setHarvestLevel`/`scheduleUpdate`/
+  `setBlockToAir`/`addBlockEvent`/`spawnParticle` all keep their shape;
+  `Blocks.FIRE` → `Blocks.fire`.
+- Stick item details: `getHeldItem()` (no hand — hopper precedent),
+  `stack.stackSize = 0` (no `setCount`), `damageItem`/`getItemDamage`/
+  `setFire` unchanged, `setMaxStackSize(1)` + `setMaxDamage` unchanged.
+- Block model: parentless plain cube (shower precedent — no `block/block`
+  parent in 1.8.9) with `sponge.png` on all sides + particle; blockstate is a
+  single normal variant (the 1.12.2 `orientation` is a vestigial single value —
+  dropped, fan/elevator precedent); item model = parent + verbatim block-item
+  display (shower pattern). Stick item = `builtin/generated` parent (standing
+  rule) + redstone-family flat display (glider/slimalyzer precedent — user
+  eyes verify).
+- Recipes: 16 shapeless (wool meta loop 0-15 + `slimeball`) + 1 shaped
+  (sponge over two `stickWood`) — same inputs as the 17 JSONs.
+- INFERRED (compiler verifies): `Material.sponge` ctor arg, `soundTypeCloth`
+  inner-class field, `EnumParticleTypes.SMOKE_LARGE`, creative tab holder.
