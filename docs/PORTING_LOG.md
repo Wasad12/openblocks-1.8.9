@@ -1925,6 +1925,22 @@ stick soak/damage/lava-burn; icons + held looks.
 
 ---
 
+## 2026-09-19 — Feature: Sponge (fix loop 1 — init crash, ROOT CAUSE FOUND)
+
+User pasted `crash-2026-09-19_19.40.24-client.txt`: `IllegalArgumentException:
+Invalid shapeless recipe: unknown type java.lang.String` at
+`GameRegistry.addShapelessRecipe` from our sponge recipe loop. Root cause: my
+mistake, not a port gap — vanilla 1.8.9 `addShapelessRecipe` accepts
+ItemStack/Item/Block ONLY; ore-dict strings are a `ShapedOreRecipe` (Forge)
+convenience, which is why every shaped recipe in the tree works and the
+hopper's shapeless recipe (plain Blocks/Items args) never broke. Fix: the loop
+now passes `new ItemStack(Items.slime_ball)` instead of the `"slimeball"`
+string (same single item — no variants exist to look up, zero behavior delta).
+Rebuilt (`:reobfJar` BUILD SUCCESSFUL -> 581,416 bytes), redeployed, awaiting
+retest (game must at least reach the main menu now).
+
+---
+
 ## 2026-09-19 — Creative tab icon (user request)
 
 User: the mod's creative tab still showed the vanilla sponge placeholder —

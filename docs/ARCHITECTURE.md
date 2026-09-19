@@ -744,7 +744,9 @@ model, `sponge.png` + `sponge_on_a_stick.png`, `sponge` config keys
   display (shower pattern). Stick item = `builtin/generated` parent (standing
   rule) + redstone-family flat display (glider/slimalyzer precedent — user
   eyes verify).
-- Recipes: 16 shapeless (wool meta loop 0-15 + `slimeball`) + 1 shaped
-  (sponge over two `stickWood`) — same inputs as the 17 JSONs.
+- Recipes: 16 shapeless (wool meta loop 0-15 + slimeball ItemStack — vanilla
+  `addShapelessRecipe` takes stacks/items/blocks ONLY, ore strings crash init
+  with "unknown type java.lang.String", PROVED by the 2026-09-19 crash report)
+  + 1 shaped (sponge over two `stickWood`) — same inputs as the 17 JSONs.
 - INFERRED (compiler verifies): `Material.sponge` ctor arg, `soundTypeCloth`
   inner-class field, `EnumParticleTypes.SMOKE_LARGE`, creative tab holder.

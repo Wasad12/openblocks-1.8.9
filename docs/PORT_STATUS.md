@@ -20,7 +20,7 @@
 - **Current problem:** none — no open problems, no TEMPORARY code (trace removed,
   audit clean). KNOWN_ISSUES #7 closed as user-verified FIXED 2026-09-18.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
-- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (581,395 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-19 (Sponge Phase C, one self-caused brace fix, zero API iterations)
+- **Last successful build:** `OpenBlocks-1.8.9-1.0.0.jar` (581,416 bytes, reobfuscated, stable_22) — BUILD SUCCESSFUL 2026-09-19 (Sponge shapeless-crash fix)
 - **Last deployment:** same JAR copied to `1.8.9(6)/minecraft/mods` 2026-09-19 (unrelated mods untouched)
 - **Last user test result (2026-09-13):** Elevator COMPLETED ("work exactly like 1.12.2" — no fix loops needed). Prior: Last Stand COMPLETED + Fan COMPLETED + Vacuum Hopper COMPLETED + Auto Anvil COMPLETED + Auto Enchantment Table COMPLETED + XP Drain/Shower COMPLETED + Tank COMPLETED + glider fixes verified. Anvil texture color-bleed deployed, awaiting retest.
 - **Known issues:** see `KNOWN_ISSUES.md`
@@ -50,8 +50,8 @@
   2. GitHub (`Wasad12/openblocks-1.8.9`) RECEIVED subtree push `9e4e580`
      2026-09-13 (all local work through `c267850` now visible). Future pushes need explicit
      request: `git subtree push --prefix OpenBlocks-1.8.9 origin master`.
-- **Last known-good Git commit:** `6641c4a` (Sponge Phase C; deployed
-  581,395-byte JAR matches this source).
+- **Last known-good Git commit:** (recording after commit — Sponge crash fix,
+  deployed 581,416-byte JAR).
 - **Repo hygiene (IMPORTANT):** `OpenBlocks-1.12.X/` + `OpenModsLib-1.12.X/` are flagged
   `assume-unchanged` (`git ls-files -v` shows `h`) because environmental mtime churn made
   `git status` permanently list 1369 phantom-modified reference files (content PROVEN identical via

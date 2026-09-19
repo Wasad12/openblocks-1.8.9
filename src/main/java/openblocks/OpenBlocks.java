@@ -269,10 +269,14 @@ public class OpenBlocks {
 				'i', "ingotIron", 'g', "paneGlass",
 				's', "slimeball", 'r', "dustRedstone"));
 
-		// sponge (mirrors 1.12.2 sponge_0..15.json: any wool + slimeball, shapeless)
+		// sponge (mirrors 1.12.2 sponge_0..15.json: any wool + slimeball, shapeless).
+		// NOTE: vanilla addShapelessRecipe takes ItemStack/Item/Block only — ore-dict
+		// strings throw "unknown type java.lang.String" (crashed init 2026-09-19),
+		// so plain stacks here (slimeball has no variants to look up anyway).
 		for (int woolMeta = 0; woolMeta < 16; woolMeta++)
 			GameRegistry.addShapelessRecipe(new ItemStack(Blocks.sponge),
-					new ItemStack(net.minecraft.init.Blocks.wool, 1, woolMeta), "slimeball");
+					new ItemStack(net.minecraft.init.Blocks.wool, 1, woolMeta),
+					new ItemStack(net.minecraft.init.Items.slime_ball));
 
 		// sponge on a stick (mirrors 1.12.2 sponge_on_a_stick_0.json: sponge over two sticks)
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.spongeOnAStick),
