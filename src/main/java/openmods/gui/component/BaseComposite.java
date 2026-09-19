@@ -42,6 +42,10 @@ public abstract class BaseComposite extends BaseComponent {
 		return this;
 	}
 
+	public List<BaseComponent> getComponents() {
+		return ImmutableList.copyOf(components);
+	}
+
 	private static boolean isComponentEnabled(BaseComponent component) {
 		return component != null && component.isEnabled();
 	}

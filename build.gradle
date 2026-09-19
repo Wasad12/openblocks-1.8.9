@@ -25,6 +25,23 @@ archivesBaseName = "OpenBlocks"
 
 sourceCompatibility = targetCompatibility = '1.8'
 
+// Optional local JEI API for the openblocks.compat.jei integration (tab
+// exclusion areas so JEI's item panel reflows around open side tabs).
+// Offline-friendly: drop the matching JEI jar at lib-local/jei_1.8.9.jar
+// (gitignored via *.jar — never committed, never shipped). The jar is compile
+// classpath only (never bundled — JEI provides those classes at runtime), and
+// the compat classes are never referenced from mod code, so the game runs fine
+// with JEI absent. Without the jar, the compat sources are excluded and the
+// build works normally, minus the JEI tab shift.
+def jeiJar = file('lib-local/jei_1.8.9.jar')
+if (jeiJar.exists()) {
+    dependencies {
+        compile files(jeiJar)
+    }
+} else {
+    sourceSets.main.java.exclude('openblocks/compat/jei/**')
+}
+
 minecraft {
     version = mc_version + "-" + forge_version
     runDir = "run"

@@ -1,6 +1,8 @@
 package openmods.gui;
 
+import java.awt.Rectangle;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
@@ -15,6 +17,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import openmods.gui.component.BaseComposite;
+import openmods.gui.component.BaseComponent;
+import openmods.gui.component.GuiComponentTab;
 import org.lwjgl.opengl.GL11;
 
 public abstract class ComponentGui extends GuiContainer {
@@ -127,6 +131,28 @@ public abstract class ComponentGui extends GuiContainer {
 	public void preRender(float mouseX, float mouseY) {}
 
 	public void postRender(int mouseX, int mouseY) {}
+
+	// Screen-space bounds of every tab (open or folded handle), in live animated
+	// sizes. Used by the JEI extra-areas handler (compat package) so JEI's item
+	// panel reflows around open tabs instead of painting under them (TE/Forestry
+	// 1.8.9 precedent). Empty for tab-less GUIs.
+	public List<Rectangle> getTabAreas() {
+		final List<Rectangle> areas = new ArrayList<Rectangle>();
+		collectTabAreas(root, guiLeft, guiTop, areas);
+		return areas;
+	}
+
+	private static void collectTabAreas(BaseComponent component, int offsetX, int offsetY, List<Rectangle> areas) {
+		if (component instanceof GuiComponentTab) {
+			final int w = component.getWidth();
+			final int h = component.getHeight();
+			if (w > 0 && h > 0)
+				areas.add(new Rectangle(offsetX + component.getX(), offsetY + component.getY(), w, h));
+		} else if (component instanceof BaseComposite) {
+			for (BaseComponent child : ((BaseComposite)component).getComponents())
+				collectTabAreas(child, offsetX + component.getX(), offsetY + component.getY(), areas);
+		}
+	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {

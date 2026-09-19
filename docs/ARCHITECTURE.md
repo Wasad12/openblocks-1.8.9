@@ -674,3 +674,35 @@ slimeball + redstone), `slimalyzer.json` (slimeoff + `active` override) +
 - INFERRED (compiler verifies): `setCreativeTab` tab holder (hang-glider
   pattern), `ShapedOreRecipe` varargs form, `ModelLoader`/`ModelBakery` mesh
   imports (glider pattern).
+
+### JEI tab overlap (2026-09-19 — user-requested GUI improvement, TE/Forestry precedent)
+
+Request: with JEI visible, opening a side tab (Auto Anvil, Auto Enchantment
+Table, Vacuum Hopper) must push JEI's item panel aside instead of painting
+under it — exactly what ThermalExpansion 1.8.9 (`MachineTabAreaHandler` on
+`GuiBase`) and Forestry 1.8.9 (`GuiForestry.getExtraGuiAreas`) do. The 1.12.2
+tree has no equivalent (its JEI-era integration lived in OpenModsLib, out of
+scope per section 19) — this is a 1.8.9-targeted addition, not a 1.12.2 port.
+
+- JEI contract (all VERIFIED against the instance's `jei_1.8.9-2.28.18.neified1.jar`
+  via `javap`): `IAdvancedGuiHandler.getGuiExtraAreas` returns the exclusion
+  rectangles; `IModRegistry.addAdvancedGuiHandlers` registers them from an
+  `@JEIPlugin` plugin's `register`; `BlankModPlugin` exists for the narrow
+  override. `ItemListOverlay` bytecode PROVES handler matching is
+  `getGuiContainerClass().isAssignableFrom(...)` — one registration on the
+  common GUI base covers every tabbed GUI, present and future.
+- Our side: `ComponentGui.getTabAreas()` walks the component tree from `root`
+  and returns live screen-space bounds (`guiLeft/guiTop` + accumulated offsets)
+  of every `GuiComponentTab` in current animated sizes — open tabs and folded
+  24px handles alike (TE precedent). New `openblocks.compat.jei` package:
+  `JeiPlugin` (`@JEIPlugin`, registers only) + `TabAreaHandler`
+  (`IAdvancedGuiHandler<ComponentGui>`). The compat classes are never
+  referenced from mod code, so the game runs fine with JEI absent (same
+  client-only-discovery shape as both references).
+- Compile dependency (offline constraint): no JEI in the Gradle cache and no
+  network, and vendoring binaries is out (`*.jar` is gitignored). `build.gradle`
+  takes an OPTIONAL local jar at `lib-local/jei_1.8.9.jar` (compile classpath
+  only — verified NOT bundled into our jar): present → compat compiles in;
+  absent → `openblocks/compat/jei/**` is excluded and the build works normally
+  minus the tab shift. The local jar is a copy of the instance's JEI, never
+  committed.

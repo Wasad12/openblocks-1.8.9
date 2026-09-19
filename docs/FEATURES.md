@@ -6,7 +6,10 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 ## IN PROGRESS
 
 - Slimalyzer (`ItemSlimalyzer` + active/inactive models + slime-chunk ping + recipe).
-  Phase A (investigate) + Phase B (plan) done 2026-09-19; implementing.
+  Phase C implemented, built, deployed UNTESTED 2026-09-19.
+- JEI tab overlap (side tabs report exclusion areas so JEI's item panel makes
+  room when a tab opens — TE/Forestry 1.8.9 precedent). Implemented, built,
+  deployed UNTESTED 2026-09-19.
 
 ## COMPLETED
 

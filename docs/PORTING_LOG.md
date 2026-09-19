@@ -1869,3 +1869,32 @@ classes + models + textures + sound VERIFIED inside), deployed (unrelated mods
 untouched). Awaiting user test: recipe crafts; slimeoff icon; slime-chunk
 entry flips to slimeon + beep; exit flips back silently; dropped items update;
 held FPP/TPP sane.
+
+---
+
+## 2026-09-19 — JEI tab overlap (implemented, built, deployed UNTESTED)
+
+User request: with JEI visible, opening a side tab (Auto Anvil, Auto
+Enchantment Table, Vacuum Hopper) must push JEI's item panel aside, like
+ThermalExpansion 1.8.9 + Forestry 1.8.9 do (both trees consulted as
+JEI-API references — NOT 1.12.2 ports, no 1.8-branch rule involved).
+
+Investigation (all VERIFIED via `javap` on the instance JEI 2.28.18 jar):
+`IAdvancedGuiHandler.getGuiExtraAreas` is the contract,
+`IModRegistry.addAdvancedGuiHandlers` the registration,
+`@JEIPlugin`+`BlankModPlugin` the plugin shape; `ItemListOverlay` bytecode
+PROVES `isAssignableFrom` matching — one base-class registration covers all
+tabbed GUIs. TE reports every tab's live screen-space bounds on its GuiBase;
+Forestry exposes `getExtraGuiAreas()` on its GUI base.
+
+Implementation: `ComponentGui.getTabAreas()` (tree walk from `root`,
+`guiLeft/guiTop`-relative, live animated sizes, open + folded tabs) + new
+`openblocks.compat.jei` (`JeiPlugin` + `TabAreaHandler` on `ComponentGui`,
+never referenced from mod code — safe with JEI absent). Compile dep is an
+OPTIONAL local jar (`lib-local/jei_1.8.9.jar`, gitignored, never bundled —
+verified absent from our jar); without it the compat sources are excluded
+and the build works normally. Zero compile iterations.
+`:reobfJar` BUILD SUCCESSFUL -> 572,531 bytes (compat classes VERIFIED inside,
+no `mezz/jei` bundled), deployed (unrelated mods untouched). Awaiting user
+test: tab open -> JEI panel makes room; tab closed -> panel returns.
+(Slimalyzer Phase C test still open.)
