@@ -89,6 +89,7 @@ public class OpenBlocks {
 	public static class Items {
 		public static ItemHangGlider hangGlider;
 		public static ItemOBGeneric generic;
+		public static openblocks.common.item.ItemSlimalyzer slimalyzer;
 	}
 
 	public static class Blocks {
@@ -129,6 +130,9 @@ public class OpenBlocks {
 
 		Items.generic = new ItemOBGeneric();
 		GameRegistry.registerItem(Items.generic, "generic");
+
+		Items.slimalyzer = new openblocks.common.item.ItemSlimalyzer();
+		GameRegistry.registerItem(Items.slimalyzer, "slimalyzer");
 
 		FluidRegistry.registerFluid(Fluids.xpJuice);
 
@@ -251,6 +255,12 @@ public class OpenBlocks {
 				"www", "wew", "www",
 				'w', new ItemStack(net.minecraft.init.Blocks.wool, 1, 0),
 				'e', net.minecraft.init.Items.ender_pearl));
+
+		// slimalyzer (mirrors 1.12.2 slimalyzer_0.json: iron + glass + slimeball + redstone)
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.slimalyzer),
+				"igi", "isi", "iri",
+				'i', "ingotIron", 'g', "paneGlass",
+				's', "slimeball", 'r', "dustRedstone"));
 
 		proxy.init();
 		proxy.registerRenderInformation();

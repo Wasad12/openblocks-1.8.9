@@ -634,3 +634,43 @@ formula XP cost → health 1 + XP drain + cancel), `Config` keys
 - Compiler schooling (one iteration): 1.8.9 `LivingEvent` exposes the entity as
   a public `entityLiving` FIELD — no `getEntityLiving()` getter (1.9+). Fixed at
   both use sites; everything else from Phase B compiled clean first try.
+
+### Slimalyzer (2026-09-19, Phase B plan — behavior preserved, model switch adapted)
+
+Source: `ItemSlimalyzer` (78 lines: `Active` NBT tag, server-side `onUpdate` +
+`onEntityItemUpdate` recompute from the vanilla slime-chunk check, ping on
+false-to-true), recipe `slimalyzer_0.json` (igi/isi/iri: iron + paneGlass +
+slimeball + redstone), `slimalyzer.json` (slimeoff + `active` override) +
+`slimalyzer_active.json` (slimeon), `slimeoff.png` + `slimeon.png`,
+`sounds.json` stanza (`slimalyzer.signal` -> `beep.ogg`), registration +
+`ITEM_SLIMALYZER_PING` sound, lang keys (already in our `en_US.lang`).
+
+- Slime-chunk math ports VERBATIM: `World.getChunkFromBlockCoords`,
+  `Chunk.getRandomWithSeed(987234911L).nextInt(10) == 0` — both VERIFIED present
+  in 1.8.9 via `javap` on the stable_22 `forgeBin` jar (same Notch code).
+- Active-state model switch: 1.12.2 uses an `IItemPropertyGetter` override —
+  that interface DOES NOT EXIST in 1.8.9 (VERIFIED absent via `javap`).
+  Replacement is the glider pattern: `ModelBakery.registerItemVariants` with
+  plain `ResourceLocation`s (`slimalyzer`, `slimalyzer_active`) + a mesh
+  definition returning the active MRL when the stack's `Active` tag is set.
+  Both JSONs get `"parent": "builtin/generated"` (the standing 1.8.9 rule —
+  `item/generated` has no 1.8.9 file) + the proven flat-item `display`
+  (redstone-family thirdperson, sword firstperson — user eyes verify).
+- Sound: `worldObj.playSoundEffect(x, y, z, "openblocks:slimalyzer.signal", 1, 1)`
+  (elevator/anvil precedent — no SoundEvent registry pre-1.9); `sounds.json`
+  gains the 1.12.2 stanza verbatim; `beep.ogg` copied. Position from
+  `entity.posX/posY/posZ` (no BlockPos API questions).
+- `Item.onUpdate` + `onEntityItemUpdate(EntityItem)` both exist in 1.8.9 with
+  1.12.2-compatible signatures (VERIFIED via `javap`); `world.isRemote` is a
+  field in both. EntityItem access uses the 1.8.9 names `getEntityItem()` +
+  `setEntityItemStack()` (hopper precedent — 1.12.2 `getItem()` doesn't exist).
+  NBT via a tiny private tag helper (no `ItemUtils` port per section 19 —
+  same 3 lines the Tank files already carry privately).
+- Dropped: `BookDocumentation` (unrelated system), `javax.annotation` (no
+  jsr305 guarantee in 1.8.9 dev env — glider precedent).
+- Registration: `Items.slimalyzer` + `GameRegistry.registerItem(..., "slimalyzer")`
+  in preInit; recipe in init() mirroring the JSON pattern/ingredients
+  (`paneGlass` + `slimeball` ore names already used by tank-era recipes).
+- INFERRED (compiler verifies): `setCreativeTab` tab holder (hang-glider
+  pattern), `ShapedOreRecipe` varargs form, `ModelLoader`/`ModelBakery` mesh
+  imports (glider pattern).

@@ -1821,3 +1821,51 @@ TEMPORARY code in tree (DOLLTRACE removed, audit clean). Pushing the
 `OpenBlocks-1.8.9/` subtree to `Wasad12/openblocks-1.8.9` on explicit user
 request — covers the doll fix (partial-1.0 + `func_147046_a` detection) and
 all doc updates. No active feature; awaiting next feature instruction.
+
+---
+
+## 2026-09-19 — Feature: Slimalyzer (Phase A — investigate, 1.12.2 source only)
+
+Source (all VERIFIED by reading): `ItemSlimalyzer` (78 lines: `Active` NBT tag;
+server-side `onUpdate` + `onEntityItemUpdate` recompute from
+`world.getChunkFromBlockCoords(entity.getPosition())` +
+`chunk.getRandomWithSeed(987234911L).nextInt(10) == 0`; ping on false-to-true
+via `OpenBlocks.Sounds.ITEM_SLIMALYZER_PING`), recipe `slimalyzer_0.json`
+(igi/isi/iri: ingotIron + paneGlass + slimeball + dustRedstone),
+`slimalyzer.json` (slimeoff texture + `active` property override) +
+`slimalyzer_active.json` (slimeon), `slimeoff.png` + `slimeon.png`,
+`sounds.json` stanza (`slimalyzer.signal` -> `beep.ogg`), registration +
+sound, lang keys (already in our `en_US.lang`).
+OpenModsLib deps: `ItemUtils.getItemTag` (3-line helper, inlined) +
+`BookDocumentation` (dropped). 1.8.9 API facts VERIFIED via `javap` on the
+stable_22 `forgeBin` jar: NO `IItemPropertyGetter` (mesh-def switch instead);
+`onUpdate` + `onEntityItemUpdate(EntityItem)` exist with compatible signatures;
+`getChunkFromBlockCoords` + `getRandomWithSeed` exist.
+
+---
+
+## 2026-09-19 — Feature: Slimalyzer (Phase B — plan)
+
+Full plan in ARCHITECTURE.md ("Slimalyzer" section). Decisive points: slime
+math verbatim; property override -> glider-pattern mesh def (plain variant
+names + NBT-switched MRL); JSON parents `builtin/generated` + redstone-family
+flat-item display (user eyes verify); ping via `playSoundEffect` string id +
+`sounds.json` stanza + `beep.ogg`; `getEntityItem`/`setEntityItemStack`
+(hopper precedent); inline tag helper; recipe verbatim.
+
+---
+
+## 2026-09-19 — Feature: Slimalyzer (Phase C — implemented, built, deployed)
+
+New: `common/item/ItemSlimalyzer` (verbatim logic, 1.8.9 adaptations per plan)
++ `Items.slimalyzer` registration + `GameRegistry` item + `ShapedOreRecipe` +
+ClientProxy mesh def (`slimalyzer`/`slimalyzer_active` variants) +
+`models/item/slimalyzer{,_active}.json` + `slime{off,on}.png` + `beep.ogg` +
+`sounds.json` stanza (lang already had all keys). Zero compile iterations —
+every INFERRED 1.8.9 name (`getEntityItem`, `setEntityItemStack`, `worldObj`
+sound effect, mesh-def imports, creative tab, ore-dict names) compiled clean
+first try. `:reobfJar` BUILD SUCCESSFUL -> 570,179 bytes (all slimalyzer
+classes + models + textures + sound VERIFIED inside), deployed (unrelated mods
+untouched). Awaiting user test: recipe crafts; slimeoff icon; slime-chunk
+entry flips to slimeon + beep; exit flips back silently; dropped items update;
+held FPP/TPP sane.

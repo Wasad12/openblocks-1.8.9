@@ -3,5 +3,10 @@
         "sounds": [
             "openblocks:teleport"
         ]
+    },
+    "slimalyzer.signal": {
+        "sounds": [
+            "openblocks:beep"
+        ]
     }
 }

@@ -5,7 +5,8 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-_none — awaiting next feature instruction._
+- Slimalyzer (`ItemSlimalyzer` + active/inactive models + slime-chunk ping + recipe).
+  Phase A (investigate) + Phase B (plan) done 2026-09-19; implementing.
 
 ## COMPLETED
 
@@ -94,7 +95,7 @@ _none — awaiting next feature instruction._
   Empty Map, Epic Eraser, Flag Block item, Golden Eye, Guide item,
   Height Map, Imaginary item, Imagination Glasses, Info Book, Luggage,
   Generic (OBGeneric/Unstackable/Meta variants), Paint Brush, Paint Can item,
-  Pedometer, Sky Block item, Sleeping Bag, Slimalyzer, Sonic Glasses,
+  Pedometer, Sky Block item, Sleeping Bag, Sonic Glasses,
   Sponge On A Stick, Squeegee, Stencil, Tasty Clay,
   Trophy Block item, Wrench, XP Bucket, Miracle Magnet, Pointer
 
