@@ -11,12 +11,13 @@
   `OpenBlocks-1.8.9/` subtree (`git subtree push --prefix OpenBlocks-1.8.9 origin master`),
   docs included (they live at `OpenBlocks-1.8.9/docs/`). Reference trees stay local-only.
   Last push 2026-09-13 (`9e4e580`, Elevator + docs refresh — all work through `c267850`).
-- **Current feature:** Sponge + Sponge On A Stick (Phase C implemented, built,
-  deployed UNTESTED 2026-09-19).
+- **Current feature:** none — Sponge + Sponge On A Stick COMPLETED
+  (user-confirmed 2026-09-19). Slimalyzer + JEI-tab tests still open.
 - **Feature status:** no active feature. May revisit completed features if issues surface later.
-- **Last completed feature:** Elevator (user-confirmed COMPLETED 2026-09-13).
-  Prior: Last Stand, Fan, Vacuum Hopper, Auto Anvil, Auto Enchantment Table,
-  XP Drain + XP Shower, Tank, Hang Glider (all user-confirmed).
+- **Last completed feature:** Sponge + Sponge On A Stick (user-confirmed
+  COMPLETED 2026-09-19).
+  Prior: Elevator, Last Stand, Fan, Vacuum Hopper, Auto Anvil, Auto Enchantment
+  Table, XP Drain + XP Shower, Tank, Hang Glider (all user-confirmed).
 - **Current problem:** none — no open problems, no TEMPORARY code (trace removed,
   audit clean). KNOWN_ISSUES #7 closed as user-verified FIXED 2026-09-18.
   History in `PORTING_LOG.md`; full tracker in `KNOWN_ISSUES.md`.
@@ -34,12 +35,8 @@
   - Test instance: `C:\Users\wassi\AppData\Roaming\PrismLauncher\instances\1.8.9(6)\minecraft\mods`
     (contains `1.8.9/` subdir + a few unrelated 1.8.9 mods; do not touch them per §20).
 - **Next exact action (in order):**
-  1. Await user test of Sponge + Stick: sponge recipe (any wool + slimeball);
-     placed sponge clears liquids in 7x7x7 on place/neighbour/tick and burns
-     to fire on lava contact (smoke puff); stick recipe (sponge + sticks);
-     right-click/use absorbs with damage, lava burns the stick + sets player
-     on fire; block + stick icons render; FPP/TPP held looks sane.
-     (Slimalyzer + JEI-tab tests from before still open too.)
+  1. Await user's next feature instruction — no active feature, tree clean.
+     (Slimalyzer + JEI-tab tests still open; revisit on report.)
   2. Push to GitHub only on explicit user request. NOTE (standing 2026-09-18):
      `git subtree push` fails on auth from this environment (HTTPS + `manager`
      helper, no TTY for the credential dialog) — user runs it themselves or

@@ -10,8 +10,6 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 - JEI tab overlap (side tabs report exclusion areas so JEI's item panel makes
   room when a tab opens — TE/Forestry 1.8.9 precedent). Implemented, built,
   deployed UNTESTED 2026-09-19.
-- Sponge (`BlockSponge`) + Sponge On A Stick (`ItemSpongeOnAStick` + shared
-  sponge config). Phase C implemented, built, deployed UNTESTED 2026-09-19.
 
 ## COMPLETED
 
@@ -57,6 +55,10 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
   User-confirmed COMPLETED 2026-09-13 ("work exactly like 1.12.2" — no fix loops
   needed). May revisit if issues surface later, same as the other completed
   features.
+- Sponge (`BlockSponge` + `ItemSpongeOnAStick` + shared sponge config +
+  16 wool-meta recipes + stick recipe). User-confirmed COMPLETED 2026-09-19
+  ("it works now" — fix loop 1 included: shapeless ore-string init crash).
+  May revisit if issues surface later, same as the other completed features.
 
 ## NOT STARTED
 

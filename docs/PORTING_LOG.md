@@ -1941,6 +1941,19 @@ retest (game must at least reach the main menu now).
 
 ---
 
+## 2026-09-19 — Feature: Sponge + Sponge On A Stick COMPLETED (user-confirmed)
+
+User: "it works now, mark as complete". Per section 7 this is explicit
+completion confirmation: feature moves to COMPLETED (fix loop 1 included).
+Final state: faithful 1.8.9 port — liquid-clearing block (place/neighbour/
+tick triggers, lava burn with smoke + fire), damage-based stick tool (lava
+burns stick + ignites player), 16 wool-meta + stick recipes, cube + flat
+models — with user-verified parity on behavior. Tree clean, no TEMPORARY
+code. No active feature; awaiting next feature instruction. (Slimalyzer +
+JEI-tab tests remain open.)
+
+---
+
 ## 2026-09-19 — Creative tab icon (user request)
 
 User: the mod's creative tab still showed the vanilla sponge placeholder —
