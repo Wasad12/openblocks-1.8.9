@@ -5,11 +5,7 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
 
 ## IN PROGRESS
 
-- Slimalyzer (`ItemSlimalyzer` + active/inactive models + slime-chunk ping + recipe).
-  Phase C implemented, built, deployed UNTESTED 2026-09-19.
-- JEI tab overlap (side tabs report exclusion areas so JEI's item panel makes
-  room when a tab opens — TE/Forestry 1.8.9 precedent). Implemented, built,
-  deployed UNTESTED 2026-09-19.
+_none — awaiting next feature instruction._
 
 ## COMPLETED
 
@@ -59,6 +55,14 @@ class names. A feature moves to COMPLETED only on explicit user confirmation (§
   16 wool-meta recipes + stick recipe). User-confirmed COMPLETED 2026-09-19
   ("it works now" — fix loop 1 included: shapeless ore-string init crash).
   May revisit if issues surface later, same as the other completed features.
+- Slimalyzer (`ItemSlimalyzer` + active/inactive NBT-switched models +
+  slime-chunk ping + recipe). User-confirmed COMPLETED 2026-09-19 ("also
+  working" — no fix loops needed). May revisit if issues surface later,
+  same as the other completed features.
+- JEI tab overlap (side tabs report exclusion areas so JEI's item panel makes
+  room when a tab opens — TE/Forestry 1.8.9 precedent). User-verified WORKING
+  2026-09-19 ("also working" — no fix loops needed). May revisit if issues
+  surface later, same as the other completed features.
 
 ## NOT STARTED
 

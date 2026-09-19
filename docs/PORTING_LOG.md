@@ -1954,6 +1954,20 @@ JEI-tab tests remain open.)
 
 ---
 
+## 2026-09-19 — Feature: Slimalyzer COMPLETED + JEI tab shift VERIFIED (user-confirmed)
+
+User: "slimalyzer and jei tab thing is also working". Per section 7 both count
+as explicit confirmation: Slimalyzer moves to COMPLETED (no fix loops — recipe,
+off/on flip + beep, exit silence, icons all correct on first test), JEI tab
+shift moves to VERIFIED WORKING (panel makes room on tab open, returns on
+close — TE/Forestry parity on first test). No active feature, no open
+problems, no TEMPORARY code, tree clean. Completed tally: 12 (Hang Glider,
+Tank, XP Drain + XP Shower, Auto Enchantment Table, Auto Anvil, Vacuum Hopper,
+Fan, Last Stand, Elevator, Sponge + Stick, Slimalyzer, JEI tab shift — all
+user-confirmed, all revisit-able). Awaiting next feature instruction.
+
+---
+
 ## 2026-09-19 — Creative tab icon (user request)
 
 User: the mod's creative tab still showed the vanilla sponge placeholder —
